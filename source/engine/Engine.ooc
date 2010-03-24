@@ -1,14 +1,20 @@
-import structs/ArrayList
+import structs/HashMap
 import Entity, Update
 
 Engine: class {
     
-    entities: Entity[]
+    entities := HashMap<String, Entity> new()
     
     init: func {}
     
     addEntity: func (entity: Entity) {
-        entities add(entity)
+        // TODO: check for duplicates
+        entities put(entity name, entity)
+        entity engine = this
+    }
+    
+    getEntity: func (name: String) -> Entity {
+        entities get(name)
     }
     
     run: func {

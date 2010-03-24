@@ -1,7 +1,9 @@
 import structs/[ArrayList, HashMap, Stack]
-import Property, Update, Message
+import Property, Update, Message, Engine
 
 Entity: class {
+    
+    engine: Engine
     
     name: String
     id: Int
@@ -21,18 +23,19 @@ Entity: class {
     addUpdate: func (update: Update) { updates add(update) }
     
     update: func {
-        if(updates isEmpty()) return
         
-        //printf("[%d] %s got %d updates to run\n", id, name, updates size())
-        
-        iter := updates iterator()
-        while(iter hasNext()) {
-            up := iter next()
-            //printf("[%d] %s running update %s\n", id, name, up class name)
-            if(!up run(this)) {
-                iter remove()
+        if(!updates isEmpty()) {
+            //printf("[%d] %s got %d updates to run\n", id, name, updates size())
+            iter := updates iterator()
+            while(iter hasNext()) {
+                up := iter next()
+                //printf("[%d] %s running update %s\n", id, name, up class name)
+                if(!up run(this)) {
+                    iter remove()
+                }
             }
         }
+        
         
         while(!queue isEmpty()) {
             msg := queue get(0)
@@ -50,6 +53,7 @@ Entity: class {
     }
     
     send: func (target: Entity, msg: Message) {
+        printf("Sending message of type %s from %s to %s\n", msg class name, name, target name)
         msg sender = this
         msg target = target
         target queue add(msg)
