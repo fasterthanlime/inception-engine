@@ -3,6 +3,7 @@ import sdl/[Sdl, Video, Event]
 import glew
 import glu/Glu
 import engine/[Message, Entity]
+import gfx/Scene
 
 getchar: extern func
 
@@ -12,6 +13,7 @@ RenderWindow: class extends Entity {
 	isActive := false
 	title := "IDE v2"
 	surface: Surface*
+	scene := Scene new("Default Empty Scene")
 	
 	quit: func(errcode: Int) -> Int {
 		SDL quit()
@@ -133,8 +135,7 @@ RenderWindow: class extends Entity {
 		return true
 	}
 	
-	init: func ~rw (=width,=height,=bpp,=fullscreen) {
-	
+	init: func ~rw (=width,=height,=bpp,=fullscreen,=title) {
 		videoInfo: VideoInfo*
 
 		/* initialize SDL */
@@ -199,6 +200,7 @@ RenderWindow: class extends Entity {
 		SDL enableKeyRepeat(300,30)
 		//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
 		//glEnable(GL_COLOR_MATERIAL)
+		title(title)
 
 	}
 	
