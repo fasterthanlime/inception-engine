@@ -12,5 +12,12 @@ Message: abstract class {
 		return value
 	}
     
+    clone: func -> This {
+        // MWAHAHAHAHAHAHAHAHAHAHAH
+        copy := gc_malloc(class instanceSize)
+        memcpy(copy, this, class instanceSize)
+        return copy
+    }
+    
 }
 

@@ -20,7 +20,8 @@ main: func {
 PingPong: class extends Update {
     
     sent := false
-    sender, target: Entity
+    sender: Entity
+    target: String
     
     init: func ~withEnt(=sender, =target) {
         sender set("alive", true)
@@ -38,6 +39,7 @@ PingPong: class extends Update {
     
     run: func (origin: Entity) -> Bool {
         if(!sent) {
+            origin set("alive", true)
             "Here %s, sending ping to %s!" format(sender name, target name) println()
             origin send(target, PingMessage new())
             sent = true

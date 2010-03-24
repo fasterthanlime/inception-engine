@@ -41,7 +41,7 @@ Entity: class {
             msg := queue get(0)
             queue removeAt(0)
             for(r in receivers) {
-                if(msg class == r messageType) {
+                if(r messageType inheritsFrom(msg class)) {
                     r call(msg)
                 }
             }
@@ -53,10 +53,25 @@ Entity: class {
     }
     
     send: func (target: Entity, msg: Message) {
-        printf("Sending message of type %s from %s to %s\n", msg class name, name, target name)
+        //printf("Sending message of type %s from %s to %s\n", msg class name, name, target name)
         msg sender = this
         msg target = target
         target queue add(msg)
+    }
+    
+    sendAll: func (msg: Message) {
+        for(entity in engine entities) {
+            has := true
+            for(receiver in entity receivers) {
+                if(receiver messageType inheritsFrom(msg class)) {
+                    has = true
+                    break
+                }
+            }
+            if(has) {
+                send(entity, msg clone())
+            }
+        }
     }
     
     // Generic properties convenience functions
