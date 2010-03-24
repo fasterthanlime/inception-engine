@@ -9,7 +9,7 @@ Entity: class {
     props := HashMap<String, Property> new()
     updates : Update[]
     receivers : Receiver[]
-    queue := Stack<Message> new()
+    queue : Message[]
     
     idSeed := static 0
     
@@ -21,19 +21,22 @@ Entity: class {
     addUpdate: func (update: Update) { updates add(update) }
     
     update: func {
-        printf("[%d] %s got %d updates to run\n", id, name, updates size())
+        if(updates isEmpty()) return
+        
+        //printf("[%d] %s got %d updates to run\n", id, name, updates size())
         
         iter := updates iterator()
         while(iter hasNext()) {
             up := iter next()
-            printf("[%d] %s running update %s\n", id, name, up class name)
+            //printf("[%d] %s running update %s\n", id, name, up class name)
             if(!up run(this)) {
                 iter remove()
             }
         }
         
         while(!queue isEmpty()) {
-            msg := queue pop()
+            msg := queue get(0)
+            queue removeAt(0)
             for(r in receivers) {
                 if(msg class == r messageType) {
                     r call(msg)
@@ -49,7 +52,7 @@ Entity: class {
     send: func (target: Entity, msg: Message) {
         msg sender = this
         msg target = target
-        target queue push(msg)
+        target queue add(msg)
     }
     
     // Generic properties convenience functions

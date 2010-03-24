@@ -8,4 +8,4 @@ all:
 	${OOC} ${OOC_FLAGS} $(shell cd source/ && find test/ -name "*.ooc")
 
 clean:
-	rm -rf *_tmp/
+	rm -rf *_tmp/ *.x
