@@ -7,7 +7,10 @@ Cube: class extends Model {
 		super(name)
 	}
 	
-	display: func {
+	
+	
+	render: func {
+		printf("rendering cube =)\n")
 		glBegin(GL_QUADS)
 			glColor3ub(255,0,0) //face rouge
 			glVertex3d(1,1,1)

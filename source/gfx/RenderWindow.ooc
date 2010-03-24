@@ -13,7 +13,7 @@ RenderWindow: class extends Entity {
 	isActive := false
 	title := "IDE v2"
 	surface: Surface*
-	scene := Scene new("Default Empty Scene")
+	
 	
 	quit: func(errcode: Int) -> Int {
 		SDL quit()
@@ -40,8 +40,8 @@ RenderWindow: class extends Entity {
 		glLoadIdentity( )
 
 		/* Set our perspective */
-		//gluPerspective( 45.0, ratio, 0.1, 100.0 )
-		gluOrtho2D(0,width,height,0);
+		gluPerspective( 45.0, ratio, 0.1, 100.0 )
+		//gluOrtho2D(0,width,height,0);
 
 		/* Make sure we're changing the model view and not the projection */
 		glMatrixMode( GL_MODELVIEW )
@@ -49,23 +49,15 @@ RenderWindow: class extends Entity {
 		/* Reset The View */
 		glLoadIdentity( )
 		
-		glEnable(GL_BLEND)
-		glDisable(GL_DEPTH_TEST)
+		//glEnable(GL_BLEND)
+		//glDisable(GL_DEPTH_TEST)
 		//glBlendFunc(GL_SRC_ALPHA,GL_ONE)
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 		return true
 	}
 	
-    /*
-	receiveMsg: func(m: Message) {
-		match(m type) {
-			case InputMsg type => {
-				quit()
-			}
-		}
-	}
-    */
+
 	
 	handleEvent: func( event: Event ) -> Bool {
 		match( event type ) {
@@ -95,7 +87,7 @@ RenderWindow: class extends Entity {
 		return false
 	}
 		
-	handleKeyPress: func(keysym: Keysym*) -> Bool{
+	handleKeyPress: func(keysym: Keysym*) -> Bool {
 		match (keysym@ sym )
 		{
 
@@ -124,7 +116,7 @@ RenderWindow: class extends Entity {
 		glClearDepth( 1.0 )
 
 		/* Enables Depth Testing */
-		glDisable( GL_DEPTH_TEST )
+		//glDisable( GL_DEPTH_TEST )
 
 		/* The Type Of Depth Test To Do */
 		//glDepthFunc( GL_LEQUAL )
@@ -136,6 +128,7 @@ RenderWindow: class extends Entity {
 	}
 	
 	init: func ~rw (=width,=height,=bpp,=fullscreen,=title) {
+		super(title)
 		videoInfo: VideoInfo*
 
 		/* initialize SDL */
