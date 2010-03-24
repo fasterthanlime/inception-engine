@@ -55,6 +55,7 @@ RenderWindow: class extends Entity {
 		return true
 	}
 	
+    /*
 	receiveMsg: func(m: Message) {
 		match(m type) {
 			case InputMsg type => {
@@ -62,6 +63,7 @@ RenderWindow: class extends Entity {
 			}
 		}
 	}
+    */
 	
 	handleEvent: func( event: Event ) -> Bool {
 		match( event type ) {
@@ -131,7 +133,7 @@ RenderWindow: class extends Entity {
 		return true
 	}
 	
-	init: func(=width,=height,=bpp,=fullscreen) {
+	init: func ~rw (=width,=height,=bpp,=fullscreen) {
 	
 		videoInfo: VideoInfo*
 

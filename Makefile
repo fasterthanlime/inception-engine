@@ -1,8 +1,11 @@
-OOC_FLAGS=-v -noclean -g +-O0 -tcc
+OOC_FLAGS=-v -noclean -g +-O0 -gcc -sourcepath=source/ $(shell echo $$OOC_FLAGS)
 OOC?=rock
 
+%:
+	${OOC} ${OOC_FLAGS} test/$@
+
 all:
-	${OOC} ${OOC_FLAGS} -sourcepath=source/ $(shell cd source/ && find test/ -name "*.ooc")
+	${OOC} ${OOC_FLAGS} $(shell cd source/ && find test/ -name "*.ooc")
 
 clean:
 	rm -rf *_tmp/

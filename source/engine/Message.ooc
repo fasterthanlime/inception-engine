@@ -1,6 +1,9 @@
 import structs/HashMap
+import Entity
 
 Message: abstract class {
+
+    sender: Entity
 
 	genId: static func -> Int {
 		idSeed := static 0
@@ -8,5 +11,6 @@ Message: abstract class {
 		idSeed += 1
 		return value
 	}
+    
 }
 

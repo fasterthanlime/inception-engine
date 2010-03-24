@@ -1,12 +1,13 @@
+import Entity
 
 Update: class {
     
-    f: Func -> Bool
+    f: Func (Entity) -> Bool
     
     init: func ~withFunc (=f) {}
     
-    run: func -> Bool {
-        f()
+    run: func (entity: Entity) -> Bool {
+        f(entity)
     }
     
 }

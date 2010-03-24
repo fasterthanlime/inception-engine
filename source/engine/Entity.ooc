@@ -1,5 +1,5 @@
-import structs/[ArrayList, HashMap]
-import Property, Update
+import structs/[ArrayList, HashMap, Stack]
+import Property, Update, Message
 
 Entity: class {
     
@@ -8,6 +8,8 @@ Entity: class {
     
     props := HashMap<String, Property> new()
     updates : Update[]
+    receivers : Receiver[]
+    queue := Stack<Message> new()
     
     idSeed := static 0
     
@@ -26,7 +28,33 @@ Entity: class {
                 iter remove()
             }
         }
-
+        
+        while(!queue isEmpty()) {
+            msg := queue pop()
+            for(r in receivers) {
+                if(msg class == r messageType) {
+                    r call(msg)
+                }
+            }
+        }
     }
+    
+    receive: func (messageType: MessageClass, call: Func (Message)) {
+        receivers add(Receiver new(messageType, call))
+    }
+    
+    send: func (dest: Entity, msg: Message) {
+        msg sender = this
+        dest queue push(msg)
+    }
+    
+}
+
+Receiver: class {
+
+    messageType: MessageClass
+    call: Func (Message)
+    
+    init: func (=messageType, =call) {}
     
 }
