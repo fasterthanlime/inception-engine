@@ -3,7 +3,7 @@ import Entity
 
 Message: abstract class {
 
-    sender: Entity
+    sender, target: Entity
 
 	genId: static func -> Int {
 		idSeed := static 0

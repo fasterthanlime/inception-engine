@@ -20,26 +20,25 @@ main: func {
 PingPong: class extends Update {
     
     sent := false
-    alive := true
-    target: Entity
+    sender, target: Entity
     
-    init: func ~withEnt(=target) {
-        init ~withFunc(func (origin: Entity) -> Bool {
-            if(!sent) {
-                origin send(target, PingMessage new())
-                sent = true
-            }
-            alive
-        })
-        
+    init: func ~withEnt(=sender, =target) {
         target receive(PingMessage, func (m: PingMessage) {
-            m sender send(PongMessage new())
+            m target send(m sender, PongMessage new())
         })
         
         target receive(PongMessage, func (m: PongMessage) {
             printf("Received pong! I'm so dead!")
-            alive = false
+            m target set("alive", false)
         })
+    }
+    
+    run: func (origin: Entity) -> Bool {
+        if(!sent) {
+            origin send(target, PingMessage new())
+            sent = true
+        }
+        sender get("alive", Bool)
     }
     
 }

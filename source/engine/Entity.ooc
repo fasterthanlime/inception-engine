@@ -43,9 +43,35 @@ Entity: class {
         receivers add(Receiver new(messageType, call))
     }
     
-    send: func (dest: Entity, msg: Message) {
+    send: func (target: Entity, msg: Message) {
         msg sender = this
-        dest queue push(msg)
+        msg target = target
+        target queue push(msg)
+    }
+    
+    // Generic properties convenience functions
+    
+    set: func <T> (name: String, value: T) {
+        prop := props get(name)
+        if(prop) {
+            prop set(value)
+        } else {
+            prop := GenericProperty new(name, value)
+            props put(name, prop)
+        }
+    }
+    
+    get: func <T> (name: String, T: Class) -> T {
+        prop := props get(name)
+        if(!prop) return null
+        if(!prop instanceOf(GenericProperty)) {
+            Exception new(This, "Attempting to get (%s, %s), but the property isn't generic but a %s" format(name, T name, prop class name)) throw()
+        }
+        gp := prop as GenericProperty<T>
+        if(!gp T inheritsFrom(T)) {
+            Exception new(This, "Attempting to get (%s, %s), but the property has incompatible type %s" format(name, T name, gp T name)) throw()
+        }
+        return gp get()
     }
     
 }

@@ -7,3 +7,15 @@ Property: abstract class {
     
 }
 
+GenericProperty: class <T> extends Property {
+    
+    value: T
+    
+    init: func ~gp(.name, =value) {
+        super(name)
+    }
+    
+    set: func (=value) {}
+    get: func -> T { value }
+    
+}
