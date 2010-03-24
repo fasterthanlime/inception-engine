@@ -48,8 +48,8 @@ Entity: class {
         }
     }
     
-    listen: func (messageType: MessageClass, call: Func (Message)) {
-        receivers add(Receiver new(messageType, call))
+    listen: func <T> (T: Class, call: Func (T)) {
+        receivers add(Receiver new(T, call))
     }
     
     send: func (target: Entity, msg: Message) {
