@@ -11,13 +11,13 @@ RenderWindow: class extends Entity {
 	width, height, bpp, videoFlags : Int
 	fullscreen := false
 	isActive := false
-	title := "IDE v2"
+	title := "r2l"
 	surface: Surface*
 	
 	
-	quit: func(errcode: Int) -> Int {
+	quit: static func {
 		SDL quit()
-		return errcode
+		exit(0)
 	}
 	
 	resizeWindow: func( =width, =height ) -> Bool {
@@ -49,6 +49,7 @@ RenderWindow: class extends Entity {
 		/* Reset The View */
 		glLoadIdentity( )
 		
+		glEnable(GL_DEPTH_TEST)
 		//glEnable(GL_BLEND)
 		//glDisable(GL_DEPTH_TEST)
 		//glBlendFunc(GL_SRC_ALPHA,GL_ONE)
@@ -74,7 +75,7 @@ RenderWindow: class extends Entity {
 			    if ( !surface )
 				{
 				    fprintf( stderr, "Could not get a surface after resize: %s\n", SDL getError( ) )
-				    quit(1)
+				    quit()
 				}
 			    resizeWindow( event resize w, event resize h )
 			    return true
@@ -135,7 +136,7 @@ RenderWindow: class extends Entity {
 		if ( SDL init( SDL_INIT_EVERYTHING ) < 0 )
 		{
 			fprintf( stderr, "SDL initialization failed: %s\n", SDL getError( ) )
-			quit( 1 )
+			quit( )
 		}
 
 		/* Fetch the video info */
@@ -144,7 +145,7 @@ RenderWindow: class extends Entity {
 		if ( !videoInfo )
 		{
 			fprintf( stderr, "Video query failed: %s\n", SDL getError( ) )
-			quit( 1 );
+			quit(  );
 		}
 
 		/* the flags to pass to SDL_SetVideoMode */
@@ -177,14 +178,14 @@ RenderWindow: class extends Entity {
 		if ( !surface )
 		{
 			fprintf( stderr,  "Video mode set failed: %s\n", SDL getError( ) )
-			quit( 1 )
+			quit( )
 		}
 
 		/* initialize OpenGL */
 		if ( initGL( ) == false )
 		{
 			fprintf( stderr, "Could not initialize OpenGL.\n" )
-			quit( 1 )
+			quit(  )
 		}
 
 		/* Resize the initial window */

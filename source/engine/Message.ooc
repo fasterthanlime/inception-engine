@@ -21,3 +21,7 @@ Message: abstract class {
     
 }
 
+MouseMotion: class extends Message {
+	x,y,dx,dy: Int
+	init: func ~mm (=x,=y,=dx,=dy){}
+}

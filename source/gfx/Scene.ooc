@@ -5,12 +5,12 @@ import sdl/Video
 import engine/[Entity, Update]
 import gfx/Model
 import structs/LinkedList
+
 Scene: class extends Entity {
 	
 	models := LinkedList<Model> new()
 	
 	render: func -> Bool {
-		printf("CACAPROOUT\n")
 		glClearColor(0,0,0,0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	    glMatrixMode(GL_MODELVIEW)
