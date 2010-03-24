@@ -12,7 +12,7 @@ main: func {
             scanf("%s", s)
             
             "Hi there, %s" format(s) println()
-            true
+            false
         }))
     engine addEntity(player)
     
