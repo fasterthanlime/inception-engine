@@ -3,7 +3,7 @@ Property: abstract class {
     
     name: String
     
-    init: func ~withName(=withName) {}
+    init: func ~withName(=name) {}
     
 }
 
