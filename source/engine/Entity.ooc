@@ -16,4 +16,6 @@ Entity: class {
         id = This idSeed
     }
     
+    addUpdate: func (update: Update) { updates add(update) }
+    
 }

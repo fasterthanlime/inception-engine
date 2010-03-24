@@ -1,4 +1,4 @@
-OOC_FLAGS=-v -noclean -g +-O0
+OOC_FLAGS=-v -noclean -g +-O0 -tcc
 OOC?=rock
 
 all:

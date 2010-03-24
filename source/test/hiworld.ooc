@@ -1,18 +1,19 @@
-import engine/[Entity, Property]
+import engine/[Engine, Entity, Property, Update]
 
 main: func {
     
-    eng := Engine new()
+    engine := Engine new()
     
-    ent := Entity new("Player")
-    ent addUpdate(AskName new())
-    
-    eng add(ent)
+    player := Entity new("Player") .\
+    addUpdate(Update new(func -> Bool {
+        "username: " print()
+        s := String new(128)
+        scanf("%s", s)
+        
+        "Hi there, %s" format(s) println()
+        false
+    }))
     
     engine run()
-    
-}
-
-AskName: func {
     
 }
