@@ -1,4 +1,5 @@
 import engine/[Engine, Entity, Property, Update]
+import gfx/RenderWindow
 
 main: func {
     
@@ -12,10 +13,10 @@ main: func {
             scanf("%s", s)
             
             "Hi there, %s" format(s) println()
-            true
+            false
         }))
     engine addEntity(player)
-    
+    renderWindow := RenderWindow new(800,600,32,false)
     engine run()
     
 }

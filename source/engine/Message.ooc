@@ -1,7 +1,6 @@
 import structs/HashMap
 
 Message: abstract class {
-	type := static genId()
 
 	genId: static func -> Int {
 		idSeed := static 0
@@ -10,3 +9,4 @@ Message: abstract class {
 		return value
 	}
 }
+

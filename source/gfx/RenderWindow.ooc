@@ -2,10 +2,11 @@ use sdl,glew,glu
 import sdl/[Sdl, Video, Event]
 import glew
 import glu/Glu
+import engine/[Message, Entity]
 
 getchar: extern func
 
-RenderWindow: class {
+RenderWindow: class extends Entity {
 	width, height, bpp, videoFlags : Int
 	fullscreen := false
 	isActive := false
@@ -54,6 +55,13 @@ RenderWindow: class {
 		return true
 	}
 	
+	receiveMsg: func(m: Message) {
+		match(m type) {
+			case InputMsg type => {
+				quit()
+			}
+		}
+	}
 	
 	handleEvent: func( event: Event ) -> Bool {
 		match( event type ) {
