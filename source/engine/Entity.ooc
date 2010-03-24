@@ -18,4 +18,15 @@ Entity: class {
     
     addUpdate: func (update: Update) { updates add(update) }
     
+    update: func {
+        //printf("[%d] %s got %d updates to run\n", id, name, updates size())
+        iter := updates iterator()
+        while(iter hasNext()) {
+            if(!iter next() run()) {
+                iter remove()
+            }
+        }
+
+    }
+    
 }

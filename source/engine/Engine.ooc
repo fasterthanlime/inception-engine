@@ -12,7 +12,11 @@ Engine: class {
     }
     
     run: func {
-        
+        while(true) {
+            for(ent in entities) {
+                ent update()
+            }
+        }
     }
     
 }
