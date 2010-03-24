@@ -25,12 +25,12 @@ PingPong: class extends Update {
     init: func ~withEnt(=sender, =target) {
         sender set("alive", true)
         
-        target receive(PingMessage, func (m: PingMessage) {
+        target listen(PingMessage, func (m: PingMessage) {
             "Here %s, received ping from %s, sending pong back" format(m sender name, m target name) println()
             m target send(m sender, PongMessage new())
         })
         
-        target receive(PongMessage, func (m: PongMessage) {
+        target listen(PongMessage, func (m: PongMessage) {
             "Here %s, received pong from %s! I'm so dead!" format(m sender name, m target name) println()
             m target set("alive", false)
         })

@@ -5,7 +5,7 @@ OOC?=rock
 	${OOC} ${OOC_FLAGS} test/$@ -o=$@.x
 
 all:
-	${OOC} ${OOC_FLAGS} $(shell cd source/ && find test/ -name "*.ooc")
+	@echo "Usage: make <testname>"
 
 clean:
 	rm -rf *_tmp/ *.x

@@ -45,7 +45,7 @@ Entity: class {
         }
     }
     
-    receive: func (messageType: MessageClass, call: Func (Message)) {
+    listen: func (messageType: MessageClass, call: Func (Message)) {
         receivers add(Receiver new(messageType, call))
     }
     
