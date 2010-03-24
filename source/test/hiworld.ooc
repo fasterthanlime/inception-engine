@@ -1,3 +1,4 @@
+import engine/[Entity, Property]
 
 main: func {
     
