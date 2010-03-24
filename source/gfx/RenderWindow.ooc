@@ -55,10 +55,10 @@ RenderWindow: class {
 	}
 	
 	
-	handleEvent: func( event: Event* ) -> Bool {
-		match( event@ type ) {
+	handleEvent: func( event: Event ) -> Bool {
+		match( event type ) {
 			case SDL_ACTIVEEVENT => {
-			    if ( event@ active gain == 0 )
+			    if ( event active gain == 0 )
 					isActive = false
 			    else
 					isActive = true
@@ -66,17 +66,17 @@ RenderWindow: class {
 			   
 			case SDL_VIDEORESIZE => {
 			    /* handle resize event */
-			    surface = SDLVideo setMode( event@ resize w,event@ resize h, 32, videoFlags )
+			    surface = SDLVideo setMode( event resize w,event resize h, 32, videoFlags )
 			    if ( !surface )
 				{
 				    fprintf( stderr, "Could not get a surface after resize: %s\n", SDL getError( ) )
 				    quit(1)
 				}
-			    resizeWindow( event@ resize w, event@ resize h )
+			    resizeWindow( event resize w, event resize h )
 			    return true
 			}
 			 
-			case SDL_KEYDOWN => return handleKeyPress( event@ key keysym&)
+			case SDL_KEYDOWN => return handleKeyPress( event key keysym&)
 			   
 			case SDL_QUIT => return false
 		}
