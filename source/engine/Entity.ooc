@@ -21,10 +21,13 @@ Entity: class {
     addUpdate: func (update: Update) { updates add(update) }
     
     update: func {
-        //printf("[%d] %s got %d updates to run\n", id, name, updates size())
+        printf("[%d] %s got %d updates to run\n", id, name, updates size())
+        
         iter := updates iterator()
         while(iter hasNext()) {
-            if(!iter next() run(this)) {
+            up := iter next()
+            printf("[%d] %s running update %s\n", id, name, up class name)
+            if(!up run(this)) {
                 iter remove()
             }
         }
