@@ -24,7 +24,7 @@ Entity: class {
         //printf("[%d] %s got %d updates to run\n", id, name, updates size())
         iter := updates iterator()
         while(iter hasNext()) {
-            if(!iter next() run()) {
+            if(!iter next() run(this)) {
                 iter remove()
             }
         }

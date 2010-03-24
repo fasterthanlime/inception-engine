@@ -16,7 +16,6 @@ main: func {
             false
         }))
     engine addEntity(player)
-    renderWindow := RenderWindow new(800,600,32,false)
     engine run()
     
 }
