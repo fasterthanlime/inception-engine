@@ -1,11 +1,11 @@
-use glew,glu
-import glew,glu/Glu
+use glew, glu, ftgl
+import glew, glu/Glu, ftgl
 import Entity,Property,Types
 import gfx/RenderWindow
 
 
 GLConsole: class extends Entity {
-	//font := Ftgl new(80,72,"font/Terminus.ttf")
+	font := Ftgl new(80,72,"data/fonts/Terminus.ttf")
 	init: func ~glc (.name) {
 		super(name)
 		set("position",Float2 new(0,0))
