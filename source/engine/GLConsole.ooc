@@ -30,12 +30,12 @@ GLConsole: class extends Model {
 	}
 	
 	begin2D: func {
-		 glDisable(GL_DEPTH_TEST);
-		 glEnable(GL_BLEND)
-
+        glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND)
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
 		glLoadIdentity();
+        
 		rw := engine getEntity("render_window") as RenderWindow
 		gluOrtho2D(0, rw width, rw height, 0);
 		glMatrixMode(GL_MODELVIEW);
@@ -53,11 +53,8 @@ GLConsole: class extends Model {
         glDisable(GL_BLEND)
 	}
 	
-	background: func {
-		
+	background: func {		
 		size := get("size",Float2)
-		
-		
 		
 		glBegin(GL_QUADS)
 			glColor4ub(255, 255, 255,128)
@@ -70,8 +67,8 @@ GLConsole: class extends Model {
 	
 	drawText: func {
 		printf("rendering text\n")
-		glColor4ub(255,0,0,255)
-		font render(10,10,0.2,true,"KALAMAZOOOO")
+		glColor4ub(255, 0, 0, 255)
+		font render(10, 10, 0.2, true, "KALAMAZOOOO")
 	}
 	
 	render: func {
