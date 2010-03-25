@@ -11,13 +11,15 @@ main: func {
 	//win listen(QuitMessage, |m| win quit())
 	
 	scene := Scene new("scene_1")
+	console := GLConsole new("console_1")
 	
 	scene models add(Cube new("cube_1"))
 	scene models add(Grid new("grid_1"))
+	scene models add(console)
 	
 	engine addEntity(EventMapper new())
 	engine addEntity(scene)
 	engine addEntity(win)
-	engine addEntity(GLConsole new("console_1"))
+	engine addEntity(console)
 	engine run()
 }
