@@ -25,4 +25,7 @@ Engine: class {
         }
     }
     
+    exit: func {
+		exit(0)
+	}
 }

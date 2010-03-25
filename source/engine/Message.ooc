@@ -25,3 +25,17 @@ MouseMotion: class extends Message {
 	x,y,dx,dy: Int
 	init: func ~mm (=x,=y,=dx,=dy){}
 }
+
+
+ValueChange: class <T> extends Message {
+	value: T
+	
+	init: func ~vc (=value) {}
+	
+	get: static func <T> (t: T) -> This<T> {
+		This<T> new(t)
+	}
+}
+
+Command: class extends Message {
+}

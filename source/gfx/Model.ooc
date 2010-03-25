@@ -1,3 +1,5 @@
+use glew
+import glew
 import engine/[Entity, Update]
 import gfx/StaticMesh
 
@@ -7,7 +9,10 @@ Model: class extends Entity {
 	init: func ~model (.name) {
 		super(name)
 		addUpdate(Update new(func (m : Model) -> Bool {
-			m render(); true
+			glPushMatrix()
+			m render()
+			glPopMatrix()
+			true
 		}))
 	}
 	

@@ -1,5 +1,5 @@
-import engine/[Engine, Entity, Property, Update,QuitMessage, EventMapper, Message]
-import gfx/[RenderWindow, Cube, Scene]
+import engine/[Engine, Entity, Property, Update,QuitMessage, EventMapper, Message,GLConsole]
+import gfx/[RenderWindow, Cube, Scene,Grid]
 
 
 main: func {
@@ -12,12 +12,12 @@ main: func {
 	
 	scene := Scene new("scene_1")
 	
-	
-	cube := Cube new("cube_1")
-	scene models add(cube)
+	scene models add(Cube new("cube_1"))
+	scene models add(Grid new("grid_1"))
 	
 	engine addEntity(EventMapper new())
 	engine addEntity(scene)
 	engine addEntity(win)
+	engine addEntity(GLConsole new("console_1"))
 	engine run()
 }

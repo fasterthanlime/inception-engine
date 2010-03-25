@@ -19,3 +19,4 @@ GenericProperty: class <T> extends Property {
     get: func -> T { value }
     
 }
+
