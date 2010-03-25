@@ -11,7 +11,7 @@ main: func {
 	//win listen(QuitMessage, |m| win quit())
 	
 	scene := Scene new("scene_1")
-	console := GLConsole new("console_1")
+	console := GLConsole new~glc("console_1")
 	
 	scene models add(Cube new("cube_1"))
 	scene models add(Grid new("grid_1"))

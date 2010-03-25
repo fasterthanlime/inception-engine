@@ -26,6 +26,11 @@ MouseMotion: class extends Message {
 	init: func ~mm (=x,=y,=dx,=dy){}
 }
 
+KeyboardMsg: class extends Message {
+	key: Int
+	init: func ~km (=key) {}
+}
+
 
 ValueChange: class <T> extends Message {
 	value: T

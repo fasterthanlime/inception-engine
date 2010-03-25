@@ -152,7 +152,7 @@ RenderWindow: class extends Entity {
 		videoFlags  = SDL_OPENGL          /* Enable OpenGL in SDL */
 		videoFlags |= SDL_GL_DOUBLEBUFFER /* Enable double buffering */
 		videoFlags |= SDL_HWPALETTE       /* Store the palette in hardware */
-		videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
+		//videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
 		
 		if(fullscreen) {
 			videoFlags |= SDL_FULLSCREEN

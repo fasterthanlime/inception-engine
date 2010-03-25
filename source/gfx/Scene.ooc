@@ -6,6 +6,9 @@ import engine/[Entity, Update, Engine]
 import gfx/[Model, RenderWindow]
 import structs/LinkedList
 
+include unistd
+usleep: extern func(Int)
+
 Scene: class extends Entity {
 	
 	models := LinkedList<Model> new()
@@ -18,13 +21,13 @@ Scene: class extends Entity {
 	render: func -> Bool {
 		glClearColor(0,0,0,0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-	   // glMatrixMode(GL_MODELVIEW)
-	   // glLoadIdentity()
-	    rw := engine getEntity("render_window") as RenderWindow 
+	    glMatrixMode(GL_MODELVIEW)
+	    glLoadIdentity()
+	    //rw := engine getEntity("render_window") as RenderWindow 
 	    
-	    glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
+	   // glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
+		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
 		
@@ -37,6 +40,7 @@ Scene: class extends Entity {
 		}
 	    
 	    SDLVideo glSwapBuffers()
+	    usleep(30000)
 	    return true
 	}
 	
