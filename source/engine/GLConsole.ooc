@@ -54,28 +54,36 @@ GLConsole: class extends Model {
 	}
 	
 	background: func {
-		pos := get("position",Float2)
+		
 		size := get("size",Float2)
+		
+		
 		
 		glBegin(GL_QUADS)
 			glColor4ub(255, 255, 255,128)
-			glVertex2i(pos x, pos y)
-			glVertex2i(pos x + size x, pos y)
-			glVertex2i(pos x + size x, pos y + size y)
-			glVertex2i(pos x, pos y + size y)
+			glVertex2i(0, 0)
+			glVertex2i(size x, 0)
+			glVertex2i(size x,size y)
+			glVertex2i(0, size y)
 		glEnd()         
 	}
 	
 	drawText: func {
-		font render(0,0,1,true,"KALAMAZOOOO")
+		printf("rendering text\n")
+		glColor4ub(255,0,0,255)
+		font render(10,10,0.2,true,"KALAMAZOOOO")
 	}
 	
 	render: func {
 		if(!show)
 			return
+		pos := get("position",Float2)
+		
 		
 		begin2D()
+		glTranslated(pos x, pos y,0)
 		background()
+		glDisable(GL_BLEND)
 		drawText()
 		end2D()	
 	}
