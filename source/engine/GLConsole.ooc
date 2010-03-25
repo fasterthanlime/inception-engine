@@ -7,7 +7,8 @@ import gfx/[RenderWindow, Model]
 
 
 GLConsole: class extends Model {
-	font := Ftgl new(80,72,"font/Terminus.ttf")
+
+	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	init: func ~glc (.name) {
 		//super(name)
 		this name = name
