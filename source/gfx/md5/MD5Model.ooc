@@ -28,6 +28,8 @@
 use math, glew
 import glew
 
+import ../Model
+
 // Vectors
 Vec2: cover {
     x, y: Float
@@ -138,7 +140,7 @@ MD5Triangle: cover {
 }
 
 /* Weight */
-MD5Weight: class {
+MD5Weight: cover {
     joint: Int
     bias: Float
 
@@ -166,7 +168,7 @@ MD5Mesh: class {
 }
 
 /* MD5 model structure */
-MD5Model: class {
+MD5Model: class extends Model {
     baseSkel : MD5Joint*
     meshes   : MD5Mesh*
     
@@ -175,6 +177,10 @@ MD5Model: class {
     
     vertexArray  : Vec3*
     vertexIndices: GLuint*
+    
+    init: func ~md5 (.name) {
+        super(name)
+    }
     
     /**
      * Prepare a mesh for drawing.  Compute mesh's final vertex positions
@@ -239,12 +245,17 @@ MD5Model: class {
         glColor3f (0.0, 1.0, 0.0)
         glBegin (GL_LINES)
         for (i in 0..numJoints) {
+            //printf("%d's parent = %d, pos = (%.2f, %.2f, %.2f)\n", i, skeleton[i] parent, skeleton[i] pos x, skeleton[i] pos y, skeleton[i] pos z)
             if (skeleton[i] parent != -1) {
                 glVertex3fv(skeleton[skeleton[i] parent] pos&)
                 glVertex3fv(skeleton[i] pos&)
             }
         }
         glEnd()
+    }
+    
+    render: func {
+        drawSkeleton(baseSkel, numJoints)
     }
 
 }

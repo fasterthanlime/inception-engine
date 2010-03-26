@@ -1,12 +1,6 @@
 import io/[File, FileReader]
 import MD5Model
 
-main: func {
-    
-    MD5Loader new() load("../../../data/models/hophop.md5mesh")
-    
-}
-
 MD5Loader: class {
     
     maxVerts := 0
@@ -14,7 +8,7 @@ MD5Loader: class {
 
     /// Load an MD5 model from file.
     load: func (filename: String) -> MD5Model {
-        mdl := MD5Model new()
+        mdl := MD5Model new(filename)
         //buff: Char[512]
         version: Int
         currMesh := 0
@@ -24,11 +18,8 @@ MD5Loader: class {
         
         while(fR hasNext()) {
             // Read whole line
-            //fR read(buff, 0, buff length())
             buff := fR readLine()
             
-            printf("# %s\n", buff)
-
             if (sscanf(buff, " MD5Version %d", version&) == 1) {
                 if (version != 10) {
                     // Bad version
@@ -36,27 +27,29 @@ MD5Loader: class {
                     fR close()
                     return null
                 }
-                printf("version = %d\n", version)
             } else if (sscanf (buff, " numJoints %d", mdl numJoints&) == 1) {
-                printf("numJoints = %d\n", mdl numJoints)
-                if (mdl numJoints > 0) {
+                if (mdl numJoints > 0) {                    
                     // Allocate memory for base skeleton joints
                     mdl baseSkel = gc_malloc (mdl numJoints * MD5Joint size)
+                    for(i in 0..mdl numJoints) {
+                        mdl baseSkel[i] = MD5Joint new()
+                    }
                 }
             } else if (sscanf (buff, " numMeshes %d", mdl numMeshes&) == 1) {
-                printf("numMeshes = %d\n", mdl numMeshes)
                 if (mdl numMeshes > 0) {
                     // Allocate memory for meshes
                     mdl meshes = gc_malloc (mdl numMeshes * MD5Mesh size)
+                    for(i in 0..mdl numMeshes) {
+                        mdl meshes[i] = MD5Mesh new()
+                    }
                 }
             } else if (strncmp (buff, "joints {", 8) == 0) {
                 // Read each joint
-                for(i in 0..(mdl numJoints)) {
-                    joint := MD5Joint new()
-                    mdl baseSkel[i] = joint
+                for(i in 0..mdl numJoints) {
+                    joint := mdl baseSkel[i]
 
                     // Read whole line
-                    fR read(buff, 0, buff length())
+                    buff = fR readLine()
 
                     if (sscanf (buff, "%s %d ( %f %f %f ) ( %f %f %f )",
                       joint name, joint parent&, joint pos x&,
@@ -67,8 +60,7 @@ MD5Loader: class {
                     }
                 }
             } else if (strncmp (buff, "mesh {", 6) == 0) {
-                mesh := MD5Mesh new()
-                mdl meshes[currMesh] = mesh
+                mesh := mdl meshes[currMesh]
                 vertIndex := 0
                 triIndex := 0
                 weightIndex := 0
@@ -77,7 +69,7 @@ MD5Loader: class {
 
                 while ((buff[0] != '}') && fR hasNext()) {
                     // Read whole line
-                    fR read(buff, 0, buff length())
+                    buff = fR readLine()
 
                     if (strstr (buff, "shader ")) {
                         quote := 0; j := 0
@@ -97,15 +89,15 @@ MD5Loader: class {
                     } else if (sscanf (buff, " numverts %d", mesh numVerts&) == 1) {
                         if (mesh numVerts > 0) {
                             // Allocate memory for vertices 
-                            mesh vertices = gc_malloc(MD5Vertex size * mesh numVerts)
+                            mesh vertices = gc_malloc(MD5Vertex instanceSize * mesh numVerts)
                         }
 
                         if (mesh numVerts > maxVerts)
                             maxVerts = mesh numVerts
                     } else if (sscanf (buff, " numtris %d", mesh numTris&) == 1) {
                         if (mesh numTris > 0) {
-                            // Allocate memory for triangles 
-                            mesh triangles = gc_malloc (MD5Triangle size * mesh numTris)
+                            // Allocate memory for triangles
+                            mesh triangles = gc_malloc (MD5Triangle instanceSize * mesh numTris)
                         }
 
                         if (mesh numTris > maxTris)
@@ -113,7 +105,7 @@ MD5Loader: class {
                     } else if (sscanf (buff, " numweights %d", mesh numWeights&) == 1) {
                         if (mesh numWeights > 0) {
                             // Allocate memory for vertex weights 
-                            mesh weights = gc_malloc(MD5Weight size * mesh numWeights)
+                            mesh weights = gc_malloc(MD5Weight instanceSize * mesh numWeights)
                         }
                     } else if (sscanf (buff, " vert %d ( %f %f ) %d %d", vertIndex&,
                        fdata[0]&, fdata[1]&, idata[0]&, idata[1]&) == 5) {

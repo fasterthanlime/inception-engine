@@ -31,7 +31,7 @@ Scene: class extends Entity {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
 		
-	    gluLookAt(6,6,6,
+	    gluLookAt(40,40,40,
 				  0,0,0,
 				  0,0,1)
 	    
