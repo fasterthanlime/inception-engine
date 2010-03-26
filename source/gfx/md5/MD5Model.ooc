@@ -219,6 +219,33 @@ MD5Model: class {
         vertexArray   = gc_malloc(Vec3 size * maxVerts)
         vertexIndices = gc_malloc(sizeof(GLuint) * maxTris * 3)
     }
+    
+    /**
+     * Draw the skeleton as lines and points (for joints).
+     */
+    drawSkeleton: func (skeleton: MD5Joint*, numJoints: Int) {
+        i: Int
+
+        // Draw each joint
+        glPointSize(5.0)
+        glColor3f(1.0, 0.0, 0.0)
+        glBegin(GL_POINTS)
+        for (i in 0..numJoints)
+            glVertex3fv (skeleton[i] pos&)
+        glEnd()
+        glPointSize(1.0)
+
+        // Draw each bone
+        glColor3f (0.0, 1.0, 0.0)
+        glBegin (GL_LINES)
+        for (i in 0..numJoints) {
+            if (skeleton[i] parent != -1) {
+                glVertex3fv(skeleton[skeleton[i] parent] pos&)
+                glVertex3fv(skeleton[i] pos&)
+            }
+        }
+        glEnd()
+    }
 
 }
 
