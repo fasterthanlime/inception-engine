@@ -1,8 +1,8 @@
-/*
+/**
  * md5model.h -- md5mesh model loader + animation
- * last modification: aug. 14, 2007
  *
  * Copyright (c) 2005-2007 David HENRY
+ * Copyright (c) 2010-2011 Amos Wenger <amoswenger@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,8 +23,6 @@
  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * gcc -Wall -ansi -lGL -lGLU -lglut md5anim.c md5anim.c -o md5model
  */
 
 use math
@@ -54,7 +52,7 @@ Quat4: cover {
             w = -sqrt(t)
     }
     
-    normalize: func@ {
+    normalize: func {
         // compute magnitude of the quaternion
         mag := sqrt ((x * x) + (y * y) + (z * z) + (w * w))
 
@@ -71,7 +69,7 @@ Quat4: cover {
     }
     
     multQuat: func (qb: Quat4) -> Quat4 {
-        qa := this
+        qa : Quat4 = this
         out: Quat4
         out w = (qa w * qb w) - (qa x * qb x) - (qa y * qb y) - (qa z * qb z)
         out x = (qa x * qb w) + (qa w * qb x) + (qa y * qb z) - (qa z * qb y)
@@ -96,8 +94,8 @@ Quat4: cover {
         inv
     }
     
-    rotatePoint: func (in: Vec3) -> Vec3 {
-        inv := inverse(). normalize()
+    rotatePoint: func@ (in: Vec3) -> Vec3 {
+        inv := inverse() .normalize()
         result := multVec(in) multQuat(inv)
         
         out: Vec3
@@ -176,9 +174,6 @@ AnimInfo: cover {
     
     lastTime, maxTime: Double
 }
-
-
-main: func {}
 
 
 
