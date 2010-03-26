@@ -27,6 +27,8 @@
  * gcc -Wall -ansi -lGL -lGLU -lglut md5anim.c md5anim.c -o md5model
  */
 
+use math
+
 // Vectors
 Vec2: cover {
     x, y: Float
@@ -37,52 +39,73 @@ Vec3: cover {
 }
 
 // Quaternion (x, y, z, w)
-Quat4: class {
+Quat4: cover {
+    
     x, y, z, w: Float
     
-    init: func (=x, =y, =z, =w) {}
+    init: func@ (=x, =y, =z, =w) {}
     
-    computeW: func {
-        t := 1.0f - (q[X] * q[X]) - (q[Y] * q[Y]) - (q[Z] * q[Z]);
+    computeW: func@ {
+        t := 1 - (x * x) - (y * y) - (z * z);
 
         if (t < 0)
-            q[W] = 0
+            w = 0
         else
-            q[W] = -sqrt(t)
+            w = -sqrt(t)
     }
     
-    normalize: func {
-        /* compute magnitude of the quaternion */
-        float mag = sqrt ((q[X] * q[X]) + (q[Y] * q[Y]) + (q[Z] * q[Z]) + (q[W] * q[W]))
+    normalize: func@ {
+        // compute magnitude of the quaternion
+        mag := sqrt ((x * x) + (y * y) + (z * z) + (w * w))
 
         /* check for bogus length, to protect against divide by zero */
-        if (mag > 0.0f) {
+        if (mag > 0) {
             /* normalize it */
-            float oneOverMag = 1.0f / mag
+            oneOverMag := 1 / mag
 
-            q[X] *= oneOverMag
-            q[Y] *= oneOverMag
-            q[Z] *= oneOverMag
-            q[W] *= oneOverMag
+            x *= oneOverMag
+            y *= oneOverMag
+            z *= oneOverMag
+            w *= oneOverMag
         }
     }
     
-    multQuat: func (b, out: Quat4) {
-        out[W] = (qa[W] * qb[W]) - (qa[X] * qb[X]) - (qa[Y] * qb[Y]) - (qa[Z] * qb[Z])
-        out[X] = (qa[X] * qb[W]) + (qa[W] * qb[X]) + (qa[Y] * qb[Z]) - (qa[Z] * qb[Y])
-        out[Y] = (qa[Y] * qb[W]) + (qa[W] * qb[Y]) + (qa[Z] * qb[X]) - (qa[X] * qb[Z])
-        out[Z] = (qa[Z] * qb[W]) + (qa[W] * qb[Z]) + (qa[X] * qb[Y]) - (qa[Y] * qb[X])
+    multQuat: func (qb: Quat4) -> Quat4 {
+        qa := this
+        out: Quat4
+        out w = (qa w * qb w) - (qa x * qb x) - (qa y * qb y) - (qa z * qb z)
+        out x = (qa x * qb w) + (qa w * qb x) + (qa y * qb z) - (qa z * qb y)
+        out y = (qa y * qb w) + (qa w * qb y) + (qa z * qb x) - (qa x * qb z)
+        out z = (qa z * qb w) + (qa w * qb z) + (qa x * qb y) - (qa y * qb x)
+        out
     }
     
-    multVec (const quat4_t q, const vec3_t v, quat4_t out)
-    {
-        out[W] = - (q[X] * v[X]) - (q[Y] * v[Y]) - (q[Z] * v[Z]);
-        out[X] =   (q[W] * v[X]) + (q[Y] * v[Z]) - (q[Z] * v[Y]);
-        out[Y] =   (q[W] * v[Y]) + (q[Z] * v[X]) - (q[X] * v[Z]);
-        out[Z] =   (q[W] * v[Z]) + (q[X] * v[Y]) - (q[Y] * v[X]);
+    multVec: func (v: Vec3) -> Quat4 {
+        out: Quat4
+        out w = 0 - (x * v x) - (y * v y) - (z * v z)
+        out x =     (w * v x) + (y * v z) - (z * v y)
+        out y =     (w * v y) + (z * v x) - (x * v z)
+        out z =     (w * v z) + (x * v y) - (y * v x)
+        out
     }
     
+    inverse: func -> Quat4 {
+        inv: Quat4
+        inv x = -x; inv y = -y
+        inv z = -z; inv w =  w
+        inv
+    }
     
+    rotatePoint: func (in: Vec3) -> Vec3 {
+        inv := inverse(). normalize()
+        result := multVec(in) multQuat(inv)
+        
+        out: Vec3
+        out x = result x
+        out y = result y
+        out z = result z
+        out
+    }
 }
 
 /* Joint */
@@ -155,7 +178,7 @@ AnimInfo: cover {
 }
 
 
-
+main: func {}
 
 
 
