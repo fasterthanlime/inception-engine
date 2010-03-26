@@ -3,7 +3,7 @@ import MD5Model
 
 main: func {
     
-    MD5Loader
+    MD5Loader new() load("../../../data/models/hophop.md5mesh")
     
 }
 
@@ -15,7 +15,7 @@ MD5Loader: class {
     /// Load an MD5 model from file.
     load: func (filename: String) -> MD5Model* {
         mdl: MD5Model* = gc_malloc(MD5Model size)
-        buff: Char[512]
+        //buff: Char[512]
         version: Int
         currMesh := 0
         i: Int
@@ -24,21 +24,27 @@ MD5Loader: class {
         
         while(fR hasNext()) {
             // Read whole line
-            fR read(buff, 0, sizeof(buff))
+            //fR read(buff, 0, buff length())
+            buff := fR readLine()
+            
+            printf("# %s\n", buff)
 
             if (sscanf(buff, " MD5Version %d", version&) == 1) {
                 if (version != 10) {
-                  // Bad version
-                  fprintf (stderr, "Error: bad model version\n")
-                  fR close()
-                  return null
+                    // Bad version
+                    fprintf (stderr, "Error: bad model version\n")
+                    fR close()
+                    return null
                 }
+                printf("version = %d\n", version)
             } else if (sscanf (buff, " numJoints %d", mdl@ numJoints&) == 1) {
+                printf("numJoints = %d\n", mdl@ numJoints)
                 if (mdl@ numJoints > 0) {
                     // Allocate memory for base skeleton joints
                     mdl@ baseSkel = gc_malloc (mdl@ numJoints * MD5Joint size)
                 }
             } else if (sscanf (buff, " numMeshes %d", mdl@ numMeshes&) == 1) {
+                printf("numMeshes = %d\n", mdl@ numMeshes)
                 if (mdl@ numMeshes > 0) {
                     // Allocate memory for meshes
                     mdl@ meshes = gc_malloc (mdl@ numMeshes * MD5Mesh size)
@@ -49,7 +55,7 @@ MD5Loader: class {
                     joint := mdl@ baseSkel[i]&
 
                     // Read whole line
-                    fR read(buff, 0, sizeof(buff))
+                    fR read(buff, 0, buff length())
 
                     if (sscanf (buff, "%s %d ( %f %f %f ) ( %f %f %f )",
                       joint@ name, joint@ parent&, joint@ pos x&,
@@ -69,14 +75,14 @@ MD5Loader: class {
 
                 while ((buff[0] != '}') && fR hasNext()) {
                     // Read whole line
-                    fR read(buff, 0, sizeof(buff))
+                    fR read(buff, 0, buff length())
 
                     if (strstr (buff, "shader ")) {
                         quote := 0; j := 0
 
                         // Copy the shader name whithout the quote marks 
                         i := 0
-                        while(i < sizeof(buff) && (quote < 2)) {
+                        while(i < buff length() && (quote < 2)) {
                             if (buff[i] == '"')
                                 quote += 1
 
@@ -134,6 +140,8 @@ MD5Loader: class {
                 currMesh += 1
             }
         }
+
+        printf("[%s] Finished loading %s, got %d meshes, %d joints\n", class name, filename, mdl@ numMeshes, mdl@ numJoints)
 
         fR close()
         return mdl
