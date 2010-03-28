@@ -4,14 +4,18 @@ import sdl/[Sdl,Event]
 import glew,glu/Glu
 import Entity,Property,Types,Message,EventMapper
 import gfx/[RenderWindow, Model]
-
+import structs/LinkedList
 
 GLConsole: class extends Model {
 
+	history := LinkedList<String> new()
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	buffer := String new(128)
 	inputHeight := 10
 	caretStart := 0
+	
+	pos := Float2 new(0,0)
+	size := Float2 new(200,100)
 	
 	init: func ~glc (.name) {
 		//super(name)
@@ -25,10 +29,16 @@ GLConsole: class extends Model {
 	
 	toggleShow: func {
 		show = !show
-		if(show)
+		if(show) {
 			send(engine getEntity("event_mapper"),GrabKeyboard new())
-		else
+			send(engine getEntity("event_mapper"),GrabMouse new())
+			SDL showCursor(SDL_ENABLE)
+		}
+		else {
 			send(engine getEntity("event_mapper"),UngrabKeyboard new())
+			send(engine getEntity("event_mapper"),UngrabMouse new())
+			SDL showCursor(SDL_DISABLE)
+		}
 	}
 	
 	handleKey: static func(m: KeyboardMsg) {
@@ -36,9 +46,10 @@ GLConsole: class extends Model {
 			return
 		//printf("handle key ;)")
 		this := m target
-		if(m key == SDLK_BACKQUOTE && m type == SDL_KEYDOWN) {
-			m target as GLConsole toggleShow()
-		}
+		match(m key) {
+			case SDLK_BACKQUOTE => {m target as GLConsole toggleShow(); return}
+			case SDLK_RETURN => {m target as GLConsole command(buffer); m target as GLConsole buffer = String new(128) ; caretStart = 0}
+		} 
 		
 		if(!show)
 			return
@@ -80,23 +91,6 @@ GLConsole: class extends Model {
 		}
 	}
 	
-	bufferDraw: func {
-		glPushMatrix()
-		glColor3ub(255,0,0)
-		glTranslated(0, 5, 0)
-		font render(1, 12, 0.2, 1, buffer)
-        
-        // draw caret
-        if(caretStart > 0) {
-			bbox := font getFontBBox(caretStart)
-            textWidth : Float = (bbox urx / 5)
-            glTranslated(textWidth - 2, 0, 0)
-        }
-        font render(1, 12, 0.2, 1, "|")
-        
-		glPopMatrix()
-	}
-	
 	begin2D: func {
         glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND)
@@ -122,8 +116,6 @@ GLConsole: class extends Model {
 	}
 	
 	background: func {		
-		size := get("size",Float2)
-		
 		glBegin(GL_QUADS)
 			glColor4ub(255, 255, 255,128)
 			glVertex2i(0, 0)
@@ -135,30 +127,158 @@ GLConsole: class extends Model {
 	
 	drawText: func {
 		//printf("rendering text\n")
-		glColor4ub(255, 0, 0, 255)
-		font render(10, 10, 0.2, true, "KALAMAZOOOO")
+		glPushMatrix()
+		glTranslated(0,size y - 2 * inputHeight,0)
 		bufferDraw()
+		glPopMatrix()
 	}
 	
 	render: func {
 		if(!show)
 			return
-		pos := get("position",Float2)
-		
+		pos = get("position",Float2)
+		size = get("size", Float2)
 		
 		begin2D()
 		glTranslated(pos x, pos y,0)
 		background()
+		round(10)
 		glDisable(GL_BLEND)
 		drawText()
 		end2D()	
 	}
 	
-	drawInputField: func {
-		size := get("size",Float2)
+	bufferDraw: func {
 		glPushMatrix()
-		glTranslated(0,size y - inputHeight,0)
-		font render(0,0,0.2, true, buffer)
+		glColor3ub(255,255,255)
+		glTranslated(0, 0, 0)
+		font render(1, inputHeight, 0.2, 1, buffer)
+        
+        // draw caret
+        if(caretStart > 0) {
+			bbox := font getFontBBox(caretStart)
+            textWidth : Float = (bbox urx / 5)
+            glTranslated(textWidth - 2, 0, 0)
+        }
+        font render(1, inputHeight, 0.2, 1, "|")
+        
+        upperpos := pos y
+        posy :=pos y + size y + 5
+        
+         if(caretStart > 0) {
+			bbox := font getFontBBox(caretStart)
+            textWidth : Float = (bbox urx / 5)
+            glTranslated(2 - textWidth, 0, 0)
+        }
+        
+        for(line in history) {
+			
+			posy = posy - inputHeight
+			if(posy < (upperpos + inputHeight*2))
+				break
+				
+			if(posy == posy - inputHeight)
+				break
+			glTranslated(0,-inputHeight,0)
+			font render(1, inputHeight, 0.2, 1, line)
+		}
+        
+		glPopMatrix()
+	}
+	
+	command: func(cm: String) {
+		history add(0,cm)
+		if(cm == "quit") {
+			sendAll(QuitMessage new())
+		}
+	}
+	
+	round: func(size: Float) {
+		glColor4ub(255,255,255,64)
+		glPushMatrix()
+		//drawing the upper left corner
+		angle1 := PI
+		angle2 := 3.0*PI/2.0
+		step := PI/2.0/10.0
+		glBegin(GL_TRIANGLE_FAN)
+		glVertex2f(0,0)
+		while(angle1 <= angle2) {
+			glVertex2f(cos(angle1)*size,sin(angle1)*size)
+			angle1 += step
+		}
+		glVertex2f(cos(angle2)*size,sin(angle2)*size)
+		glEnd()
+		
+		//upper right
+		glTranslated(this size x,0,0)
+		angle1 = 3.0*PI/2.0
+		angle2 = 4.0*PI/2.0
+		glBegin(GL_TRIANGLE_FAN)
+		glVertex2f(0,0)
+		while(angle1 <= angle2) {
+			glVertex2f(cos(angle1)*size,sin(angle1)*size)
+			angle1 += step
+		}
+		glVertex2f(cos(angle2)*size,sin(angle2)*size)
+		glEnd()
+		
+		//lower right
+		glTranslated(0,this size y,0)
+		angle1 = 0.0
+		angle2 = PI/2.0
+		glBegin(GL_TRIANGLE_FAN)
+		glVertex2f(0,0)
+		while(angle1 <= angle2) {
+			glVertex2f(cos(angle1)*size,sin(angle1)*size)
+			angle1 += step
+		}
+		glVertex2f(cos(angle2)*size,sin(angle2)*size)
+		glEnd()
+		
+		//lower left
+		glTranslated(-this size x,0,0)
+		angle1 = PI/2.0
+		angle2 = PI
+		step = angle1/10.0
+		glBegin(GL_TRIANGLE_FAN)
+		glVertex2f(0,0)
+		while(angle1 <= angle2) {
+			glVertex2f(cos(angle1)*size,sin(angle1)*size)
+			angle1 += step
+		}
+		glVertex2f(cos(angle2)*size,sin(angle2)*size)
+		glEnd()
+		
+		glPopMatrix()
+		
+		glPushMatrix()
+		glBegin(GL_QUADS)
+			glVertex2f(0,0)
+			glVertex2f(0 - size,0)
+			glVertex2f(0 - size,0 + this size y)
+			glVertex2f(0,0 + this size y)
+		glEnd()
+		
+		glBegin(GL_QUADS)
+			glVertex2f(0,0 - size)
+			glVertex2f(0 + this size x,0 - size)
+			glVertex2f(0 + this size x,0)
+			glVertex2f(0,0)
+		glEnd()
+		
+		glBegin(GL_QUADS)
+			glVertex2f(0 + this size x,0)
+			glVertex2f(0 + this size x + size,0)
+			glVertex2f(0 + this size x + size,0 + this size y)
+			glVertex2f(0 + this size x,0 + this size y)
+		glEnd()
+		
+		glBegin(GL_QUADS)
+			glVertex2f(0,0 + this size y)
+			glVertex2f(0,0 + this size y + size)
+			glVertex2f(0 + this size x,0 + this size y + size)
+			glVertex2f(0 + this size x,0 + this size y)
+		glEnd()
 		glPopMatrix()
 	}
 }

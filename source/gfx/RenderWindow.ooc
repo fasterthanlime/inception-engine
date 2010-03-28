@@ -136,6 +136,7 @@ RenderWindow: class extends Entity {
 		//listen(QuitMessage, This quit)
 		listen(KeyboardMsg, This onKey)
 		listen(ResizeEvent, This onResize)
+		listen(QuitMessage, func(m: Message) {this := m target; quit()})
 		videoInfo: VideoInfo*
 		
 
