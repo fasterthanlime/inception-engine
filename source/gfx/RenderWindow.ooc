@@ -140,7 +140,7 @@ RenderWindow: class extends Entity {
 	
 	init: func ~rw (=width,=height,=bpp,=fullscreen,=title) {
 		super(title)
-		listen(QuitMessage, This quit)
+		//listen(QuitMessage, This quit)
 		listen(KeyboardMsg, This onKey)
 		listen(ResizeEvent, This onResize)
 		videoInfo: VideoInfo*
