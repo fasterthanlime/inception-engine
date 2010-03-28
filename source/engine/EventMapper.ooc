@@ -20,9 +20,9 @@ EventMapper: class extends Entity {
 		while(SDLEvent poll(event&)) {
 			if(event type == SDL_QUIT) {
 				sendAll(QuitMessage new())
-			} else if(event type == SDL_KEYUP) {
-				printf("keyuuuuuuuuuuuup\n")
-				sendAll(KeyboardMsg new(event key keysym sym))
+			} else if(event type == SDL_KEYUP || event type == SDL_KEYDOWN) {
+				//printf("keyuuuuuuuuuuuup\n")
+				sendAll(KeyboardMsg new(event key keysym sym,event type))
 			
 			} else if(event type == SDL_MOUSEMOTION) {
 				sendAll(MouseMotion new (

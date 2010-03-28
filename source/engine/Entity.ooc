@@ -99,6 +99,7 @@ Entity: class {
         return gp get()
     }
     
+    onAdd: func {}
 }
 
 Receiver: class {

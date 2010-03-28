@@ -22,12 +22,12 @@ Grid: class extends Model {
 		glColor3f(color x,color y,color z)	
 		glBegin(GL_LINES)
 		
-		for(y in yrange x..yrange y) {
+		for(y in yrange x..yrange y + 1 ) {
 			glVertex3f(xrange x, y,0)
 			glVertex3f(xrange y, y,0)
 		}
 		
-		for(x in xrange x..xrange y) {
+		for(x in xrange x..xrange y + 1) {
 			glVertex3f(x, yrange x,0)
 			glVertex3f(x, yrange y,0)
 		}

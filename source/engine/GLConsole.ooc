@@ -9,6 +9,9 @@ import gfx/[RenderWindow, Model]
 GLConsole: class extends Model {
 
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
+	buffer := String new(128)
+	inputHeight := 10
+	
 	init: func ~glc (.name) {
 		//super(name)
 		this name = name
@@ -24,7 +27,7 @@ GLConsole: class extends Model {
 	}
 	
 	handleKey: static func(m: KeyboardMsg) {
-		printf("handle key ;)")
+		//printf("handle key ;)")
 		if(m key == SDLK_BACKQUOTE)
 			m target as GLConsole toggleShow()
 	}
@@ -66,7 +69,7 @@ GLConsole: class extends Model {
 	}
 	
 	drawText: func {
-		printf("rendering text\n")
+		//printf("rendering text\n")
 		glColor4ub(255, 0, 0, 255)
 		font render(10, 10, 0.2, true, "KALAMAZOOOO")
 	}
@@ -83,5 +86,13 @@ GLConsole: class extends Model {
 		glDisable(GL_BLEND)
 		drawText()
 		end2D()	
+	}
+	
+	drawInputField: func {
+		size := get("size",Float2)
+		glPushMatrix()
+		glTranslated(0,size y - inputHeight,0)
+		font render(0,0,0.2, true, buffer)
+		glPopMatrix()
 	}
 }

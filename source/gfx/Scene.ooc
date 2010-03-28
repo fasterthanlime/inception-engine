@@ -2,8 +2,8 @@ use glew,sdl,glu
 import glew
 import glu/Glu
 import sdl/Video
-import engine/[Entity, Update, Engine]
-import gfx/[Model, RenderWindow]
+import engine/[Entity, Update, Engine, Types]
+import gfx/[Model, RenderWindow, Camera]
 import structs/LinkedList
 
 include unistd
@@ -16,9 +16,11 @@ Scene: class extends Entity {
 	init: func ~scene(.name) {
 		super(name)
 		this addUpdate(Update new(This render))
+		set("camera",Camera new("default_cam"))
 	}
 	
 	render: func -> Bool {
+		
 		glClearColor(0,0,0,0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	    //glMatrixMode(GL_MODELVIEW)
@@ -31,9 +33,7 @@ Scene: class extends Entity {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
 		
-	    gluLookAt(40,40,40,
-				  0,0,0,
-				  0,0,1)
+		cam := get("camera",Camera) .look()
 	    
 	    for(model in models) {
 			model render()
@@ -44,5 +44,7 @@ Scene: class extends Entity {
 	    return true
 	}
 	
-	
+	onAdd: func {
+		engine addEntity(get("camera",Camera))
+	}
 }

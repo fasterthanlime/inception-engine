@@ -28,7 +28,8 @@ MouseMotion: class extends Message {
 
 KeyboardMsg: class extends Message {
 	key: Int
-	init: func ~km (=key) {}
+	type : Int //keyup or keydown
+	init: func ~km (=key, =type) {}
 }
 
 

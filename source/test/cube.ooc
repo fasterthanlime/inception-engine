@@ -1,5 +1,5 @@
 import engine/[Engine, Entity, Property, Update,QuitMessage, EventMapper, Message,GLConsole]
-import gfx/[RenderWindow, Cube, Scene,Grid]
+import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
 
 
 main: func {
