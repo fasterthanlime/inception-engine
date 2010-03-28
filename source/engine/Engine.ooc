@@ -9,10 +9,9 @@ Engine: class extends Entity {
     
     init: func ~engine{
 		super("r2l_engine")
-		SDL WM_GrabInput(SDL_GRAB_ON)
+		printf("awdwadawda\n")
 		addEntity(this)
 		listen(KeyboardMsg, This onKey)
-		printf("grabing...\n")
 	}
     
     addEntity: func (entity: Entity) {
@@ -27,6 +26,8 @@ Engine: class extends Entity {
     }
     
     run: func {
+		SDL WM_GrabInput(SDL_GRAB_ON)
+		SDL showCursor(SDL_DISABLE)
         while(true) {
             for(ent in entities) {
                 ent update()

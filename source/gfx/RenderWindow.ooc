@@ -144,6 +144,7 @@ RenderWindow: class extends Entity {
 		listen(KeyboardMsg, This onKey)
 		listen(ResizeEvent, This onResize)
 		videoInfo: VideoInfo*
+		
 
 		/* initialize SDL */
 		if ( SDL init( SDL_INIT_EVERYTHING ) < 0 )
@@ -208,7 +209,6 @@ RenderWindow: class extends Entity {
 		//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
 		//glEnable(GL_COLOR_MATERIAL)
 		title(title)
-
 	}
 	
 	
