@@ -45,3 +45,8 @@ ValueChange: class <T> extends Message {
 
 Command: class extends Message {
 }
+
+QuitMessage: class extends Message {
+	
+}
+

@@ -88,7 +88,11 @@ RenderWindow: class extends Entity {
 		return false
 	}
 		
-	onKey: func
+	onKey: func(m: KeyboardMsg) {
+		if(m key == SDLK_F11 && m type == SDL_KEYUP) {
+			SDL WM_ToggleFullScreen( surface )
+		}
+	}
 	handleKeyPress: func(keysym: Keysym*) -> Bool {
 		match (keysym@ sym )
 		{

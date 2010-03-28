@@ -1,4 +1,4 @@
-import engine/[Engine, Entity, Property, Update,QuitMessage, EventMapper, Message,GLConsole]
+import engine/[Engine, Entity, Property, Update, EventMapper, Message,GLConsole]
 import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
 
 
