@@ -34,6 +34,7 @@ Scene: class extends Entity {
 		glLoadIdentity()
 		
 		cam := get("camera",Camera) .look()
+
 	    
 	    for(model in models) {
 			model render()
