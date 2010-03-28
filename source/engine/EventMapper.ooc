@@ -1,7 +1,7 @@
 use sdl
 import sdl/[Sdl,Event]
 import Message
-import engine/[Entity, QuitMessage, Message]
+import engine/[Entity, Message]
 
 EventMapper: class extends Entity {
 	event: Event
@@ -29,6 +29,8 @@ EventMapper: class extends Entity {
 					event motion x, event motion y,
 					event motion xrel,event motion yrel)
 						)
+			} else if(event type == SDL_VIDEORESIZE) {
+				sendAll(ResizeEvent new(event resize w, event resize h))
 			}
 		}
 	}
