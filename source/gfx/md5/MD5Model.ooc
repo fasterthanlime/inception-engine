@@ -53,10 +53,10 @@ Quat4: cover {
     init: func@ (=x, =y, =z, =w) {}
     
     computeW: func@ {
-        t := 1 - (x * x) - (y * y) - (z * z);
+        t := 1.0 - (x * x) - (y * y) - (z * z)
 
-        if (t < 0)
-            w = 0
+        if (t < 0.0)
+            w = 0.0
         else
             w = -sqrt(t)
     }
@@ -68,9 +68,9 @@ Quat4: cover {
         mag := sqrt ((x * x) + (y * y) + (z * z) + (w * w))
 
         /* check for bogus length, to protect against divide by zero */
-        if (mag > 0) {
+        if (mag > 0.0) {
             /* normalize it */
-            oneOverMag := 1 / mag
+            oneOverMag := 1.0 / mag
 
             out x = x * oneOverMag
             out y = y * oneOverMag
@@ -93,10 +93,10 @@ Quat4: cover {
     
     multVec: func (v: Vec3) -> Quat4 {
         out: Quat4
-        out w = 0 - (x * v x) - (y * v y) - (z * v z)
-        out x =     (w * v x) + (y * v z) - (z * v y)
-        out y =     (w * v y) + (z * v x) - (x * v z)
-        out z =     (w * v z) + (x * v y) - (y * v x)
+        out w = 0.0 - (x * v x) - (y * v y) - (z * v z)
+        out x =       (w * v x) + (y * v z) - (z * v y)
+        out y =       (w * v y) + (z * v x) - (x * v z)
+        out z =       (w * v z) + (x * v y) - (y * v x)
         out
     }
     
@@ -107,10 +107,12 @@ Quat4: cover {
         inv
     }
     
-    rotatePoint: func@ (in: Vec3) -> Vec3 {
+    rotatePoint: func (in: Vec3) -> Vec3 {
         inv := inverse()
         inv = inv normalize()
-        result := multVec(in) multQuat(inv)
+        
+        tmp := multVec(in)
+        result := tmp multQuat(inv)
         
         out: Vec3
         out x = result x
@@ -228,7 +230,8 @@ MD5Model: class extends Model {
                 // Calculate transformed vertex for this weight
                 wv := joint orient rotatePoint(weight pos)
                 
-                //printf("transformed vertex = (%.2f, %.2f, %.2f), jointpos = (%.2f, %.2f, %.2f) weight bias = %.2f\n", wv x, wv y, wv z, joint pos x, joint pos y, joint pos z, weight bias)
+                //printf("transformed vertex = (%.2f, %.2f, %.2f), jointpos = (%.2f, %.2f, %.2f), weightpos = (%.2f, %.2f, %.2f), weight bias = %.2f\n",
+                //   wv x, wv y, wv z, joint pos x, joint pos y, joint pos z, weight pos x, weight pos y, weight pos z, weight bias)
 
                 // The sum of all weight->bias should be 1.0
                 finalVertex x += (joint pos x + wv x) * weight bias
@@ -304,12 +307,12 @@ MD5Model: class extends Model {
 
         glColor3f (1.0, 1.0, 1.0)
 
-        //glEnableClientState (GL_VERTEX_ARRAY)
+        glEnableClientState (GL_VERTEX_ARRAY)
 
         // Draw each mesh of the model
         for (i in 0..numMeshes) {
             prepareMesh(meshes[i], skeleton)
-            //glVertexPointer(3, GL_FLOAT, 0, vertexArray)
+            glVertexPointer(3, GL_FLOAT, 0, vertexArray)
             
             /*
             printf("numVerts = %d, numTris = %d\n", meshes[i] numVerts, meshes[i] numTris)
@@ -324,16 +327,16 @@ MD5Model: class extends Model {
             ";" println()
             */
             
-            //glDrawElements(GL_TRIANGLES, meshes[i] numTris * 3, GL_UNSIGNED_INT, vertexIndices)
+            glDrawElements(GL_TRIANGLES, meshes[i] numTris * 3, GL_UNSIGNED_INT, vertexIndices)
             
-            glBegin(GL_TRIANGLES)
-            for(j in 0..meshes[i] numTris) {
-                glVertex3f(vertexArray[vertexIndices[j*3]], vertexArray[vertexIndices[j*3+1]],vertexArray[vertexIndices[j*3+2]])
-            }
-            glEnd()
+            //glBegin(GL_TRIANGLES)
+            //for(j in 0..meshes[i] numTris) {
+                //glVertex3f(vertexArray[vertexIndices[j*3]], vertexArray[vertexIndices[j*3+1]],vertexArray[vertexIndices[j*3+2]])
+            //}
+            //glEnd()
         }
         
-        //glDisableClientState (GL_VERTEX_ARRAY)
+        glDisableClientState (GL_VERTEX_ARRAY)
         
     }
 
