@@ -1,5 +1,5 @@
 /**
- * md5model.h -- md5mesh model loader + animation
+ * md5mesh model loader + animation
  *
  * Copyright (c) 2005-2007 David HENRY
  * Copyright (c) 2010-2011 Amos Wenger <amoswenger@gmail.com>
@@ -34,13 +34,15 @@ import ../Model
 Vec2: cover {
     x, y: Float
     
-    init: func@ (=x, =y) {}
+    init: func@ ~zero { x = y = 0 }
+    init: func@ ~xy (=x, =y) {}
 }
 
 Vec3: cover {
     x, y, z: Float
     
-    init: func@ (=x, =y, =z) {}
+    init: func@ ~zero { x = y = z = 0 }
+    init: func@ ~xyz (=x, =y, =z) {}
 }
 
 // Quaternion (x, y, z, w)
@@ -59,7 +61,9 @@ Quat4: cover {
             w = -sqrt(t)
     }
     
-    normalize: func {
+    normalize: func -> Quat4 {
+        out: Quat4
+        
         // compute magnitude of the quaternion
         mag := sqrt ((x * x) + (y * y) + (z * z) + (w * w))
 
@@ -68,11 +72,13 @@ Quat4: cover {
             /* normalize it */
             oneOverMag := 1 / mag
 
-            x *= oneOverMag
-            y *= oneOverMag
-            z *= oneOverMag
-            w *= oneOverMag
+            out x = x * oneOverMag
+            out y = y * oneOverMag
+            out z = z * oneOverMag
+            out w = w * oneOverMag
         }
+        
+        out
     }
     
     multQuat: func (qb: Quat4) -> Quat4 {
@@ -102,7 +108,8 @@ Quat4: cover {
     }
     
     rotatePoint: func@ (in: Vec3) -> Vec3 {
-        inv := inverse() .normalize()
+        inv := inverse()
+        inv = inv normalize()
         result := multVec(in) multQuat(inv)
         
         out: Vec3
@@ -175,8 +182,10 @@ MD5Model: class extends Model {
     numJoints, numMeshes: Int
     maxVerts, maxTris: Int
     
-    vertexArray  : Vec3*
+    vertexArray  : GLfloat*
     vertexIndices: GLuint*
+    
+    animated := false
     
     init: func ~md5 (.name) {
         super(name)
@@ -187,20 +196,30 @@ MD5Model: class extends Model {
      * given a skeleton.  Put the vertices in vertex arrays.
      */
     prepareMesh: func (mesh: MD5Mesh, skeleton: MD5Joint*) {
-        i = 0, j = 0, k = 0: Int
-
-        /* Setup vertex indices */
-        while(i < mesh numTris) {
-            vertexIndices[0] = mesh triangles[i] a
-            vertexIndices[1] = mesh triangles[i] b
-            vertexIndices[2] = mesh triangles[i] c
-            i += 1
+        
+        {
+            i := 0
+            /* Setup vertex indices */
+            while(i < mesh numTris) {
+                //printf("---------- triangle #%d / #%d -------- storing to %d, %d, %d\n", i, mesh numTris, i*3, i*3 + 1, i*3 + 2)
+                vertexIndices[i*3    ] = mesh triangles[i] a
+                vertexIndices[i*3 + 1] = mesh triangles[i] b
+                vertexIndices[i*3 + 2] = mesh triangles[i] c
+                //printf("got indices %d, %d, %d\n", mesh triangles[i] a, mesh triangles[i] b, mesh triangles[i] c)
+                i += 1
+            }
         }
 
         // Setup vertices
         for (i in 0..mesh numVerts) {
-            finalVertex := Vec3 new(0, 0, 0)
-
+            vertexArray[i*3    ] = -1
+            vertexArray[i*3 + 1] = -1
+            vertexArray[i*3 + 2] = -1
+            
+            finalVertex := Vec3 new()
+            
+            //printf("---------- vertex #%d / #%d --------\n", i, mesh numVerts)
+            
             // Calculate final vertex to draw with weights
             for (j in 0..mesh vertices[i] count) {
                 weight := mesh weights[mesh vertices[i] start + j]
@@ -208,22 +227,27 @@ MD5Model: class extends Model {
 
                 // Calculate transformed vertex for this weight
                 wv := joint orient rotatePoint(weight pos)
+                
+                //printf("transformed vertex = (%.2f, %.2f, %.2f), jointpos = (%.2f, %.2f, %.2f) weight bias = %.2f\n", wv x, wv y, wv z, joint pos x, joint pos y, joint pos z, weight bias)
 
                 // The sum of all weight->bias should be 1.0
                 finalVertex x += (joint pos x + wv x) * weight bias
                 finalVertex y += (joint pos y + wv y) * weight bias
                 finalVertex z += (joint pos z + wv z) * weight bias
             }
-
-            vertexArray[i] x = finalVertex x
-            vertexArray[i] y = finalVertex y
-            vertexArray[i] z = finalVertex z
+            
+            //printf("final finalVertex = (%.2f, %.2f, %.2f), storing to %d, %d, %d\n", finalVertex x, finalVertex y, finalVertex z, i*3, i*3+1, i*3+2)
+            vertexArray[i*3    ] = finalVertex x
+            vertexArray[i*3 + 1] = finalVertex y
+            vertexArray[i*3 + 2] = finalVertex z
         }
+        
+        //printf("Finished preparing mesh, vertexArray = %.2f, %.2f, %.2f, ...\n", vertexArray[0], vertexArray[1], vertexArray[2])
     }
 
     allocVertexArrays: func {
-        vertexArray   = gc_malloc(Vec3 size * maxVerts)
-        vertexIndices = gc_malloc(sizeof(GLuint) * maxTris * 3)
+        vertexArray   = gc_malloc(sizeof(GLfloat) * maxVerts * 3) // 3 floats per vertex
+        vertexIndices = gc_malloc(sizeof(GLuint)  * maxTris  * 3) // 3 indices per faces
     }
     
     /**
@@ -255,7 +279,62 @@ MD5Model: class extends Model {
     }
     
     render: func {
-        drawSkeleton(baseSkel, numJoints)
+        
+        skeleton : MD5Joint*
+        
+        if (animated) {
+            /*
+            // Calculate current and next frames
+            animate(md5anim, animInfo, currentTime - lastTime);
+
+            // Interpolate skeletons between two frames
+            interpolateSkeletons(md5anim skelFrames[animInfo currFrame],
+			    md5anim skelFrames[animInfo next_frame],
+			    numJoints,
+			    animInfo lastTime * md5anim frameRate,
+			    skeleton);
+            */
+        } else {
+            // No animation, use bind-pose skeleton
+            skeleton = baseSkel
+        }
+        
+        // Draw skeleton
+        drawSkeleton (skeleton, numJoints)
+
+        glColor3f (1.0, 1.0, 1.0)
+
+        //glEnableClientState (GL_VERTEX_ARRAY)
+
+        // Draw each mesh of the model
+        for (i in 0..numMeshes) {
+            prepareMesh(meshes[i], skeleton)
+            //glVertexPointer(3, GL_FLOAT, 0, vertexArray)
+            
+            /*
+            printf("numVerts = %d, numTris = %d\n", meshes[i] numVerts, meshes[i] numTris)
+            for(j in 0..meshes[i] numVerts) {
+                printf("%d = (%.2f, %.2f, %.2f)\n", j, vertexArray[j*3], vertexArray[j*3+1], vertexArray[j*3+2])
+            }
+            ";" println()
+            
+            for(j in 0..meshes[i] numTris ) {
+                printf("%d = (%d, %d, %d)\n"  , j, vertexIndices[j*3], vertexIndices[j*3+1], vertexIndices[j*3+2])
+            }
+            ";" println()
+            */
+            
+            //glDrawElements(GL_TRIANGLES, meshes[i] numTris * 3, GL_UNSIGNED_INT, vertexIndices)
+            
+            glBegin(GL_TRIANGLES)
+            for(j in 0..meshes[i] numTris) {
+                glVertex3f(vertexArray[vertexIndices[j*3]], vertexArray[vertexIndices[j*3+1]],vertexArray[vertexIndices[j*3+2]])
+            }
+            glEnd()
+        }
+        
+        //glDisableClientState (GL_VERTEX_ARRAY)
+        
     }
 
 }
