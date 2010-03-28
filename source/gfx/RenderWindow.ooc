@@ -88,6 +88,7 @@ RenderWindow: class extends Entity {
 		return false
 	}
 		
+	onKey: func
 	handleKeyPress: func(keysym: Keysym*) -> Bool {
 		match (keysym@ sym )
 		{
@@ -130,6 +131,8 @@ RenderWindow: class extends Entity {
 	
 	init: func ~rw (=width,=height,=bpp,=fullscreen,=title) {
 		super(title)
+		listen(QuitMessage, This quit)
+		listen(KeyboardMsg, This onKey)
 		videoInfo: VideoInfo*
 
 		/* initialize SDL */

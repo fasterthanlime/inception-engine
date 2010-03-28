@@ -28,7 +28,7 @@ GLConsole: class extends Model {
 	
 	handleKey: static func(m: KeyboardMsg) {
 		//printf("handle key ;)")
-		if(m key == SDLK_BACKQUOTE)
+		if(m key == SDLK_BACKQUOTE && m type == SDL_KEYDOWN)
 			m target as GLConsole toggleShow()
 	}
 	

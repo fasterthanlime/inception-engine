@@ -7,7 +7,7 @@ main: func {
 	engine := Engine new()
 	
 	win := RenderWindow new(800, 600, 32, false, "render_window")
-	win listen(QuitMessage, RenderWindow quit)
+	
 	//win listen(QuitMessage, |m| win quit())
 	
 	scene := Scene new("scene_1")

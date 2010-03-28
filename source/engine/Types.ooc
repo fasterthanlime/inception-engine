@@ -1,6 +1,8 @@
 import Update,Entity,Message
 import structs/ArrayList
 
+PI := 3.141592653
+
 Float3: class {
 	clients: Entity[]
 	x,y,z: Float
