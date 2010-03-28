@@ -15,7 +15,10 @@ RenderWindow: class extends Entity {
 	surface: Surface*
 	
 	
-	quit: static func {
+	quit: func {
+		if(fullscreen) {
+			SDL WM_ToggleFullScreen( surface )
+		}
 		SDL quit()
 		exit(0)
 	}
@@ -91,25 +94,15 @@ RenderWindow: class extends Entity {
 		this := m target
 		if(m key == SDLK_F11 && m type == SDL_KEYUP) {
 			SDL WM_ToggleFullScreen( surface )
+			fullscreen = !fullscreen
+		} else if (m key == SDLK_q) {
+			quit()
 		}
 	}
 	
 	onResize: static func(m: ResizeEvent) {
 		this := m target
 		resizeWindow(m x, m y)
-	}
-	handleKeyPress: func(keysym: Keysym*) -> Bool {
-		match (keysym@ sym )
-		{
-
-		case SDLK_F11 =>
-			/* F1 key was pressed
-			 * this toggles fullscreen mode
-			 */
-			SDL WM_ToggleFullScreen( surface )
-			return true
-		}
-		return false
 	}
 	
 	

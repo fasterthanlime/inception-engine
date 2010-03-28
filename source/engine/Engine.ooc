@@ -9,7 +9,6 @@ Engine: class extends Entity {
     
     init: func ~engine{
 		super("r2l_engine")
-		printf("awdwadawda\n")
 		addEntity(this)
 		listen(KeyboardMsg, This onKey)
 	}
@@ -37,9 +36,6 @@ Engine: class extends Entity {
     
     onKey: static func(m: KeyboardMsg) {
 		this := m target
-		if(m key == SDLK_q) {
-			exit()
-		}
 	}
     
     exit: func {
