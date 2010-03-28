@@ -43,6 +43,11 @@ ValueChange: class <T> extends Message {
 	}
 }
 
+ResizeEvent: class extends Message {
+	x,y: Int
+	init: func ~winev(=x,=y) {}
+}
+
 Command: class extends Message {
 }
 

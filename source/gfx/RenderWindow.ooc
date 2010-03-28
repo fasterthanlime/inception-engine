@@ -59,7 +59,7 @@ RenderWindow: class extends Entity {
 	}
 	
 
-	
+	/*
 	handleEvent: func( event: Event ) -> Bool {
 		match( event type ) {
 			case SDL_ACTIVEEVENT => {
@@ -70,7 +70,6 @@ RenderWindow: class extends Entity {
 			}
 			   
 			case SDL_VIDEORESIZE => {
-			    /* handle resize event */
 			    surface = SDLVideo setMode( event resize w,event resize h, 32, videoFlags )
 			    if ( !surface )
 				{
@@ -86,12 +85,18 @@ RenderWindow: class extends Entity {
 			case SDL_QUIT => return false
 		}
 		return false
-	}
+	}*/
 		
-	onKey: func(m: KeyboardMsg) {
+	onKey: static func(m: KeyboardMsg) {
+		this := m target
 		if(m key == SDLK_F11 && m type == SDL_KEYUP) {
 			SDL WM_ToggleFullScreen( surface )
 		}
+	}
+	
+	onResize: static func(m: ResizeEvent) {
+		this := m target
+		resizeWindow(m x, m y)
 	}
 	handleKeyPress: func(keysym: Keysym*) -> Bool {
 		match (keysym@ sym )
@@ -137,6 +142,7 @@ RenderWindow: class extends Entity {
 		super(title)
 		//listen(QuitMessage, This quit)
 		listen(KeyboardMsg, This onKey)
+		listen(ResizeEvent, This onResize)
 		videoInfo: VideoInfo*
 
 		/* initialize SDL */
@@ -159,7 +165,7 @@ RenderWindow: class extends Entity {
 		videoFlags  = SDL_OPENGL          /* Enable OpenGL in SDL */
 		videoFlags |= SDL_GL_DOUBLEBUFFER /* Enable double buffering */
 		videoFlags |= SDL_HWPALETTE       /* Store the palette in hardware */
-		//videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
+		videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
 		
 		if(fullscreen) {
 			videoFlags |= SDL_FULLSCREEN
