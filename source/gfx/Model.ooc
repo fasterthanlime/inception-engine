@@ -1,7 +1,7 @@
 use glew
 import glew
-import engine/[Entity, Update]
-import gfx/StaticMesh
+import engine/[Engine,Entity, Update]
+import gfx/[StaticMesh, Scene]
 
 Model: class extends Entity {
 	mesh : StaticMesh
@@ -17,5 +17,9 @@ Model: class extends Entity {
 	}
 	
 	render: abstract func {}
+	
+	onAdd: func {
+		engine scene models add(this)
+	}
 	
 }

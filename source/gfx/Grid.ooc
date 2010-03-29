@@ -13,6 +13,7 @@ Grid: class extends Model {
 	}
 	
 	render: func {
+		glEnable(GL_BLEND)
 		xrange := get("x_range",Float2)
 		yrange := get("y_range",Float2)
 		pos := get("position",Float3)
@@ -33,5 +34,14 @@ Grid: class extends Model {
 		}
 		
 		glEnd()
+		
+		glColor4f(color x, color y, color z, 0.5)
+		glBegin(GL_QUADS)
+		glVertex3f(xrange x, yrange x, 0)
+		glVertex3f(xrange x, yrange y, 0)
+		glVertex3f(xrange y, yrange y, 0)
+		glVertex3f(xrange y, yrange x, 0)
+		glEnd()
+		glDisable(GL_BLEND)
 	}
 }

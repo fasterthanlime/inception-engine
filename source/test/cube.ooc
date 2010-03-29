@@ -1,3 +1,5 @@
+use glew
+import glew
 import engine/[Engine, Entity, Property, Update, EventMapper, Message,GLConsole]
 import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
 
@@ -10,16 +12,16 @@ main: func {
 	
 	//win listen(QuitMessage, |m| win quit())
 	
-	scene := Scene new("scene_1")
+	//engine scene addShader("shader_1","data/shaders/shader1.vert",GL_FRAGMENT_SHADER)
 	console := GLConsole new~glc("console_1")
 	
-	scene models add(Cube new("cube_1"))
-	scene models add(Grid new("grid_1"))
-	scene models add(console)
+	engine addEntity(Cube new("cube_1"))
+	engine addEntity(Grid new("grid_1"))
+	engine addEntity(console)
+	
 	
 	engine addEntity(EventMapper new())
-	engine addEntity(scene)
 	engine addEntity(win)
-	engine addEntity(console)
+
 	engine run()
 }

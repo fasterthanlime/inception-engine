@@ -1,16 +1,22 @@
-use sdl
+use sdl,glew
+import glew
 import sdl/[Sdl, Event]
 import structs/HashMap
 import Entity, Update, Message
+import io/File
+import gfx/Scene
 
 Engine: class extends Entity {
     
     entities := HashMap<String, Entity> new()
+    scene := Scene new("default_scene")
     
     init: func ~engine{
 		super("r2l_engine")
 		addEntity(this)
 		listen(KeyboardMsg, This onKey)
+		addEntity(scene)
+		set("scene", scene)
 	}
     
     addEntity: func (entity: Entity) {
@@ -26,8 +32,7 @@ Engine: class extends Entity {
     
     run: func {
         // Disabled for debugging
-		SDL WM_GrabInput(SDL_GRAB_ON)
-		SDL showCursor(SDL_DISABLE)
+		
         while(true) {
             for(ent in entities) {
                 ent update()
