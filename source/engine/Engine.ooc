@@ -25,6 +25,7 @@ Engine: class extends Entity {
     }
     
     run: func {
+        // Disabled for debugging
 		SDL WM_GrabInput(SDL_GRAB_ON)
 		SDL showCursor(SDL_DISABLE)
         while(true) {

@@ -25,9 +25,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use math, glew
-import glew
+use math, glew, devil
+import glew, devil
 
+import structs/ArrayList
 import ../Model
 
 // Vectors
@@ -137,15 +138,15 @@ MD5Joint: class {
 
 /* Vertex */
 MD5Vertex: cover {
-    st: Vec2
+    st: Vec2 // UV coordinates
 
-    start: Int /* start weight */
-    count: Int /* weight count */
+    start: Int // start weight
+    count: Int // weight count
 }
 
 /* Triangle */
 MD5Triangle: cover {
-    a, b, c: Int
+    a, b, c: Int // indices of the three vertices composing the face
 }
 
 /* Weight */
@@ -170,11 +171,16 @@ MD5Mesh: class {
     numVerts, numTris, numWeights: Int
 
     shader: String
+    textureID: GLuint = -1
     
     init: func {
         shader = String new(256)
     }
 }
+
+// Init DevIL and ILUT (utility toolkit for OpenGL)
+ilInit()
+ilutInit()
 
 /* MD5 model structure */
 MD5Model: class extends Model {
@@ -184,8 +190,9 @@ MD5Model: class extends Model {
     numJoints, numMeshes: Int
     maxVerts, maxTris: Int
     
-    vertexArray  : GLfloat*
-    vertexIndices: GLuint*
+    vertexArray   : GLfloat*
+    texCoordArray : GLfloat*
+    vertexIndices : GLuint*
     
     animated := false
     
@@ -198,6 +205,12 @@ MD5Model: class extends Model {
      * given a skeleton.  Put the vertices in vertex arrays.
      */
     prepareMesh: func (mesh: MD5Mesh, skeleton: MD5Joint*) {
+        
+        if(mesh textureID == -1) {
+            printf("Loading texture '%s'\n", mesh shader)
+            mesh textureID = ilutGLLoadImage(mesh shader)
+            printf("Finished loading '%s', got ID %d!\n", mesh shader, mesh textureID)
+        }
         
         {
             i := 0
@@ -214,17 +227,17 @@ MD5Model: class extends Model {
 
         // Setup vertices
         for (i in 0..mesh numVerts) {
-            vertexArray[i*3    ] = -1
-            vertexArray[i*3 + 1] = -1
-            vertexArray[i*3 + 2] = -1
             
             finalVertex := Vec3 new()
             
             //printf("---------- vertex #%d / #%d --------\n", i, mesh numVerts)
             
+            weightStart := mesh vertices[i] start
+            weightCount := mesh vertices[i] count
+            
             // Calculate final vertex to draw with weights
-            for (j in 0..mesh vertices[i] count) {
-                weight := mesh weights[mesh vertices[i] start + j]
+            for (j in 0..weightCount) {
+                weight := mesh weights[weightStart + j]
                 joint  := skeleton[weight joint]
 
                 // Calculate transformed vertex for this weight
@@ -243,6 +256,9 @@ MD5Model: class extends Model {
             vertexArray[i*3    ] = finalVertex x
             vertexArray[i*3 + 1] = finalVertex y
             vertexArray[i*3 + 2] = finalVertex z
+            
+            texCoordArray[i*2    ] = mesh vertices[i] st x
+            texCoordArray[i*2 + 1] = mesh vertices[i] st y
         }
         
         //printf("Finished preparing mesh, vertexArray = %.2f, %.2f, %.2f, ...\n", vertexArray[0], vertexArray[1], vertexArray[2])
@@ -250,6 +266,7 @@ MD5Model: class extends Model {
 
     allocVertexArrays: func {
         vertexArray   = gc_malloc(sizeof(GLfloat) * maxVerts * 3) // 3 floats per vertex
+        texCoordArray = gc_malloc(sizeof(GLfloat) * maxVerts * 2) // 2 floats per vertex
         vertexIndices = gc_malloc(sizeof(GLuint)  * maxTris  * 3) // 3 indices per faces
     }
     
@@ -303,40 +320,30 @@ MD5Model: class extends Model {
         }
         
         // Draw skeleton
-        drawSkeleton (skeleton, numJoints)
+        drawSkeleton(skeleton, numJoints)
 
-        glColor3f (1.0, 1.0, 1.0)
+        glColor3f(1.0, 1.0, 1.0)
+        glEnable(GL_TEXTURE_2D)
+        glEnable(GL_CULL_FACE)
+        glFrontFace(GL_CW)
 
-        glEnableClientState (GL_VERTEX_ARRAY)
+        glEnableClientState(GL_VERTEX_ARRAY)
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
 
         // Draw each mesh of the model
         for (i in 0..numMeshes) {
             prepareMesh(meshes[i], skeleton)
-            glVertexPointer(3, GL_FLOAT, 0, vertexArray)
-            
-            /*
-            printf("numVerts = %d, numTris = %d\n", meshes[i] numVerts, meshes[i] numTris)
-            for(j in 0..meshes[i] numVerts) {
-                printf("%d = (%.2f, %.2f, %.2f)\n", j, vertexArray[j*3], vertexArray[j*3+1], vertexArray[j*3+2])
-            }
-            ";" println()
-            
-            for(j in 0..meshes[i] numTris ) {
-                printf("%d = (%d, %d, %d)\n"  , j, vertexIndices[j*3], vertexIndices[j*3+1], vertexIndices[j*3+2])
-            }
-            ";" println()
-            */
+            glBindTexture(GL_TEXTURE_2D, meshes[i] textureID)
+            glVertexPointer  (3, GL_FLOAT, 0, vertexArray)
+            glTexCoordPointer(2, GL_FLOAT, 0, texCoordArray)
             
             glDrawElements(GL_TRIANGLES, meshes[i] numTris * 3, GL_UNSIGNED_INT, vertexIndices)
-            
-            //glBegin(GL_TRIANGLES)
-            //for(j in 0..meshes[i] numTris) {
-                //glVertex3f(vertexArray[vertexIndices[j*3]], vertexArray[vertexIndices[j*3+1]],vertexArray[vertexIndices[j*3+2]])
-            //}
-            //glEnd()
         }
         
-        glDisableClientState (GL_VERTEX_ARRAY)
+        glDisableClientState(GL_VERTEX_ARRAY)
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY)
+        glDisable(GL_TEXTURE_2D)
+        glDisable(GL_CULL_FACE)
         
     }
 

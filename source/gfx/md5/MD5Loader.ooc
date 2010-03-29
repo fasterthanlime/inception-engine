@@ -46,7 +46,7 @@ MD5Loader: class {
             if (sscanf(buff, " MD5Version %d", version&) == 1) {
                 if (version != 10) {
                     // Bad version
-                    fprintf (stderr, "Error: bad model version\n")
+                    fprintf (stderr, "%s Error: bad model version %d, we only support 10\n" format(class name, version))
                     fR close()
                     return null
                 }
@@ -127,7 +127,6 @@ MD5Loader: class {
                             mdl maxTris = mesh numTris
                     } else if (sscanf (buff, " numweights %d", mesh numWeights&) == 1) {
                         if (mesh numWeights > 0) {
-                            printf("Allocating memory for %d weights!\n", mesh numWeights)
                             // Allocate memory for vertex weights 
                             mesh weights = gc_malloc(MD5Weight instanceSize * mesh numWeights)
                         }

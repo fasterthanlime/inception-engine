@@ -55,14 +55,15 @@ Camera: class extends Entity {
 	look: func {
 		pos := get("pos",Float3)
 		target := get("target",Float3)
-		speed := get("speed",Float)	
-		
+		speed := get("speed",Float)
+        
 		if(kforward) { pos = pos + forward * speed }
 		if(kbackward) { pos = pos - forward * speed }
 		if(kstrafe_left) { pos = pos + left * speed }
 		if(kstrafe_right) { pos = pos - left * speed }
+        
 		target = pos + forward
-		
+        
 		set("pos",pos)
 		set("target",target)
 		
@@ -81,16 +82,16 @@ Camera: class extends Entity {
 			phi = 89
 		else if(phi < -89)
 			phi = -89
-			
-		rTemp := cos(phi*PI/180.0)
-		forward z = sin(phi * PI / 180.0)
-		forward x = rTemp * cos(theta * PI / 180.0)
-		forward y = rTemp * sin(theta * PI / 180.0)
-		
-		left = up ^ forward
-		left normalize()
-		
-		target = pos + forward
+        
+        rTemp := cos(phi*PI/180.0)
+        forward z = sin(phi * PI / 180.0)
+        forward x = rTemp * cos(theta * PI / 180.0)
+        forward y = rTemp * sin(theta * PI / 180.0)
+        
+        left = up ^ forward
+        left normalize()
+    
+        target = pos + forward
 		
 		set("target",target)
 	}

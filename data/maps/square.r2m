@@ -1,0 +1,33 @@
+R2MVersion 1
+
+models {
+    cube cube.md5mesh
+}
+
+things {
+    cube ( -4 -4 0 )
+    cube ( -2 -4 0 )
+    cube (  0 -4 0 )
+    cube (  2 -4 0 )
+    cube (  4 -4 0 )
+    
+    cube (  4 -4 0 )
+    cube (  4 -2 0 )
+    cube (  4  0 0 )
+    cube (  4  2 0 )
+    cube (  4  4 0 )
+    
+    cube (  4  4 0 )
+    cube (  2  4 0 )
+    cube (  0  4 0 )
+    cube ( -2  4 0 )
+    cube ( -4  4 0 )
+    
+    cube ( -4  4 0 )
+    cube ( -4  2 0 )
+    cube ( -4  0 0 )
+    cube ( -4 -2 0 )
+    cube ( -4 -4 0 )
+    
+    cube ( 0  0  0 )
+}
