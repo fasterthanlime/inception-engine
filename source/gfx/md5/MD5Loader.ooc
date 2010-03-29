@@ -134,7 +134,7 @@ MD5Loader: class {
                        fdata[0]&, fdata[1]&, idata[0]&, idata[1]&) == 5) {
                         // Copy vertex data 
                         mesh vertices[vertIndex] st x = fdata[0]
-                        mesh vertices[vertIndex] st y = fdata[1]
+                        mesh vertices[vertIndex] st y = 1 - fdata[1]
                         mesh vertices[vertIndex] start = idata[0]
                         mesh vertices[vertIndex] count = idata[1]
                     } else if (sscanf (buff, " tri %d %d %d %d", triIndex&,
