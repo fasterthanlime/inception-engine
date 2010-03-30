@@ -1,4 +1,4 @@
-OOC_FLAGS=-driver=sequence -vv -debugloop -noclean -gcc -g +-O0 -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
+OOC_FLAGS=-driver=sequence -noclean -gcc -g +-O0 -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
 OOC?=rock
 
 %:
