@@ -2,7 +2,7 @@ use sdl,glew
 import glew
 import sdl/[Sdl, Event]
 import structs/HashMap
-import Entity, Update, Message, Types
+import Entity, Update, Message, Types, GLConsole
 import io/File
 import gfx/Scene
 
@@ -29,6 +29,7 @@ Engine: class extends Entity {
 		listen(KeyboardMsg, This onKey)
 		addEntity(scene)
 		set("scene", scene)
+		addEntity(GLConsole new("console"))
 	}
     
     addEntity: func (entity: Entity) {
@@ -41,6 +42,14 @@ Engine: class extends Entity {
     getEntity: func (name: String) -> Entity {
         return entities get(name)
     }
+    
+    getEntity: func ~over <T> (name: String,T: Class) -> T {
+		ent := entities get(name)
+		if(!ent class inheritsFrom(T)) {
+            Exception new(This, "Attempting to get (%s, %s), but the entity has incompatible type %s" format(name, T name, ent class name)) throw()
+        }
+        return ent
+	}
     
     run: func {
         // Disabled for debugging

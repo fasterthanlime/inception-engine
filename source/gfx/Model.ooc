@@ -1,6 +1,6 @@
 use glew
 import glew
-import engine/[Engine,Entity, Update, Types]
+import engine/[Engine,Entity, Update, Types, GLConsole]
 import gfx/[StaticMesh, Scene]
 
 Model: class extends Entity {
@@ -25,6 +25,7 @@ Model: class extends Entity {
 		glTranslated(pos x, pos y, pos z)
 		//printf("[%s]: glTranslated(%.1f, %.1f, %.1f)\n",m name,m pos x, m pos y, m pos z)
 		//printf("[%s]: Rendering...\n",name)
+		
 		render()
 		glPopMatrix()
 	}

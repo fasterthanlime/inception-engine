@@ -2,23 +2,36 @@ use glew,glu,sdl,ftgl
 import ftgl
 import sdl/[Sdl,Event]
 import glew,glu/Glu
-import Entity,Property,Types,Message,EventMapper
+import Engine,Entity,Property,Types,Message,EventMapper
 import gfx/[RenderWindow, Model]
-import structs/LinkedList
+import structs/[LinkedList, HashMap]
 import text/StringTokenizer
 
 GLConsole: class extends Model {
 
 	lines := LinkedList<String> new()  //stores all lines for displaying(you don't want messages in the history, do you)
 	history := LinkedList<String> new() //only entered commands here
+	commands := HashMap<String,String> new()
+	//commands := LinkedList<String> new()
 	
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	buffer := String new(128)
 	inputHeight := 10
 	caretStart := 0
 	
+	focus := true
+	alpha := 128
+	
 	pos := Float2 new(0,0)
 	size := Float2 new(200,100)
+	
+	browsingHistory := false
+	iterator: LinkedListIterator<String>
+	
+	COMMAND := 0
+	
+	
+	
 	
 	init: func ~glc (.name) {
 		super(name)
@@ -26,38 +39,161 @@ GLConsole: class extends Model {
 		set("size",Float2 new(400,200))
 		listen(KeyboardMsg,This handleKey)
 		show = false
+		initCommands()
 	}
 	
+	initCommands: func {
+		commands add("quit","quits r2l")
+		commands add("help","help [command]")
+		commands add("show", "show [entity] [...]")
+	}
+	
+	show: func ~entity(ename: String) {
+		if(ename == null) {
+			cprint("usage: %s" format(commands get("show")))
+			return
+		}
+		ent := engine getEntity(ename)
+		if(ent != null) {
+			cprint("%s:" format(ename))
+			for(prop in ent props) {
+				cprint("- %s" format(prop name))
+			}
+		} else {
+			cprint("sorry, no such entity [%s]" format(ename))
+		}
+	}
+	
+	show: func ~entprop(ename,pname: String) {
+		if(pname == null) {
+			show(ename)
+			return
+		}
+		ent := engine getEntity(ename)
+		if(ent != null) {
+			cprint("%s:" format(ename))
+			for(prop in ent props) {
+				cprint("- %s" format(prop name))
+			}
+		} else {
+			cprint("sorry, no such entity [%s]" format(ename))
+		}
+	}
+	
+	quit: func {
+		sendAll(QuitMessage new())
+	}
+	
+	help: func(cm: String) {
+		if(cm == null) {
+			cprint("usage: help [command]")
+		} else {
+			hlpStr := commands get(cm)
+			if(hlpStr != null) {
+				cprint("%s: %s" format(cm,hlpStr))
+			} else {
+				cprint("unknown command: %s" format(cm))
+			}
+		}
+	}
 	
 	toggleShow: func {
 		show = !show
 		if(show) {
-			send(engine getEntity("event_mapper"),GrabKeyboard new())
-			send(engine getEntity("event_mapper"),GrabMouse new())
-			SDL showCursor(SDL_ENABLE)
+			block()
+			
+			focus = true
 		}
 		else {
-			send(engine getEntity("event_mapper"),UngrabKeyboard new())
-			send(engine getEntity("event_mapper"),UngrabMouse new())
-			SDL showCursor(SDL_DISABLE)
+			unblock()
+			
+			focus = false
 		}
 	}
 	
+	toggleFocus: func {
+		focus = !focus
+		if(focus) {
+			alpha = 128
+			block()
+		} else {
+			alpha = 64
+			unblock()
+		}
+	}
+	
+	block: func {
+		send(engine getEntity("event_mapper"),GrabKeyboard new())
+		send(engine getEntity("event_mapper"),GrabMouse new())
+		SDL showCursor(SDL_ENABLE)
+	}
+	
+	unblock: func {
+		send(engine getEntity("event_mapper"),UngrabKeyboard new())
+		send(engine getEntity("event_mapper"),UngrabMouse new())
+		SDL showCursor(SDL_DISABLE)
+	}
+	
 	handleKey: static func(m: KeyboardMsg) {
+		this := m target
+		state := SDL getModState()
+		
 		if(m type != SDL_KEYDOWN)
 			return
 		
-		this := m target
+		if(m key == SDLK_BACKQUOTE && !(state & KMOD_LCTRL)) {
+			toggleShow()
+			browsingHistory = false
+			return
+		} else if(m key == SDLK_BACKQUOTE) {
+			toggleFocus()
+		}
+		
+		if(!show || !focus)
+			return
+		
 		match(m key) {
-			case SDLK_BACKQUOTE => {m target as GLConsole toggleShow(); return}
-			case SDLK_RETURN => {m target as GLConsole command(buffer); m target as GLConsole buffer = String new(128) ; caretStart = 0}
+			case SDLK_RETURN => {
+				command(buffer)
+				buffer = String new(128)
+				caretStart = 0
+				browsingHistory = false
+			}
+			
+			case SDLK_UP => {
+				if(!browsingHistory) {
+					iterator = history iterator()
+					browsingHistory = true
+				}
+				
+				if(iterator hasNext()) {
+					setBuffer(iterator next() clone())
+				}
+			}
+			
+			case SDLK_DOWN => {
+				if(!browsingHistory) {
+					iterator = history iterator()
+					browsingHistory = true
+				}
+				
+				if(iterator hasPrev()) {
+					setBuffer(iterator prev() clone())
+				} else {
+					buffer = String new(128)
+					browsingHistory = false
+				}
+			}
+			
+			case SDLK_TAB => {
+				completion(buffer)
+			}
 		} 
 		
-		if(!show)
-			return
+		
 			
 		ch := m key as Char
-		state := SDL getModState()
+		
 		// haha c'est tout moche.
 		if((ch >= SDLK_SPACE && ch <= SDLK_z && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
 			if(state & KMOD_SHIFT) {
@@ -93,6 +229,11 @@ GLConsole: class extends Model {
 		}
 	}
 	
+	setBuffer: func(text: String) {
+		buffer = text clone()
+		caretStart = buffer length()
+	}
+	
 	begin2D: func {
         glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND)
@@ -107,6 +248,32 @@ GLConsole: class extends Model {
         glLoadIdentity();
 	}
 	
+	completion: func(begin: String) {
+		suggs := LinkedList<String> new()
+		for(key in commands getKeys()) {
+			if(key startsWith(buffer)) {
+				suggs add(key)
+			}
+		}
+		if(suggs size > 1) {
+			cprint("%s -> " format(buffer))
+			for(sugg in suggs) {
+				cprint("-%s" format(sugg))
+			}
+		} else if(suggs size == 1) {
+			setBuffer(suggs[0])
+		} else {
+			cprint("Sorry, nothing matches '%s'" format(begin))
+		}
+			
+	}
+	
+	cprint: func(line: String) {
+		lines add(0,line)
+		if(lines size > 100)
+			lines removeLast()
+	}
+	
 	end2D: func {
 		glMatrixMode(GL_PROJECTION);
         glPopMatrix();
@@ -119,7 +286,7 @@ GLConsole: class extends Model {
 	
 	background: func {		
 		glBegin(GL_QUADS)
-			glColor4ub(255, 255, 255,128)
+			glColor4ub(255, 255, 255,alpha)
 			glVertex2i(0, 0)
 			glVertex2i(size x, 0)
 			glVertex2i(size x,size y)
@@ -193,11 +360,17 @@ GLConsole: class extends Model {
 		
 		while(tokenizer hasNext()) {
 			token := tokenizer nextToken()
-			
-			if(token == "quit")
-				sendAll(QuitMessage new())
-			else
-				lines add(0,"unknow command: " + token)
+			if(token == "quit") {
+				quit()
+			} else if(token == "help"){
+				arg1 := tokenizer nextToken()
+				help(arg1)
+			} else if(token == "show") {
+				arg1 := tokenizer nextToken()
+				show(arg1)
+			} else {
+				cprint("unknown command: " + token)
+			}
 			
 			/*
 			match(token) {
@@ -208,7 +381,7 @@ GLConsole: class extends Model {
 	}
 	
 	round: func(size: Float) {
-		glColor4ub(255,255,255,64)
+		glColor4ub(255,255,255,alpha)
 		glPushMatrix()
 		//drawing the upper left corner
 		angle1 := PI

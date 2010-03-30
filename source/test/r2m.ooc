@@ -23,8 +23,6 @@ main: func (argc: Int, argv: String*) {
 	//engine addSpawnable("m_cube",Cube new)
 	//engine spawn("m_cube","cube_2",Float3 new(0,0,0))
 	
-    engine addEntity(GLConsole new("console"))
-	
     path := argc >= 2 ? argv[1] : "data/maps/square.r2m"
    // engine addEntity(R2MLoader new() load(path))
 	engine addEntity(Grid new("grid_1"))
