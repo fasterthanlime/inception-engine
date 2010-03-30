@@ -2,14 +2,14 @@ use sdl,glew
 import glew
 import sdl/[Sdl, Event]
 import structs/HashMap
-import Entity, Update, Message
+import Entity, Update, Message, Types
 import io/File
 import gfx/Scene
 
 Engine: class extends Entity {
     
     entities := HashMap<String, Entity> new()
-    spawnables := HashMap<String, Func(String) -> Entity> new()
+   // spawnables := HashMap<String, EntityClass> new()
 	
 	/*
     spawn("machin")
@@ -62,17 +62,22 @@ Engine: class extends Entity {
 		exit(0)
 	}
 	
-	addSpawnable: func(name: String, f:Func(String) -> Entity) {
-		spawnables put(name,f)
+	/*
+	addSpawnable: func(name: String, ent: Entity) {
+		spawnables put(name,ent class)
 	}
 	
 	spawn: func(className,name: String,pos: Float3) -> Bool {
-		f := spawnables get(className)
-		if(f == null)
+		ent := spawnables get(className)
+		if(ent == null)
 			return false
 			
-		addEntity(f(name))
+		spawned := ent new(name)
+		//spawned setPos(pos)
+		
+		addEntity(spawned)
 		
 		return true
 	}
+	*/
 }

@@ -42,7 +42,6 @@ Float3: class {
 		this x = f x
 		this y = f y
 		this z = f z
-		printf("sset(%.1f,%.1f,%.1f)\n",x,y,z)
 	}
 	
 	normalize: func {

@@ -21,7 +21,7 @@ main: func (argc: Int, argv: String*) {
 	//-------------------
 	
 	//engine addSpawnable("m_cube",Cube new)
-	engine spawn("m_cube","cube_2",Float3 new(0,0,0))
+	//engine spawn("m_cube","cube_2",Float3 new(0,0,0))
 	
     engine addEntity(GLConsole new("console"))
 	

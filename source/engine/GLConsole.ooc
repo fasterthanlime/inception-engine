@@ -5,10 +5,13 @@ import glew,glu/Glu
 import Entity,Property,Types,Message,EventMapper
 import gfx/[RenderWindow, Model]
 import structs/LinkedList
+import text/StringTokenizer
 
 GLConsole: class extends Model {
 
-	history := LinkedList<String> new()
+	lines := LinkedList<String> new()  //stores all lines for displaying(you don't want messages in the history, do you)
+	history := LinkedList<String> new() //only entered commands here
+	
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	buffer := String new(128)
 	inputHeight := 10
@@ -18,14 +21,13 @@ GLConsole: class extends Model {
 	size := Float2 new(200,100)
 	
 	init: func ~glc (.name) {
-		//super(name)
-		this name = name
+		super(name)
 		set("position",Float2 new(50,50))
 		set("size",Float2 new(400,200))
 		listen(KeyboardMsg,This handleKey)
+		show = false
 	}
 	
-	show := false
 	
 	toggleShow: func {
 		show = !show
@@ -44,7 +46,7 @@ GLConsole: class extends Model {
 	handleKey: static func(m: KeyboardMsg) {
 		if(m type != SDL_KEYDOWN)
 			return
-		//printf("handle key ;)")
+		
 		this := m target
 		match(m key) {
 			case SDLK_BACKQUOTE => {m target as GLConsole toggleShow(); return}
@@ -134,8 +136,6 @@ GLConsole: class extends Model {
 	}
 	
 	render: func {
-		if(!show)
-			return
 		pos = get("position",Float2)
 		size = get("size", Float2)
 		
@@ -171,7 +171,7 @@ GLConsole: class extends Model {
             glTranslated(2 - textWidth, 0, 0)
         }
         
-        for(line in history) {
+        for(line in lines) {
 			
 			posy = posy - inputHeight
 			if(posy < (upperpos + inputHeight*2))
@@ -188,8 +188,22 @@ GLConsole: class extends Model {
 	
 	command: func(cm: String) {
 		history add(0,cm)
-		if(cm == "quit") {
-			sendAll(QuitMessage new())
+		lines add(0,cm)
+		tokenizer := StringTokenizer new(cm," ")
+		
+		while(tokenizer hasNext()) {
+			token := tokenizer nextToken()
+			
+			if(token == "quit")
+				sendAll(QuitMessage new())
+			else
+				lines add(0,"unknow command: " + token)
+			
+			/*
+			match(token) {
+				case "quit" => {sendAll(QuitMessage new())}
+			}
+			*/
 		}
 	}
 	

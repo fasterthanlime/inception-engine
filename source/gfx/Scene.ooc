@@ -39,9 +39,9 @@ Scene: class extends Entity {
 		
 		cam := get("camera",Camera) .look()
 
-	    printf("==================== render %ld ===================\n",round)
+	    //printf("==================== render %ld ===================\n",round)
 	    for(model in models) {
-			model update()
+			model _render()
 		}
 	    
 	    SDLVideo glSwapBuffers()
