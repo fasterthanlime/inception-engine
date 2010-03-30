@@ -9,6 +9,15 @@ import gfx/Scene
 Engine: class extends Entity {
     
     entities := HashMap<String, Entity> new()
+    spawnables := HashMap<String, Func(String) -> Entity> new()
+	
+	/*
+    spawn("machin")
+    f := map get("machin")
+    addEntity(f("abeuh"))
+    */
+    
+    
     scene := Scene new("default_scene")
     time1: UInt32 = 0
     time2: UInt32 = 0
@@ -30,7 +39,7 @@ Engine: class extends Entity {
     }
     
     getEntity: func (name: String) -> Entity {
-        entities get(name)
+        return entities get(name)
     }
     
     run: func {
@@ -51,5 +60,19 @@ Engine: class extends Entity {
     
     exit: func {
 		exit(0)
+	}
+	
+	addSpawnable: func(name: String, f:Func(String) -> Entity) {
+		spawnables put(name,f)
+	}
+	
+	spawn: func(className,name: String,pos: Float3) -> Bool {
+		f := spawnables get(className)
+		if(f == null)
+			return false
+			
+		addEntity(f(name))
+		
+		return true
 	}
 }

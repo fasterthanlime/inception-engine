@@ -6,6 +6,7 @@ Body: class extends Entity {
 	acc := Float3 new(0,0,0) //in m/s/s
 	rot := Float3 new(0,0,0) //in degrees
 	mass := 1.0   //in kg
+	fixed := false //does the body react to forces?
 	
 	init: func ~body(.name) {
 		super(name)
@@ -20,6 +21,8 @@ Body: class extends Entity {
 	}
 	
 	evolve: func(dt: Float) { //in seconds
+		if(fixed)
+			return
 		vel x += acc x * dt
 		vel y += acc y * dt
 		vel z += acc z * dt
@@ -36,5 +39,9 @@ Body: class extends Entity {
 		acc x += force x / mass
 		acc y += force y / mass
 		acc z += force z / mass
+	}
+	
+	setPos: func(x,y,z: Float) {
+		pos set(x,y,z)
 	}
 }

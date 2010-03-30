@@ -32,6 +32,7 @@ PhysicsEngine: class extends Entity {
 	
 	bind: func(m: Model, b: Body) {
 		bodies add(b)
+		b pos sset(m pos)
 		b pos bind(m pos)
 		b rot bind(m rot)
 	}

@@ -16,9 +16,12 @@ main: func (argc: Int, argv: String*) {
 	physx := PhysicsEngine new()
 	cube := Cube new("cube_1") .setPos(0,0,10)
 	
-	//physx bind(cube,Body new("cube_1_body"))
+	physx bind(cube,Body new("cube_1_body"))
 	engine addEntity(cube)
 	//-------------------
+	
+	//engine addSpawnable("m_cube",Cube new)
+	engine spawn("m_cube","cube_2",Float3 new(0,0,0))
 	
     engine addEntity(GLConsole new("console"))
 	
