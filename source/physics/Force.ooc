@@ -13,7 +13,7 @@ Force: class {
 
 Gravity: class extends Force {
 	acc := 0.0
-	init: func ~gravity (acc: Float) {
+	init: func ~gravity (=acc) {
 	}
 	
 	init: func ~gravempty {
