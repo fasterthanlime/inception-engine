@@ -10,6 +10,9 @@ Engine: class extends Entity {
     
     entities := HashMap<String, Entity> new()
     scene := Scene new("default_scene")
+    time1: UInt32 = 0
+    time2: UInt32 = 0
+	dt: UInt32 = 0
     
     init: func ~engine{
 		super("r2l_engine")
@@ -32,11 +35,13 @@ Engine: class extends Entity {
     
     run: func {
         // Disabled for debugging
-		
         while(true) {
+			time1 = time2
             for(ent in entities) {
                 ent update()
             }
+            time2 = SDL getTicks()
+            dt = time2 - time1
         }
     }
     

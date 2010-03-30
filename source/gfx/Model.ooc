@@ -10,17 +10,21 @@ Model: class extends Entity {
 	
 	init: func ~model (.name) {
 		super(name)
-		addUpdate(Update new(func (m : Model) -> Bool {
-			glPushMatrix()
-			glTranslated(m pos x, m pos y, m pos z)
-			printf("[%s]: glTranslated(%.1f, %.1f, %.1f)\n",m name,m pos x, m pos y, m pos z)
-			m render()
-			glPopMatrix()
-			true
-		}))
 	}
 	
-	render: abstract func {}
+	setPos: func(x,y,z: Float) {
+		pos set(x,y,z)
+	}
+	
+	update: func {
+		glPushMatrix()
+		glTranslated(pos x, pos y, pos z)
+		//printf("[%s]: glTranslated(%.1f, %.1f, %.1f)\n",m name,m pos x, m pos y, m pos z)
+		render()
+		glPopMatrix()
+	}
+	
+	render: abstract func{}
 	
 	onAdd: func {
 		engine scene models add(this)

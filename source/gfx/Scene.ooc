@@ -14,13 +14,13 @@ Scene: class extends Entity {
 	
 	models := LinkedList<Model> new()
 	shaders := HashMap<String, Int> new()
-	
+	round : Long = 0
 	
 	
 	init: func ~scene(.name) {
 		super(name)
 		this addUpdate(Update new(This render))
-		set("camera",Camera new("default_cam"))
+		set("camera",Camera new(Float3 new(10,10,10),Float3 new(0,0,0),"default_cam"))
 	}
 	
 	render: func -> Bool {
@@ -39,13 +39,14 @@ Scene: class extends Entity {
 		
 		cam := get("camera",Camera) .look()
 
-	    
+	    printf("==================== render %ld ===================\n",round)
 	    for(model in models) {
-			model render()
+			model update()
 		}
 	    
 	    SDLVideo glSwapBuffers()
 	    usleep(30000)
+	    round += 1
 	    return true
 	}
 	

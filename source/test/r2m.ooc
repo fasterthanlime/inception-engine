@@ -8,15 +8,15 @@ main: func (argc: Int, argv: String*) {
 	
 	engine := Engine new()
 	
-	win := RenderWindow new(800, 600, 32, false, "render_window")
+	win := RenderWindow new(1200, 800, 32, false, "render_window")
 	win listen(QuitMessage, RenderWindow quit)
 	//win listen(QuitMessage, |m| win quit())
 	
 	//---------------------
 	physx := PhysicsEngine new()
-	cube := Cube new("cube_1")
+	cube := Cube new("cube_1") .setPos(0,0,10)
 	
-	physx bind(cube,Body new("cube_1_body"))
+	//physx bind(cube,Body new("cube_1_body"))
 	engine addEntity(cube)
 	//-------------------
 	

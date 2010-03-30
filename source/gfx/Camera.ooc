@@ -7,6 +7,9 @@ Camera: class extends Entity {
 	forward := Float3 new(0,0,0)
 	left := Float3 new(0,0,0)
 	
+	pos := Float3 new(5,0,0)
+	target := Float3 new(0,0,0)
+	
 	kforward := false
 	kbackward := false
 	kstrafe_left := false
@@ -14,8 +17,8 @@ Camera: class extends Entity {
 	
 	init: func ~cam (.name){
 		super(name)
-		set("pos", Float3 new(5,5,5))
-		set("target", Float3 new(0,0,0))
+		set("pos", pos)
+		set("target", target)
 		set("speed",1.0)
 		set("sensitivity",0.2)
 		phi = 0
@@ -23,6 +26,14 @@ Camera: class extends Entity {
 		listen(MouseMotion,This onMouseMotion)
 		listen(KeyboardMsg,This onKey)
 		vectorsFromAngles()
+	}
+	
+	init: func ~camfull(=pos,=target,.name) {
+		phi = atan2(target y - pos y, target x - pos x) / PI * 180.0
+		dist := sqrt((target y - pos y)*(target y - pos y) + (target x - pos x)*(target x - pos x))
+		theta = atan2(target z - pos z, dist) / PI * 180.0
+		init(name)
+		
 	}
 	
 	onMouseMotion: static func(m: MouseMotion) {

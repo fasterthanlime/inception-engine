@@ -10,7 +10,6 @@ Cube: class extends Model {
 	
 	
 	render: func {
-		printf("[%s]: Rendering muthafucka!!!\n",name)
 		glBegin(GL_QUADS)
 			glColor3ub(255,0,0) //face rouge
 			glVertex3d(1,1,1)

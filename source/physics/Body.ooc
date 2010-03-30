@@ -13,7 +13,11 @@ Body: class extends Entity {
 		set("velocity",vel)
 		set("acceleration",acc)
 		set("rotation",rot)	
-	} 
+	}
+	
+	init: func ~full(=pos,=vel,.name) {
+		init(name)
+	}
 	
 	evolve: func(dt: Float) { //in seconds
 		vel x += acc x * dt
