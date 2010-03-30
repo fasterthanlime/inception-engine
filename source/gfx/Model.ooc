@@ -8,6 +8,8 @@ Model: class extends Entity {
 	pos := Float3 new(0,0,0)
 	rot := Float3 new(0,0,0)
 	
+	show := true
+	
 	init: func ~model (.name) {
 		super(name)
 	}
@@ -16,10 +18,13 @@ Model: class extends Entity {
 		pos set(x,y,z)
 	}
 	
-	update: func {
+	_render: func {
+		if(!show)
+			return
 		glPushMatrix()
 		glTranslated(pos x, pos y, pos z)
 		//printf("[%s]: glTranslated(%.1f, %.1f, %.1f)\n",m name,m pos x, m pos y, m pos z)
+		//printf("[%s]: Rendering...\n",name)
 		render()
 		glPopMatrix()
 	}
