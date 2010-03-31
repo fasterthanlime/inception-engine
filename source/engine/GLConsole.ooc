@@ -292,7 +292,7 @@ GLConsole: class extends Model {
 				
 				case 1 => {
 					suggs clear()
-					if(correctTokens getLast() == "show") {
+					if(correctTokens last() == "show") {
 						status = SHOW
 						ent := engine getEntity(token)
 						if(ent == null) {
@@ -313,7 +313,7 @@ GLConsole: class extends Model {
 						case SHOW => {
 							status = ENT
 							suggs clear()
-							ent := engine getEntity(correctTokens getLast())
+							ent := engine getEntity(correctTokens last())
 							prop := ent props get(token)
 							if(prop == null) {
 								for(key in ent props getKeys()) {
@@ -359,9 +359,9 @@ GLConsole: class extends Model {
 			setBuffer("%s%s " format(correctToken,suggs[0]))
 		} else {
 			match(status) {
-				case COMMAND => cprint("Sorry, no command begins with '%s'" format(correctTokens getLast()))
-				case SHOW => cprint("Sorry, no entity begins with '%s'" format(correctTokens getLast()))
-				case ENT => cprint("Sorry, no property begins with '%s'" format(correctTokens getLast()))
+				case COMMAND => cprint("Sorry, no command begins with '%s'" format(correctTokens last()))
+				case SHOW => cprint("Sorry, no entity begins with '%s'" format(correctTokens last()))
+				case ENT => cprint("Sorry, no property begins with '%s'" format(correctTokens last()))
 			}
 		}
 			
