@@ -40,7 +40,7 @@ Scene: class extends Entity {
 		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
-		printf("==================== render %ld ===================\n",round)
+		//printf("==================== render %ld ===================\n",round)
 		cam := get("camera",Camera) .look()
 		
 		for(name in globalPrograms) {
@@ -54,6 +54,7 @@ Scene: class extends Entity {
 		}
 		for(name in globalPrograms) {
 			glUseProgram(0)
+			printf("unloading program...\n")
 		}
 		
 	    glFlush()
@@ -72,7 +73,7 @@ Scene: class extends Entity {
 		globalPrograms add(name)
 	}
 	
-	setProgram: func(name,model: String) {
+	setProgram: func(model,name: String) {
 		prg := programs get(name)
 		if(prg == null) {
 			printf("[Scene->setProgram]: No such program '%s'\n",name)

@@ -28,8 +28,10 @@ Model: abstract class extends Entity {
 	_render: func {
 		if(!show)
 			return
-		if(sprogram > 0)
+		if(sprogram > 0) {
 			glUseProgram(sprogram)
+			printf("[%s]: Using program %d\n",name,sprogram)
+		}
 			
 		glPushMatrix()
 		glTranslated(pos x, pos y, pos z)
@@ -38,8 +40,10 @@ Model: abstract class extends Entity {
 		
 		render()
 		glPopMatrix()
-		if(sprogram > 0)
+		if(sprogram > 0) {
 			glUseProgram(0)
+			printf("[%s]: Unloading program\n",name)
+		}
 	}
 	
 	render: abstract func {}
