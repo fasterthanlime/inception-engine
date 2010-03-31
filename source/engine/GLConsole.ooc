@@ -16,27 +16,36 @@ GLConsole: class extends Model {
 	
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	buffer := String new(128)
-	inputHeight := 10
+	inputHeight := 12
 	caretStart := 0
+	
+	size := Float2 new(800,600)
 	
 	focus := true
 	alpha := 128
-	
-	pos := Float2 new(0,0)
-	size := Float2 new(200,100)
 	
 	browsingHistory := false
 	iterator: LinkedListIterator<String>
 	
 	COMMAND := 0
-	
+	SHOW := 1
+	ENT := 2
 	
 	
 	
 	init: func ~glc (.name) {
 		super(name)
-		set("position",Float2 new(50,50))
-		set("size",Float2 new(400,200))
+		set("position",pos)
+		set("size",size)
+		listen(KeyboardMsg,This handleKey)
+		show = false
+		initCommands()
+	}
+	
+	init: func ~fullglc (.name, =pos, =size) {
+		super(name)
+		set("position",pos)
+		set("size",size)
 		listen(KeyboardMsg,This handleKey)
 		show = false
 		initCommands()
@@ -69,7 +78,9 @@ GLConsole: class extends Model {
 			show(ename)
 			return
 		}
-		ent := engine getEntity(ename)
+		
+		cprint("Sry, can't not display properties yet :S")
+		/*ent := engine getEntity(ename)
 		if(ent != null) {
 			cprint("%s:" format(ename))
 			for(prop in ent props) {
@@ -77,7 +88,7 @@ GLConsole: class extends Model {
 			}
 		} else {
 			cprint("sorry, no such entity [%s]" format(ename))
-		}
+		}*/
 	}
 	
 	quit: func {
@@ -186,7 +197,12 @@ GLConsole: class extends Model {
 			}
 			
 			case SDLK_TAB => {
-				completion(buffer)
+				completion(buffer clone())
+			}
+			
+			case SDLK_l => {
+				if(state & KMOD_LCTRL)
+					lines clear()
 			}
 		} 
 		
@@ -250,20 +266,103 @@ GLConsole: class extends Model {
 	
 	completion: func(begin: String) {
 		suggs := LinkedList<String> new()
-		for(key in commands getKeys()) {
-			if(key startsWith(buffer)) {
-				suggs add(key)
+		tokenizer := StringTokenizer new(begin, " ")
+		correctTokens := LinkedList<String> new()
+		status := COMMAND
+		
+		
+		
+		
+		level := 0
+		for(token in tokenizer) {
+			match(level) {
+				case 0 => {
+					suggs clear()
+					if(commands get(token) == null) {
+						for(key in commands getKeys()) {
+							if(key startsWith(token)) {
+								suggs add(key)
+							}
+						}
+						break
+					} else {
+						correctTokens add(token clone())
+					}
+				}
+				
+				case 1 => {
+					suggs clear()
+					if(correctTokens getLast() == "show") {
+						status = SHOW
+						ent := engine getEntity(token)
+						if(ent == null) {
+							for(key in engine entities getKeys()) {
+								if(key startsWith(token)) {
+									suggs add(key)
+								}
+							}
+							break
+						} else {
+							correctTokens add(token clone())
+						}
+					}
+				}
+				
+				case 2 => {
+					match(status) {
+						case SHOW => {
+							status = ENT
+							suggs clear()
+							ent := engine getEntity(correctTokens getLast())
+							prop := ent props get(token)
+							if(prop == null) {
+								for(key in ent props getKeys()) {
+									if(key startsWith(token)) {
+										suggs add(key)
+									}
+								}
+								break
+							} else {
+								correctTokens add(token clone())
+							}
+						}
+					}
+				}
+			}
+			level += 1
+		}
+		
+		correctToken := ""
+		for(token in correctTokens) {
+			correctToken += token
+			correctToken += " "
+		}
+		
+		if(begin == "") {
+			for(key in commands getKeys()) {
+				if(key startsWith("")) {
+					suggs add(key)
+				}
 			}
 		}
-		if(suggs size > 1) {
-			cprint("%s -> " format(buffer))
-			for(sugg in suggs) {
-				cprint("-%s" format(sugg))
+		
+		if(suggs size() > 1) {
+			if(correctToken == "") {
+				cprint("avalaible commands:")
+			} else {
+				cprint("%s →" format(buffer))
 			}
-		} else if(suggs size == 1) {
-			setBuffer(suggs[0])
+			for(sugg in suggs) {
+				cprint(" • %s" format(sugg))
+			}
+		} else if(suggs size() == 1) {
+			setBuffer("%s%s " format(correctToken,suggs[0]))
 		} else {
-			cprint("Sorry, nothing matches '%s'" format(begin))
+			match(status) {
+				case COMMAND => cprint("Sorry, no command begins with '%s'" format(correctTokens getLast()))
+				case SHOW => cprint("Sorry, no entity begins with '%s'" format(correctTokens getLast()))
+				case ENT => cprint("Sorry, no property begins with '%s'" format(correctTokens getLast()))
+			}
 		}
 			
 	}
@@ -303,7 +402,7 @@ GLConsole: class extends Model {
 	}
 	
 	render: func {
-		pos = get("position",Float2)
+		pos = get("position",Float3)
 		size = get("size", Float2)
 		
 		begin2D()
@@ -330,7 +429,7 @@ GLConsole: class extends Model {
         font render(1, inputHeight, 0.2, 1, "|")
         
         upperpos := pos y
-        posy :=pos y + size y + 5
+        posy := pos y + size y + 5
         
          if(caretStart > 0) {
 			bbox := font getFontBBox(caretStart)
@@ -353,31 +452,55 @@ GLConsole: class extends Model {
 		glPopMatrix()
 	}
 	
+	breakLine: func(_line: String) -> LinkedList<String> {
+		elems := LinkedList<String> new()
+		lastSpace := 0
+		elemStart := 0
+		line := _line clone()
+		
+		
+		for(i in 0..line length()) {
+			bbox := font getFontBBox(i - elemStart)
+			textWidth : Float = (bbox urx / 5)
+			if(textWidth > (size x - 50)) {
+				//line split()
+			}
+			if(line[i] == ' ')
+				lastSpace = i
+		}
+		return elems
+	}
+	
 	command: func(cm: String) {
+		if(cm == "") {
+			cprint(String new(20))
+			return
+		}
 		history add(0,cm)
 		lines add(0,cm)
 		tokenizer := StringTokenizer new(cm," ")
 		
-		while(tokenizer hasNext()) {
-			token := tokenizer nextToken()
-			if(token == "quit") {
-				quit()
-			} else if(token == "help"){
-				arg1 := tokenizer nextToken()
-				help(arg1)
-			} else if(token == "show") {
-				arg1 := tokenizer nextToken()
-				show(arg1)
-			} else {
-				cprint("unknown command: " + token)
-			}
-			
-			/*
-			match(token) {
-				case "quit" => {sendAll(QuitMessage new())}
-			}
-			*/
+		
+		token := tokenizer nextToken()
+		if(token == "quit") {
+			quit()
+		} else if(token == "help"){
+			arg1 := tokenizer nextToken()
+			help(arg1)
+		} else if(token == "show") {
+			arg1 := tokenizer nextToken()
+			arg2 := tokenizer nextToken()
+			show(arg1,arg2)
+		} else {
+			cprint("unknown command: " + token)
 		}
+		
+		/*
+		match(token) {
+			case "quit" => {sendAll(QuitMessage new())}
+		}
+		*/
+		
 	}
 	
 	round: func(size: Float) {

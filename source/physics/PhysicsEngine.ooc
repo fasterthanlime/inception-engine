@@ -7,13 +7,12 @@ PhysicsEngine: class extends Entity {
 	forces := LinkedList<Force> new()
 	bodies := LinkedList<Body> new()
 	tempForce := Float3 new(0,0,0)
-	speed := 1.0
+	speed := 0.1
 	
 	
 	init: func ~physx {
 		super("physx")
 		set("physx_speed",speed)
-		forces add(Gravity new())
 	}
 	update: func {
 		dt := engine dt as Float / 1000.0
@@ -35,5 +34,9 @@ PhysicsEngine: class extends Entity {
 		b pos sset(m pos)
 		b pos bind(m pos)
 		b rot bind(m rot)
+	}
+	
+	addForce: func(f: Force) {
+		forces add(f)
 	}
 }

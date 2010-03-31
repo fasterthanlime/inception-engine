@@ -12,6 +12,8 @@ Model: class extends Entity {
 	
 	init: func ~model (.name) {
 		super(name)
+		set("position",pos)
+		set("rotation",rot)
 	}
 	
 	setPos: func(x,y,z: Float) {
@@ -35,5 +37,4 @@ Model: class extends Entity {
 	onAdd: func {
 		engine scene models add(this)
 	}
-	
 }

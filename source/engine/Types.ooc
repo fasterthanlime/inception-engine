@@ -60,6 +60,13 @@ Float3: class {
 	}
 }
 
+dist: func(f1,f2: Float3) -> Float {
+	return sqrt((f1 x - f2 x)*(f1 x - f2 x) +
+				(f1 y - f2 y)*(f1 y - f2 y) +
+				(f1 z - f2 z)*(f1 z - f2 z)
+				)
+}
+
 operator * (v1: Float3, n: Float) -> Float3 {
 	return Float3 new(v1 x * n, v1 y * n, v1 z * n)
 }

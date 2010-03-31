@@ -29,7 +29,7 @@ Engine: class extends Entity {
 		listen(KeyboardMsg, This onKey)
 		addEntity(scene)
 		set("scene", scene)
-		addEntity(GLConsole new("console"))
+		addEntity(GLConsole new("console",Float3 new(10,10,0), Float2 new(800,600)))
 	}
     
     addEntity: func (entity: Entity) {

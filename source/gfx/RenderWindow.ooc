@@ -204,7 +204,7 @@ RenderWindow: class extends Entity {
 		//glEnable(GL_COLOR_MATERIAL)
 		title(title)
 		
-		SDL WM_GrabInput(SDL_GRAB_ON)
+		//SDL WM_GrabInput(SDL_GRAB_ON)
 		SDL showCursor(SDL_DISABLE)
 		
 		glewInit()
