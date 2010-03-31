@@ -167,7 +167,8 @@ Scene: class extends Entity {
 		shaders remove(name)
 	}
 	
-	createProgram: func ~vertex(name,pshader,vshader: String) -> Bool {
+	createProgram: func ~vertex(name, pshader, vshader: String) -> Bool {
+        
 		if(pshader == null && vshader == null) {
 			Exception new("[Scene->addProgram]: Passed only null arguments") throw()
 		}
