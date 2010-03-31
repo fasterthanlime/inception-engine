@@ -81,7 +81,7 @@ RenderWindow: class extends Entity {
 		title(title)
 		
 		//SDL WM_GrabInput(SDL_GRAB_ON)
-		SDL showCursor(SDL_DISABLE)
+		//SDL showCursor(SDL_DISABLE)
 		
 		glewInit()
         
