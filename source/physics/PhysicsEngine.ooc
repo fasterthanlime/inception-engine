@@ -7,7 +7,7 @@ PhysicsEngine: class extends Entity {
 	forces := LinkedList<Force> new()
 	bodies := LinkedList<Body> new()
 	tempForce := Float3 new(0,0,0)
-	speed := 0.1
+	speed := 1.0
 	
 	
 	init: func ~physx {
