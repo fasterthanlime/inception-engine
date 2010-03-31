@@ -50,7 +50,7 @@ Scene: class extends Entity {
 
 	    
 	    for(model in models) {
-			model _render()
+            model _render()
 		}
 		for(name in globalPrograms) {
 			glUseProgram(0)

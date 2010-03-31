@@ -3,10 +3,11 @@ import glew
 import engine/[Engine,Entity, Update, Types, GLConsole]
 import gfx/[StaticMesh, Scene]
 
-Model: class extends Entity {
+Model: abstract class extends Entity {
+    
 	mesh : StaticMesh
-	pos := Float3 new(0,0,0)
-	rot := Float3 new(0,0,0)
+	pos := Float3 new()
+	rot := Float3 new()
 	
 	sprogram : GLuint = 0
 	
@@ -14,8 +15,8 @@ Model: class extends Entity {
 	
 	init: func ~model (.name) {
 		super(name)
-		set("position",pos)
-		set("rotation",rot)
+		set("position", pos)
+		set("rotation", rot)
 	}
 	
 	setProgram: func(=sprogram) {}
@@ -41,7 +42,7 @@ Model: class extends Entity {
 			glUseProgram(0)
 	}
 	
-	render: abstract func{}
+	render: abstract func {}
 	
 	onAdd: func {
 		engine scene models put(name,this)
