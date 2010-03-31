@@ -9,17 +9,17 @@ main: func {
 	engine := Engine new()
 	
 	win := RenderWindow new(1280, 800, 32, false, "render_window")
+	engine addEntity(win)
 	
-	//engine scene addShader("shader_1","data/shaders/shader1.vert",GL_FRAGMENT_SHADER)
-	console := GLConsole new~glc("console_1")
 	
+	engine scene addShader("pshader_1","data/shaders/test.vert",GL_FRAGMENT_SHADER)
+	engine scene createProgram("prog_1","pshader_1",null)
 	engine addEntity(Cube new("cube_1"))
 	engine addEntity(Grid new("grid_1"))
-	engine addEntity(console)
 	
 	
 	engine addEntity(EventMapper new())
-	engine addEntity(win)
+	
 
 	engine run()
 }
