@@ -15,7 +15,6 @@ RenderWindow: class extends Entity {
     init: func ~renderWindow (=width, =height, =bpp, =fullscreen, =title) {
         
 		super("render_window")
-		listen(QuitMessage, This quit)
 		listen(KeyboardMsg, This onKey)
 		listen(ResizeEvent, This onResize)
 		listen(QuitMessage, func(m: Message) { this := m target; quit() })
@@ -89,7 +88,7 @@ RenderWindow: class extends Entity {
 	}
     
 	quit: func {
-		if(fullscreen) {
+        if(fullscreen) {
 			SDL WM_ToggleFullScreen(surface)
 		}
 		SDL quit()

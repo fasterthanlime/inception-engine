@@ -3,17 +3,18 @@ import glew
 import engine/[Engine,Entity, Update, Types, GLConsole]
 import gfx/[StaticMesh, Scene]
 
-Model: class extends Entity {
+Model: abstract class extends Entity {
+    
 	mesh : StaticMesh
-	pos := Float3 new(0,0,0)
-	rot := Float3 new(0,0,0)
+	pos := Float3 new()
+	rot := Float3 new()
 	
 	show := true
 	
 	init: func ~model (.name) {
 		super(name)
-		set("position",pos)
-		set("rotation",rot)
+		set("position", pos)
+		set("rotation", rot)
 	}
 	
 	setPos: func(x,y,z: Float) {
@@ -32,7 +33,7 @@ Model: class extends Entity {
 		glPopMatrix()
 	}
 	
-	render: abstract func{}
+	render: abstract func {}
 	
 	onAdd: func {
 		engine scene models add(this)

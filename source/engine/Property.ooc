@@ -38,7 +38,7 @@ GenericProperty: class <T> extends Property {
                 f := value as Float3
                 "(%.2f, %.2f, %.2f)" format(f x, f y, f z)
             case =>
-                super()
+                T name
         }
     }
     

@@ -41,7 +41,7 @@ Scene: class extends Entity {
 
 	    //printf("==================== render %ld ===================\n",round)
 	    for(model in models) {
-			model _render()
+            model _render()
 		}
 	    
 	    SDLVideo glSwapBuffers()
