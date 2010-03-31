@@ -8,7 +8,9 @@ Float3: class {
 	bindings := LinkedList<This> new()
 	x,y,z: Float
 	
-	init: func(=x,=y,=z) {}
+	init: func ~xyz (=x,=y,=z) {}
+    
+    init: func ~zero { x = y = z = 0 }
 	
 	set: func(=x,=y,=z){
 		for(client in clients) {
@@ -51,8 +53,16 @@ Float3: class {
 		z /= l
 	}
 	
+    scalarProduct: func (b: Float3) {
+        x * b x + y * b y + z * b z
+    }
+    
+    squaredLength: func -> Float {
+        x * x + y * y + z * z
+    }
+    
 	length: func -> Float {
-		return sqrt(x*x + y*y + z*z)
+		return sqrt(squaredLength())
 	}
 	
 	toString: func -> String {

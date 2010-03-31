@@ -1,11 +1,9 @@
-use sdl,glew,glu
-import sdl/[Sdl, Video, Event]
-import glew
-import glu/Glu
-import engine/[Message, Entity]
-import gfx/Scene
 
-getchar: extern func
+use sdl, glew, glu
+import sdl/[Sdl, Video, Event], glew, glu/Glu
+
+import engine/[Message, Entity, GLConsole, Types]
+import gfx/Scene
 
 RenderWindow: class extends Entity {
 	width, height, bpp, videoFlags : Int
@@ -14,7 +12,87 @@ RenderWindow: class extends Entity {
 	title := "r2l"
 	surface: Surface*
 	
-	
+    init: func ~renderWindow (=width, =height, =bpp, =fullscreen, =title) {
+        
+		super("render_window")
+		listen(QuitMessage, This quit)
+		listen(KeyboardMsg, This onKey)
+		listen(ResizeEvent, This onResize)
+		listen(QuitMessage, func(m: Message) {this := m target; quit()})
+		videoInfo: VideoInfo*
+		
+
+		/* initialize SDL */
+		if ( SDL init( SDL_INIT_EVERYTHING ) < 0 )
+		{
+			fprintf( stderr, "SDL initialization failed: %s\n", SDL getError( ) )
+			quit( )
+		}
+
+		/* Fetch the video info */
+		videoInfo = SDL getVideoInfo( )
+
+		if ( !videoInfo )
+		{
+			fprintf( stderr, "Video query failed: %s\n", SDL getError( ) )
+			quit(  );
+		}
+
+		/* the flags to pass to SDL_SetVideoMode */
+		videoFlags  = SDL_OPENGL          /* Enable OpenGL in SDL */
+		videoFlags |= SDL_GL_DOUBLEBUFFER /* Enable double buffering */
+		videoFlags |= SDL_HWPALETTE       /* Store the palette in hardware */
+		videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
+		
+		if(fullscreen) {
+			videoFlags |= SDL_FULLSCREEN
+		}
+
+		/* This checks to see if surfaces can be stored in memory */
+		if ( videoInfo@ hw_available )
+			videoFlags |= SDL_HWSURFACE
+		else
+			videoFlags |= SDL_SWSURFACE
+
+		/* This checks if hardware blits can be done */
+		if ( videoInfo@ blit_hw )
+			videoFlags |= SDL_HWACCEL
+
+		/* Sets up OpenGL double buffering */
+		SDL GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 )
+
+		/* get a SDL surface */
+		surface = SDLVideo setMode( width, height, bpp,videoFlags )
+
+		/* Verify there is a surface */
+		if ( !surface )
+		{
+			fprintf( stderr,  "Video mode set failed: %s\n", SDL getError( ) )
+			quit( )
+		}
+
+		/* initialize OpenGL */
+		if ( initGL( ) == false )
+		{
+			fprintf( stderr, "Could not initialize OpenGL.\n" )
+			quit(  )
+		}
+
+		/* Resize the initial window */
+		resizeWindow( width, height )
+		
+		SDL enableKeyRepeat(300,30)
+		//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
+		//glEnable(GL_COLOR_MATERIAL)
+		title(title)
+		
+		//SDL WM_GrabInput(SDL_GRAB_ON)
+		SDL showCursor(SDL_DISABLE)
+		
+		glewInit()
+        
+	}
+    
 	quit: func {
 		if(fullscreen) {
 			SDL WM_ToggleFullScreen( surface )
@@ -24,7 +102,6 @@ RenderWindow: class extends Entity {
 	}
 	
 	resizeWindow: func( =width, =height ) -> Bool {
-		
 		
 		/* Height / width ration */
 		ratio: GLfloat
@@ -107,8 +184,7 @@ RenderWindow: class extends Entity {
 	
 	
 	/* general OpenGL initialization function */
-	initGL: func() -> Bool
-	{
+	initGL: func() -> Bool {
 
 		/* Enable smooth shading */
 		glShadeModel( GL_SMOOTH )
@@ -129,86 +205,14 @@ RenderWindow: class extends Entity {
 		//glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST )
 
 		return true
+        
 	}
-	
-	init: func ~rw (=width,=height,=bpp,=fullscreen,=title) {
-		super(title)
-		//listen(QuitMessage, This quit)
-		listen(KeyboardMsg, This onKey)
-		listen(ResizeEvent, This onResize)
-		listen(QuitMessage, func(m: Message) {this := m target; quit()})
-		videoInfo: VideoInfo*
-		
-
-		/* initialize SDL */
-		if ( SDL init( SDL_INIT_EVERYTHING ) < 0 )
-		{
-			fprintf( stderr, "SDL initialization failed: %s\n", SDL getError( ) )
-			quit( )
-		}
-
-		/* Fetch the video info */
-		videoInfo = SDL getVideoInfo( )
-
-		if ( !videoInfo )
-		{
-			fprintf( stderr, "Video query failed: %s\n", SDL getError( ) )
-			quit(  );
-		}
-
-		/* the flags to pass to SDL_SetVideoMode */
-		videoFlags  = SDL_OPENGL          /* Enable OpenGL in SDL */
-		videoFlags |= SDL_GL_DOUBLEBUFFER /* Enable double buffering */
-		videoFlags |= SDL_HWPALETTE       /* Store the palette in hardware */
-		videoFlags |= SDL_RESIZABLE       /* Enable window resizing */
-		
-		if(fullscreen) {
-			videoFlags |= SDL_FULLSCREEN
-		}
-
-		/* This checks to see if surfaces can be stored in memory */
-		if ( videoInfo@ hw_available )
-			videoFlags |= SDL_HWSURFACE
-		else
-			videoFlags |= SDL_SWSURFACE
-
-		/* This checks if hardware blits can be done */
-		if ( videoInfo@ blit_hw )
-			videoFlags |= SDL_HWACCEL
-
-		/* Sets up OpenGL double buffering */
-		SDL GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 )
-
-		/* get a SDL surface */
-		surface = SDLVideo setMode( width, height, bpp,videoFlags )
-
-		/* Verify there is a surface */
-		if ( !surface )
-		{
-			fprintf( stderr,  "Video mode set failed: %s\n", SDL getError( ) )
-			quit( )
-		}
-
-		/* initialize OpenGL */
-		if ( initGL( ) == false )
-		{
-			fprintf( stderr, "Could not initialize OpenGL.\n" )
-			quit(  )
-		}
-
-		/* Resize the initial window */
-		resizeWindow( width, height )
-		
-		SDL enableKeyRepeat(300,30)
-		//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-		//glEnable(GL_COLOR_MATERIAL)
-		title(title)
-		
-		//SDL WM_GrabInput(SDL_GRAB_ON)
-		SDL showCursor(SDL_DISABLE)
-		
-		glewInit()
-	}
+    
+    onAdd: func {
+        
+        engine addEntity(GLConsole new(Float3 new(10, 10, 0), Float2 new(width * 2/5, height * 2/5)))
+        
+    }
 	
 	
 	title: func(=title) {

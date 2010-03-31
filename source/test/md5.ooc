@@ -7,8 +7,6 @@ main: func (argc: Int, argv: String*) {
 	engine := Engine new()
 	
 	win := RenderWindow new(800, 600, 32, false, "render_window")
-	win listen(QuitMessage, RenderWindow quit)
-	//win listen(QuitMessage, |m| win quit())
     
     console := GLConsole new("console")
     engine addEntity(console)

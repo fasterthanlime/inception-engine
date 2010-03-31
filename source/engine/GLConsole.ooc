@@ -31,29 +31,20 @@ GLConsole: class extends Model {
 	SHOW := 1
 	ENT := 2
 	
-	
-	
-	init: func ~glc (.name) {
-		super(name)
-		set("position",pos)
-		set("size",size)
-		listen(KeyboardMsg,This handleKey)
+	init: func ~posSize (=pos, =size) {
+        
+		super("console")
+		set("position", pos)
+		set("size",     size)
+		listen(KeyboardMsg, This handleKey)
 		show = false
 		initCommands()
-	}
-	
-	init: func ~fullglc (.name, =pos, =size) {
-		super(name)
-		set("position",pos)
-		set("size",size)
-		listen(KeyboardMsg,This handleKey)
-		show = false
-		initCommands()
+        
 	}
 	
 	initCommands: func {
-		commands add("quit","quits r2l")
-		commands add("help","help [command]")
+		commands add("quit", "quits r2l")
+		commands add("help", "help [command]")
 		commands add("show", "show [entity] [...]")
 	}
 	

@@ -1,42 +1,49 @@
 import engine/[Types,Entity]
-import physics/Force
+import Force, Geometry
 import structs/LinkedList
 
 DAMP := 0.90
 
 Body: class extends Entity {
-	pos := Float3 new(0,0,0) //in m
-	vel := Float3 new(0,0,0) //in m/s
-	acc := Float3 new(0,0,0) //in m/s/s
-	rot := Float3 new(0,0,0) //in degrees
-	mass := 1.0   //in kg
+    
+	pos := Float3 new() //in m
+	vel := Float3 new() //in m/s
+	acc := Float3 new() //in m/s/s
+	rot := Float3 new() //in degrees
+	mass := 1.0  // in kg
 	fixed := false //does the body react to forces?
 	
 	forces := LinkedList<Force> new()
+    geom : Geometry = null
 	
-	tmp_force := Float3 new(0,0,0)
+	tmpForce := Float3 new()
 	
 	init: func ~body(.name) {
 		super(name)
-		set("position",pos)
-		set("velocity",vel)
-		set("acceleration",acc)
-		set("rotation",rot)	
+		set("position",     pos)
+		set("velocity",     vel)
+		set("acceleration", acc)
+		set("rotation",     rot)
+        set("geometry",     geom)
 	}
 	
 	init: func ~full(=pos,=vel,.name) {
 		init(name)
 	}
+    
+    setGeometry: func (=geom) {
+        geom set("position", pos)
+    }
 	
-	evolve: func(dt: Float) { //in seconds
+	evolve: func(dt: Float) { // in seconds
 		if(fixed)
 			return
-			
+            
 		for(force in forces) {
-			force get(this,tmp_force)
-			acc x += tmp_force x / mass
-			acc y += tmp_force y / mass
-			acc z += tmp_force z / mass
+            force compute(this, tmpForce)
+			acc x += tmpForce x / mass
+			acc y += tmpForce y / mass
+			acc z += tmpForce z / mass
 		}
 		
 		vel x += acc x * dt
@@ -47,12 +54,13 @@ Body: class extends Entity {
 		vel y *= DAMP
 		vel z *= DAMP
 		
-		pos addSet( vel x * dt,
-					vel y * dt,		
-					vel z * dt		
-			)
+		pos addSet(
+            vel x * dt,
+			vel y * dt,		
+            vel z * dt		
+        )
 		
-		acc set(0,0,0)
+		acc set(0, 0, 0)
 	}
 	
 	applyForce: func(force: Float3) {
@@ -73,6 +81,8 @@ Body: class extends Entity {
 		vel set(x,y,z)
 	}
 	
+    setFixed: func(=fixed) {}
+    
 	addForce: func(f: Force) {
 		forces add(f)
 	}
@@ -81,4 +91,5 @@ Body: class extends Entity {
 		if(mass == 0)
 			mass = 0.01
 	}
+    
 }

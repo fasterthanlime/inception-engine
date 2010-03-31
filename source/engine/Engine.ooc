@@ -2,26 +2,16 @@ use sdl,glew
 import glew
 import sdl/[Sdl, Event]
 import structs/HashMap
-import Entity, Update, Message, Types, GLConsole
+import Entity, Update, Message, Types
 import io/File
 import gfx/Scene
 
 Engine: class extends Entity {
     
     entities := HashMap<String, Entity> new()
-   // spawnables := HashMap<String, EntityClass> new()
-	
-	/*
-    spawn("machin")
-    f := map get("machin")
-    addEntity(f("abeuh"))
-    */
-    
     
     scene := Scene new("default_scene")
-    time1: UInt32 = 0
-    time2: UInt32 = 0
-	dt: UInt32 = 0
+    time1, time2, dt: UInt32 = 0
     
     init: func ~engine{
 		super("r2l_engine")
@@ -29,7 +19,6 @@ Engine: class extends Entity {
 		listen(KeyboardMsg, This onKey)
 		addEntity(scene)
 		set("scene", scene)
-		addEntity(GLConsole new("console",Float3 new(10,10,0), Float2 new(800,600)))
 	}
     
     addEntity: func (entity: Entity) {

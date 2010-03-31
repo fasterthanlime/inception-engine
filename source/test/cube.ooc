@@ -10,8 +10,6 @@ main: func {
 	
 	win := RenderWindow new(1280, 800, 32, false, "render_window")
 	
-	//win listen(QuitMessage, |m| win quit())
-	
 	//engine scene addShader("shader_1","data/shaders/shader1.vert",GL_FRAGMENT_SHADER)
 	console := GLConsole new~glc("console_1")
 	

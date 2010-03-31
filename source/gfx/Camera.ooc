@@ -19,28 +19,30 @@ Camera: class extends Entity {
 		super(name)
 		set("pos", pos)
 		set("target", target)
-		set("speed",1.0)
-		set("sensitivity",0.2)
+		set("speed", 1.0)
+		set("sensitivity", 0.2)
 		phi = 0
 		theta = 0
-		listen(MouseMotion,This onMouseMotion)
-		listen(KeyboardMsg,This onKey)
+		listen(MouseMotion, This onMouseMotion)
+		listen(KeyboardMsg, This onKey)
 		vectorsFromAngles()
 	}
 	
-	init: func ~camfull(=pos,=target,.name) {
-		phi = atan2(target y - pos y, target x - pos x) / PI * 180.0
-		dist := sqrt((target y - pos y)*(target y - pos y) + (target x - pos x)*(target x - pos x))
-		theta = atan2(target z - pos z, dist) / PI * 180.0
+	init: func ~camfull(=pos, =target, .name) {
+        diff := target - pos
+        
+        dist := sqrt(diff y * diff y + diff x * diff x)
+		phi   = atan2(diff z, dist  ) / PI * 180.0
+		theta = atan2(diff y, diff x) / PI * 180.0
 		init(name)
-		
 	}
 	
 	onMouseMotion: static func(m: MouseMotion) {
 		this := m target
-		sensitivity := get("sensitivity",Float)
+        
+        sensitivity := get("sensitivity",Float)
 		theta -= m dx * sensitivity
-		phi -= m dy * sensitivity
+		phi   -= m dy * sensitivity
 		vectorsFromAngles()
 	}
 	

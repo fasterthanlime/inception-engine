@@ -53,7 +53,7 @@ EventMapper: class extends Entity {
                 }
 			} else if(event type == SDL_MOUSEMOTION) {
                 msg := MouseMotion new (
-					event motion x, event motion y,
+					event motion x,   event motion y,
 					event motion xrel,event motion yrel
                 )
                 if(mouseGrabber) {
