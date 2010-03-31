@@ -1,4 +1,4 @@
-use sdl,glew
+use sdl, glew
 import glew
 import sdl/[Sdl, Event]
 import structs/HashMap
@@ -32,7 +32,7 @@ Engine: class extends Entity {
         return entities get(name)
     }
     
-    getEntity: func ~over <T> (name: String,T: Class) -> T {
+    getEntity: func ~over <T> (name: String, T: Class) -> T {
 		ent := entities get(name)
 		if(!ent class inheritsFrom(T)) {
             Exception new(This, "Attempting to get (%s, %s), but the entity has incompatible type %s" format(name, T name, ent class name)) throw()

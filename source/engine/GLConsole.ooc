@@ -70,16 +70,15 @@ GLConsole: class extends Model {
 			return
 		}
 		
-		cprint("Sry, can't not display properties yet :S")
-		/*ent := engine getEntity(ename)
+		ent := engine getEntity(ename)
 		if(ent != null) {
 			cprint("%s:" format(ename))
 			for(prop in ent props) {
-				cprint("- %s" format(prop name))
+				cprint("- %s = %s" format(prop name, prop toString()))
 			}
 		} else {
 			cprint("sorry, no such entity [%s]" format(ename))
-		}*/
+		}
 	}
 	
 	quit: func {
