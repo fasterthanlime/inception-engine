@@ -12,6 +12,7 @@ Engine: class extends Entity {
     
     scene := Scene new("default_scene")
     time1, time2, dt: UInt32 = 0
+	time: UInt32 = 0
     
     init: func ~engine{
 		super("r2l_engine")
@@ -48,9 +49,14 @@ Engine: class extends Entity {
                 ent update()
             }
             time2 = SDL getTicks()
+			time = time2
             dt = time2 - time1
         }
     }
+	
+	getTicks: func -> UInt32 {
+		return time
+	}
     
     onKey: static func(m: KeyboardMsg) {
 		this := m target

@@ -10,6 +10,7 @@ Model: abstract class extends Entity {
 	rot := Float3 new()
 	
 	sprogram : GLuint = 0
+	timeid : Int = 0
 	
 	show := true
 	
@@ -19,7 +20,9 @@ Model: abstract class extends Entity {
 		set("rotation", rot)
 	}
 	
-	setProgram: func(=sprogram) {}
+	setProgram: func(=sprogram) {
+		timeid = glGetUniformLocation(sprogram,"time")
+	}
 	
 	setPos: func(x,y,z: Float) {
 		pos set(x,y,z)
@@ -28,7 +31,7 @@ Model: abstract class extends Entity {
 	_render: func {
 		if(!show)
 			return
-		if(sprogram > 0) glUseProgram(sprogram)
+		if(sprogram > 0) {glUseProgram(sprogram) ; glUniform1f(timeid,engine getTicks() as Float)}
 			
 		glPushMatrix()
 		glTranslated(pos x, pos y, pos z)
