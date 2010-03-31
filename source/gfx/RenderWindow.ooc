@@ -43,7 +43,7 @@ RenderWindow: class extends Entity {
 		glLoadIdentity( )
 
 		/* Set our perspective */
-		gluPerspective( 45.0, ratio, 0.1, 100.0 )
+		gluPerspective( 45.0, ratio, 0.1, 1000.0 )
 		//gluOrtho2D(0,width,height,0);
 
 		/* Make sure we're changing the model view and not the projection */

@@ -2,6 +2,8 @@ import engine/[Types,Entity]
 import physics/Force
 import structs/LinkedList
 
+DAMP := 0.90
+
 Body: class extends Entity {
 	pos := Float3 new(0,0,0) //in m
 	vel := Float3 new(0,0,0) //in m/s
@@ -40,6 +42,10 @@ Body: class extends Entity {
 		vel x += acc x * dt
 		vel y += acc y * dt
 		vel z += acc z * dt
+		
+		vel x *= DAMP
+		vel y *= DAMP
+		vel z *= DAMP
 		
 		pos addSet( vel x * dt,
 					vel y * dt,		

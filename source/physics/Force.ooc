@@ -1,6 +1,7 @@
 import engine/Types
 import physics/Body
 
+
 Force: class {
 	none := static Float3 new(0,0,0)
 	init: func {
@@ -40,8 +41,8 @@ SpringForce: class extends Force {
 	
 	get: func(b: Body, force: Float3) {
 		d := dist(b pos, targetSpot)
-		force set(kconst*(targetSpot x - b pos x)/d*(d - targetLength),
-				  kconst*(targetSpot y - b pos y)/d*(d - targetLength),
+		force set(kconst*(targetSpot x - b pos x)/d*(d - targetLength) ,
+				  kconst*(targetSpot y - b pos y)/d*(d - targetLength) ,
 				  kconst*(targetSpot z - b pos z)/d*(d - targetLength)
 				)
 	}	
