@@ -5,16 +5,20 @@ import sdl/Video
 import engine/[Entity, Update, Engine, Types]
 import gfx/[Model, RenderWindow, Camera, SProgram]
 import structs/[LinkedList, HashMap]
-import io/File
+import io/[File, FileReader]
+import text/Buffer
 
 include unistd
 usleep: extern func(Int)
 
 Scene: class extends Entity {
 	
-	models := LinkedList<Model> new()
+	models := HashMap<String,Model> new()
 	shaders := HashMap<String, Int> new()
 	programs := HashMap<String, Int> new()  //shader programs
+	
+	globalPrograms := LinkedList<String> new()
+	
 	round : Long = 0
 	
 	init: func ~scene(.name) {
@@ -36,17 +40,27 @@ Scene: class extends Entity {
 		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
-		
+		printf("==================== render %ld ===================\n",round)
 		cam := get("camera",Camera) .look()
+		
+		for(name in globalPrograms) {
+			useProgram(name)
+			printf("using program %s\n",name)
+		}
 
-	    //printf("==================== render %ld ===================\n",round)
+	    
 	    for(model in models) {
 			model _render()
 		}
-	    
+		for(name in globalPrograms) {
+			glUseProgram(0)
+		}
+		
+	    glFlush()
 	    SDLVideo glSwapBuffers()
 	    usleep(30000)
 	    round += 1
+		
 	    return true
 	}
 	
@@ -54,8 +68,35 @@ Scene: class extends Entity {
 		engine addEntity(get("camera",Camera))
 	}
 	
+	addProgram: func(name: String) {
+		globalPrograms add(name)
+	}
+	
+	setProgram: func(name,model: String) {
+		prg := programs get(name)
+		if(prg == null) {
+			printf("[Scene->setProgram]: No such program '%s'\n",name)
+			return
+		}
+		
+		mod := models get(model)
+		if(mod == null) {
+			printf("[Scene->setProgram]: No such model '%s'\n",model)
+			return
+		}
+			
+		mod setProgram(prg)		
+	}
+	
+	useProgram: func(name: String) {
+		prg := programs get(name)
+		if(prg != null)
+			glUseProgram(prg)
+	}
+	
 	addShader: func(name: String, filename: String, type: GLenum) {
 		
+		printf("creating shader %s at %s\n",name,filename)
 		if(type != GL_VERTEX_SHADER && type != GL_FRAGMENT_SHADER) {
 			printf("[Engine]: Error, unkown shader type\n")
 			return
@@ -103,7 +144,16 @@ Scene: class extends Entity {
 	}
 	
 	loadSrc: func(filename: String) -> String {
-		return File new(filename) read()
+		reader := FileReader new(File new("data/shaders/test.vert"))
+		buffer := Buffer new()
+		while(reader hasNext()) {
+			buffer append(reader read())
+		}
+		
+		src := buffer toString() clone()
+		src[src length() - 1] = '\0'
+		
+		return src
 	}
 	
 	delShader: func(name: String) {
@@ -128,23 +178,25 @@ Scene: class extends Entity {
 		log: String
 		
 		if(pshader != "" && pshader != null) {
-			psh := shaders get(pshader)
+			psh = shaders get(pshader)
 			if(psh == null)
 				return false
 		}
 			
 		if(vshader != "" && vshader != null) {
-			vsh := shaders get(vshader)
+			vsh = shaders get(vshader)
 			if(vsh == null)
 				return false
 		}
 		
 		program := glCreateProgram()
 		
-		if(vsh)
+		if(vsh) {
 			glAttachShader(program, vsh)
-		if(psh)
+		}
+		if(psh) {
 			glAttachShader(program, psh)
+		}
 			
 		glLinkProgram(program)
 		

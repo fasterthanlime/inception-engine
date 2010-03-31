@@ -8,6 +8,8 @@ Model: class extends Entity {
 	pos := Float3 new(0,0,0)
 	rot := Float3 new(0,0,0)
 	
+	sprogram : GLuint = 0
+	
 	show := true
 	
 	init: func ~model (.name) {
@@ -16,6 +18,8 @@ Model: class extends Entity {
 		set("rotation",rot)
 	}
 	
+	setProgram: func(=sprogram) {}
+	
 	setPos: func(x,y,z: Float) {
 		pos set(x,y,z)
 	}
@@ -23,6 +27,9 @@ Model: class extends Entity {
 	_render: func {
 		if(!show)
 			return
+		if(sprogram > 0)
+			glUseProgram(sprogram)
+			
 		glPushMatrix()
 		glTranslated(pos x, pos y, pos z)
 		//printf("[%s]: glTranslated(%.1f, %.1f, %.1f)\n",m name,m pos x, m pos y, m pos z)
@@ -30,11 +37,13 @@ Model: class extends Entity {
 		
 		render()
 		glPopMatrix()
+		if(sprogram > 0)
+			glUseProgram(0)
 	}
 	
 	render: abstract func{}
 	
 	onAdd: func {
-		engine scene models add(this)
+		engine scene models put(name,this)
 	}
 }
