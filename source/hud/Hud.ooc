@@ -54,4 +54,8 @@ Hud: class extends Model {
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND)
 	}
+	
+	onAdd: func {
+		engine scene getFrontPass() add(this)
+	}
 }

@@ -4,28 +4,46 @@ import glu/Glu
 import sdl/Video
 import engine/[Entity, Update, Engine, Types]
 import gfx/[Model, RenderWindow, Camera, SProgram]
-import structs/[LinkedList, HashMap]
+import structs/[LinkedList, HashMap, ArrayList]
 import io/[File, FileReader]
 import text/Buffer
 
 include unistd
 usleep: extern func(Int)
 
+Pass: class {
+    models := ArrayList<Model> new()
+    
+    add: func (model: Model) { models add(model) }
+}
+
 Scene: class extends Entity {
 	
-	models := HashMap<String,Model> new()
+    passes := ArrayList<Pass> new()
+    backPass, mainPass, frontPass: Pass
+    
 	shaders := HashMap<String, Int> new()
-	programs := HashMap<String, SProgram> new()  //shader programs
+	programs := HashMap<String, SProgram> new() // shader programs
 	
-	globalPrograms := HashMap<String,SProgram> new()
+	globalPrograms := HashMap<String, SProgram> new()
 	
 	round : Long = 0
 	
 	init: func ~scene(.name) {
 		super(name)
 		this addUpdate(Update new(This render))
-		set("camera",Camera new(Float3 new(10,10,10),Float3 new(0,0,0),"default_cam"))
+        
+        backPass  = Pass new()
+        mainPass  = Pass new()
+        frontPass = Pass new()
+        passes add(backPass). add(mainPass). add(frontPass)
+        
+		set("camera", Camera new(Float3 new(10, 10, 10), Float3 new(0, 0, 0), "default_cam"))
 	}
+    
+    getBackPass : func -> Pass { backPass }
+    getMainPass : func -> Pass { mainPass  }
+    getFrontPass: func -> Pass { frontPass }
 	
 	render: func -> Bool {
 		
@@ -40,18 +58,20 @@ Scene: class extends Entity {
 		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
-		//printf("==================== render %ld ===================\n",round)
-		cam := get("camera",Camera) .look()
+		
+        cam := get("camera", Camera) .look()
 		
 		for(prg in globalPrograms) {
 			useProgram(prg)
 			//printf("using program %s\n",name)
 		}
 
-	    
-	    for(model in models) {
-            model _render()
-		}
+	    for(pass in passes) {
+            for(model in pass models) {
+                model _render()
+            }
+        }
+        
 		for(prg in globalPrograms) {
 			glUseProgram(0)
 			//printf("unloading program...\n")
@@ -60,7 +80,6 @@ Scene: class extends Entity {
 	    glFlush()
 	    SDLVideo glSwapBuffers()
 	    usleep(30000)
-	    round += 1
 		
 	    return true
 	}
@@ -73,20 +92,14 @@ Scene: class extends Entity {
 		globalPrograms put(name,SProgram new(programs get(name) program))
 	}
 	
-	setProgram: func(model,name: String) {
+	setProgram: func(model: Model, name: String) {
 		prg := programs get(name)
 		if(prg == null) {
 			printf("[Scene->setProgram]: No such program '%s'\n",name)
 			return
 		}
 		
-		mod := models get(model)
-		if(mod == null) {
-			printf("[Scene->setProgram]: No such model '%s'\n",model)
-			return
-		}
-			
-		mod setProgram(prg)		
+		model setProgram(prg)		
 	}
 	
 	useProgram: func(prg: SProgram) {
@@ -96,6 +109,12 @@ Scene: class extends Entity {
 			glUniform1f(prg timeid,engine getTicks() as Float)
 		}
 	}
+    
+    // NOTE: is called by Model when added to the engine, shouldn't
+    // be called manually
+    addModel: func (model: Model) {
+        mainPass models add(model)
+    }
 	
 	addShader: func(name: String, filename: String, type: GLenum) {
 		

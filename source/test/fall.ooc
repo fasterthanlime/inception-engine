@@ -40,7 +40,7 @@ main: func (argc: Int, argv: String*) {
         
         ogroBody2 := Body new("ogro_body") .setPos(rand() % 40 - 20, rand() % 40 - 20, 20)
         ogroBody2 setGeometry(AABB new("ogro_body_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
-        physx add(ogroBody2, MD5Loader new() load("data/models/ogro/ogro.md5mesh"))
+        physx add(ogroBody2, MD5Loader load("data/models/ogro/ogro.md5mesh"))
     }))
     
     

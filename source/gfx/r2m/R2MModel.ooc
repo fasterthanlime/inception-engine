@@ -35,7 +35,7 @@ R2MModel: class extends Model {
     }
     
     addModel: func (name, path: String) {
-        models put(name, MD5Loader new() load(path))
+        models put(name, MD5Loader load(path))
     }
 }
 

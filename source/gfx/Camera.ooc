@@ -40,7 +40,7 @@ Camera: class extends Entity {
 	onMouseMotion: static func(m: MouseMotion) {
 		this := m target
         
-        sensitivity := get("sensitivity",Float)
+        sensitivity := get("sensitivity", Float)
 		theta -= m dx * sensitivity
 		phi   -= m dy * sensitivity
 		vectorsFromAngles()
