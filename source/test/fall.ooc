@@ -22,12 +22,12 @@ main: func (argc: Int, argv: String*) {
 	
     //--------------- Add a few cubes
 	cubebody1 := Body new("cube_1_body") .setFixed(true)
-    cubebody2 := Body new("cube_2_body") .setPos(0, 0, 15)
+    cubebody2 := Body new("cube_2_body") .setPos(0, 0, 20)
     physx add(cubebody1)
-    physx add(cubebody2, Cube new("cube_2"))
+    physx add(cubebody2, MD5Loader new() load("data/models/ogro/ogro.md5mesh"))
 
     cubebody1 setGeometry(AABB new("cube_1_aabb", 1, 1, 1))
-    cubebody2 setGeometry(AABB new("cube_2_aabb", 1, 1, 1))
+    cubebody2 setGeometry(AABB new("cube_2_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
 	
     path := argc >= 2 ? argv[1] : "data/maps/square.r2m"
     engine addEntity(R2MLoader new() load(path))
