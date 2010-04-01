@@ -28,6 +28,4 @@ things {
     cube ( -4  0 0 )
     cube ( -4 -2 0 )
     cube ( -4 -4 0 )
-    
-    cube ( 0  0  0 )
 }

@@ -1,0 +1,9 @@
+R2MVersion 1
+
+models {
+    ground ground1/ground.md5mesh
+}
+
+things {
+    ground ( 0  0  0 )
+}
