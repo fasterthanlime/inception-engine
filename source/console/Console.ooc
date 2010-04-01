@@ -197,34 +197,33 @@ Console: class extends Model {
 		
 		ch := (m unicode & 0x7f) as Char
 		
-		// haha c'est tout moche.
-		if((ch isPrintable() && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
+		// haha c'est tout mom keye.
+		if(m key == SDLK_BACKSPACE && caretStart > 0) {
+			buffer = buffer substring(0, caretStart - 1) + buffer substring(caretStart, buffer length())
+			caretStart -= 1
+			
+		} else if(m key == SDLK_DELETE && caretStart < buffer length()) {
+			buffer = buffer substring(0, caretStart) + buffer substring(caretStart + 1, buffer length())
+			
+		} else if(m key == SDLK_RIGHT && caretStart < buffer length() ) {
+			caretStart += 1
+			
+		} else if(m key == SDLK_LEFT && caretStart > 0) {
+			caretStart -= 1
+			
+		} else if(m key == SDLK_HOME) {
+			caretStart = 0
+			
+		} else if(m key== SDLK_END) {
+			caretStart = buffer length()
+			
+		} else if((ch isPrintable() && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {
 				buffer = buffer substring(0, caretStart) + ch + buffer substring(caretStart, buffer length())
 			}
 			caretStart += 1
-			
-		} else if(ch == SDLK_BACKSPACE && caretStart > 0) {
-			buffer = buffer substring(0, caretStart - 1) + buffer substring(caretStart, buffer length())
-			caretStart -= 1
-			
-		} else if(ch == SDLK_DELETE && caretStart < buffer length()) {
-			buffer = buffer substring(0, caretStart) + buffer substring(caretStart + 1, buffer length())
-			
-		} else if(ch== SDLK_RIGHT && caretStart < buffer length() ) {
-			caretStart += 1
-			
-		} else if(ch== SDLK_LEFT && caretStart > 0) {
-			caretStart -= 1
-			
-		} else if(ch== SDLK_HOME) {
-			caretStart = 0
-			
-		} else if(ch== SDLK_END) {
-			caretStart = buffer length()
-			
 		}
 	}
 	
@@ -335,13 +334,40 @@ Console: class extends Model {
 			for(sugg in suggs) {
 				cprintln(" • %s" format(sugg))
 			}
+            
+            limit := 9999999
+            for(sugg in suggs) {
+                len := sugg length()
+                if(limit > len) {
+                    limit = len
+                }
+            }
+            
+            finished := false
+            best := 0
+            while(best < limit) {
+                for(sugg1 in suggs) {
+                    for(sugg2 in suggs) {
+                        if(sugg1 as Pointer == sugg2 as Pointer) continue
+                        if(sugg1[best] != sugg2[best]) {
+                            finished = true
+                            break
+                        }
+                    }
+                    if (finished) break
+                }
+                if (finished) break
+                best += 1
+            }
+            setBuffer("%s%s" format(correctToken, suggs[0] substring(0, best)))
+            
 		} else if(suggs size() == 1) {
-			setBuffer("%s%s " format(correctToken,suggs[0]))
+			setBuffer("%s%s " format(correctToken, suggs[0]))
 		} else {
 			match(status) {
-				case COMMAND => cprintln("Sorry, no command begins with '%s'" format(buffer))
-				case SHOW => cprintln("Sorry, no entity begins with '%s'" format(correctTokens last()))
-				case ENT => cprintln("Sorry, no property begins with '%s'" format(correctTokens last()))
+				case COMMAND => cprintln("Sorry, no command begins with '%s'"  format(buffer))
+				case SHOW    => cprintln("Sorry, no entity begins with '%s'"   format(correctTokens last()))
+				case ENT     => cprintln("Sorry, no property begins with '%s'" format(correctTokens last()))
 			}
 		}
 			
@@ -418,11 +444,11 @@ Console: class extends Model {
 	}
 	
 	render: func {
-		pos = get("position",Float3)
+		pos  = get("position", Float3)
 		size = get("size", Float2)
 		
 		begin2D()
-		glTranslated(pos x, pos y,0)
+		glTranslated(pos x, pos y, 0)
 		background()
 		round(10)
 		glDisable(GL_BLEND)
@@ -454,7 +480,6 @@ Console: class extends Model {
         }
         
         for(line in lines) {
-			
 			posy = posy - inputHeight
 			if(posy < (upperpos + inputHeight*2))
 				break

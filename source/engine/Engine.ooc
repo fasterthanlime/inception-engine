@@ -27,10 +27,9 @@ Engine: class extends Entity {
         seed := 1
         evilBro := entities get(name)
         while(evilBro != null) {
-            name = "%s (%d)" format(entity name, seed)
+            name = "%s__%d" format(entity name, seed)
             seed += 1
             evilBro = entities get(name)
-            printf("Bro-ing name, got %s so far.\n", name)
         }
         
         entities put(name, entity)
