@@ -27,7 +27,6 @@ Hud: class extends Model {
 			printf("[Hud]: Trying to add a null window\n")
 			return
 		}
-		win onAdd()
 		windows add(win)
 	}
 

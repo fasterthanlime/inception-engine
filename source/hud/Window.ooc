@@ -259,7 +259,7 @@ Window: class extends Entity {
 	wRender: func {}
 	
 	onAdd: func {
-		engine addEntity(this)
+		engine getHud() add(this)
 	}
 	
 	round: func(rsize: Float) {

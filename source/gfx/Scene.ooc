@@ -35,9 +35,9 @@ Scene: class extends Entity {
 	    //glLoadIdentity()
 	    rw := engine getEntity("render_window") as RenderWindow 
 	    
-	    glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
+	    //glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
+		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
 		//printf("==================== render %ld ===================\n",round)
@@ -66,7 +66,7 @@ Scene: class extends Entity {
 	}
 	
 	onAdd: func {
-		//engine hud add(get("camera",Camera))
+		engine addEntity(get("camera",Camera))
 	}
 	
 	addProgram: func(name: String) {

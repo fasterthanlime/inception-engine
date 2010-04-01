@@ -30,7 +30,6 @@ Model: abstract class extends Entity {
 	}
 	
 	_render: func {
-		printf("[Model->render]: %s\n",name)
 		if(!show)
 			return
 		if(sprogram > 0) {glUseProgram(sprogram) ; glUniform1f(timeid,engine getTicks() as Float)}
@@ -49,6 +48,5 @@ Model: abstract class extends Entity {
 	
 	onAdd: func {
 		engine scene models put(name,this)
-		printf("\t[Model->onAdd]: %s\n",name)
 	}
 }
