@@ -642,7 +642,7 @@ Console: class extends Model {
 	
 	background: func {
 		alpha2 := alpha
-		if(hovered)
+		if(hovered && !bottoms && !tops && !lefts && !rights && !ulcorners && !urcorners && !dlcorners && !drcorners && focus)
 			alpha2 = alpha + 30
 		
 		glBegin(GL_QUADS)
@@ -759,7 +759,8 @@ Console: class extends Model {
 	
 	round: func(size: Float) {
 		alpha2 := alpha
-		if(bottom || top || left || right || ulcorner || urcorner || dlcorner || drcorner)
+		if(((bottom || top || left || right || ulcorner || urcorner || dlcorner || drcorner && !selected) ||
+			(bottoms || tops || lefts || rights || ulcorners || urcorners || dlcorners || drcorners)) && focus)
 			alpha2 += 30
 		glColor4ub(255,255,255,alpha2)
 		glPushMatrix()
