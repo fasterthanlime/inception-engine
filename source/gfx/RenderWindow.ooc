@@ -206,7 +206,7 @@ RenderWindow: class extends Entity {
 	}
     
     onAdd: func {        
-        engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
+        //engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
     }
 	
 	

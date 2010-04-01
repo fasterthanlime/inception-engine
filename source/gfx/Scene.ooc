@@ -49,7 +49,14 @@ Scene: class extends Entity {
 		
 		glClearColor(0,0,0,0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-		glMatrixMode(GL_MODELVIEW)
+	    //glMatrixMode(GL_MODELVIEW)
+	    //glLoadIdentity()
+	    rw := engine getEntity("render_window") as RenderWindow 
+	    
+	    glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
+		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity()
 		
         cam := get("camera", Camera) .look()
@@ -78,7 +85,11 @@ Scene: class extends Entity {
 	}
 	
 	onAdd: func {
+<<<<<<< HEAD
 		engine addEntity(get("camera", Camera))
+=======
+		//engine hud add(get("camera",Camera))
+>>>>>>> 9eab236f651aae1af20ed3ef020b4e8e4c16de63
 	}
 	
 	addProgram: func(name: String) {
