@@ -30,6 +30,31 @@ Console: class extends Model {
 	selected := false
 	hovered := false
 	
+	border:= 10  //in pixels
+	
+	//hover bools
+	bottom := false
+	top := false
+	left := false
+	right := false
+	
+	ulcorner := false
+	urcorner := false
+	dlcorner := false
+	drcorner := false
+	
+	//select bools
+	bottoms := false
+	tops := false
+	lefts := false
+	rights := false
+	
+	ulcorners := false
+	urcorners := false
+	dlcorners := false
+	drcorners := false
+	
+	
 	browsingHistory := false
 	iterator: LinkedListIterator<String>
 	
@@ -108,13 +133,43 @@ Console: class extends Model {
 		if(m type == SDL_MOUSEBUTTONDOWN) {
 			if(hovered) {
 				selected = true
-			} else {
-				selected = false
-			}
+			} 
+			if(bottom) {
+				bottoms = true
+			} 
+			if(top) {
+				tops = true
+			} 
+			if(left) {
+				lefts = true
+			} 
+			if(right) {
+				rights = true
+			} 
+			if(ulcorner) {
+				ulcorners = true
+			} 
+			if(urcorner) {
+				urcorners = true
+			} 
+			if(dlcorner) {
+				dlcorners = true
+			} 
+			if(drcorner) {
+				drcorners = true
+			} 
 		}
 		
 		if(m type == SDL_MOUSEBUTTONUP) {
 			selected = false
+			bottoms = false
+			tops = false
+			lefts = false
+			rights = false
+			ulcorners = false
+			urcorners = false
+			dlcorners = false
+			drcorners = false
 		}
 	}
 	
@@ -122,15 +177,139 @@ Console: class extends Model {
 		this := m target
 		pos := get("position", Float3)
 		size := get("size", Float2)
+		
+		left = false
+		right = false
+		top = false
+		bottom = false
+		hovered = false
+		ulcorner = false
+		urcorner = false
+		dlcorner = false
+		drcorner = false
+		
+		//testing for center bounds, for console moving
 		if(m x >= pos x && m x <= (pos x + size x) && 
 		   m y >= pos y && m y <= (pos y + size y)) {
 			   hovered = true
-		   } else {
-			   hovered = false
+		   } 
+	
+		//now left border
+		if(m x >= pos x - border && m x < pos x && 
+		   m y > pos y && m y < pos y + size y) {
+			   left = true
+		   }
+		   
+		//now right border
+		if(m x > pos x + size x && m x <= pos x + size x + border && 
+		   m y > pos y && m y < pos y + size y) {
+			   right = true
+		   }
+		   
+		//now top border
+		if(m x >= pos x && m x <= pos x + size x &&
+		   m y >= pos y - border && m y < pos y) {
+			   top = true
+		   }
+		   
+		//now bottom border
+		if(m x >= pos x && m x <= pos x + size x &&
+		   m y > pos y + size y && m y <= pos y + size y + border) {
+			   bottom = true
+		   }
+		   
+		//now upper left corner
+		if(m x < pos x && m x >= pos x - border &&
+		   m y < pos y && m y >= pos y - border) {
+			   ulcorner = true
+		   }
+		   
+		//now upper right corner
+		if(m x > pos x  + size x && m x <= pos x + size x + border &&
+		   m y < pos y && m y >= pos y - border) {
+			   urcorner = true
+		   }
+		   
+		//now lower right corner
+		if(m x > pos x  + size x && m x <= pos x + size x + border &&
+		   m y > pos y + size y && m y <= pos y + size y + border) {
+			   drcorner = true
+		   }
+		   
+		// now lower left corner
+		if(m x < pos x && m x >= pos x - border &&
+		   m y > pos y + size y && m y <= pos y + size y + border) {
+			   dlcorner = true
 		   }
 		   
 		if(selected)
 			pos set(pos x + m dx, pos y + m dy,0)
+			
+		if(lefts) {
+			size set(size x - m dx, size y)
+			pos set(pos x + m dx, pos y,0)
+		}
+		
+		if(rights) {
+			size set(size x + m dx, size y)
+			pos set(pos x, pos y,0)
+		}
+		
+		if(tops) {
+			size set(size x , size y - m dy)
+			pos set(pos x, pos y + m dy,0)
+		}
+		
+		if(bottoms) {
+			size set(size x , size y + m dy)
+			pos set(pos x, pos y,0)
+		}
+		
+		if(ulcorners) {
+			size set(size x - m dx , size y - m dy)
+			pos set(pos x + m dx, pos y + m dy,0)
+		}
+		
+		if(urcorners) {
+			size set(size x + m dx , size y - m dy)
+			pos set(pos x, pos y + m dy,0)
+		}
+		
+		if(drcorners) {
+			size set(size x + m dx , size y + m dy)
+			pos set(pos x, pos y,0)
+		}
+		
+		if(dlcorners) {
+			size set(size x - m dx , size y + m dy)
+			pos set(pos x + m dx, pos y,0)
+		}
+		
+		if(size x < border * 2) {
+			bottoms = false
+			tops = false
+			lefts = false
+			rights = false
+			ulcorners = false
+			urcorners = false
+			dlcorners = false
+			drcorners = false
+			size x = border * 2
+		}
+			
+		if(size y < border * 2) {
+			bottoms = false
+			tops = false
+			lefts = false
+			rights = false
+			ulcorners = false
+			urcorners = false
+			dlcorners = false
+			drcorners = false
+			size y = border * 2
+		}
+			
+		
 	}
 	
 	toggleShow: func {
@@ -470,7 +649,7 @@ Console: class extends Model {
 		begin2D()
 		glTranslated(pos x, pos y,0)
 		background()
-		round(10)
+		round(border)
 		glDisable(GL_BLEND)
 		drawText()
 		end2D()	
@@ -560,7 +739,10 @@ Console: class extends Model {
 	}
 	
 	round: func(size: Float) {
-		glColor4ub(255,255,255,alpha)
+		alpha2 := alpha
+		if(bottom || top || left || right || ulcorner || urcorner || dlcorner || drcorner)
+			alpha2 += 30
+		glColor4ub(255,255,255,alpha2)
 		glPushMatrix()
 		//drawing the upper left corner
 		angle1 := PI
