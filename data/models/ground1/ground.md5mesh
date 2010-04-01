@@ -9,7 +9,7 @@ joints {
 }
 
 mesh {
-	shader "/blue/Dev/r2l/data/models/ground1/ground.png"
+	shader "data/models/ground1/ground.png"
 
 	numverts 4096
 	vert 0 ( 0.997379 0.045717 ) 0 1
