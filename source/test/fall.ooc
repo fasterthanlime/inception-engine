@@ -36,7 +36,7 @@ main: func (argc: Int, argv: String*) {
     engine addEntity(R2MLoader new() load(path))
     
     engine getEntity("console", Console) addCommand(Command new("spawn", "Spawn a new entity", func (console: Console, st: StringTokenizer) {
-        console cprint("Spawwwnniiiing!")
+        console cprintln("Spawwwnniiiing!")
     }))
     
     //--------------- Start the engine!

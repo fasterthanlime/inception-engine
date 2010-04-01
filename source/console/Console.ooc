@@ -48,7 +48,7 @@ Console: class extends Model {
             
             ent := console engine getEntity(ename)
             if(ent == null) {
-                console cprint("sorry, no such entity [%s]" format(ename))
+                console cprintln("sorry, no such entity [%s]" format(ename))
                 return
             }
                 
@@ -56,17 +56,17 @@ Console: class extends Model {
             if(pname != null && !pname isEmpty()) {
                 prop := ent props get(pname)
                 if(prop == null) {
-                    console cprint("sorry, entity [%s] doesn't have a property named [%s]" format(ename, pname))
+                    console cprintln("sorry, entity [%s] doesn't have a property named [%s]" format(ename, pname))
                     return
                 }
-                console cprint(prop toString())
+                console cprintln(prop toString())
                 return
             }
             
             // display all properties
-            console cprint("%s:" format(ename))
+            console cprintln("%s:" format(ename))
             for(prop in ent props) {
-                console cprint("- %s = %s" format(prop name, prop toString()))
+                console cprintln("- %s = %s" format(prop name, prop toString()))
             }
         }))
         
@@ -74,13 +74,13 @@ Console: class extends Model {
             name := st nextToken()
             
             if(name == null) {
-                console cprint("usage: help [command]")
+                console cprintln("usage: help [command]")
             } else {
                 command := console commands get(name)
                 if(command != null) {
-                    console cprint("%s: %s" format(name, command getHelp()))
+                    console cprintln("%s: %s" format(name, command getHelp()))
                 } else {
-                    console cprint("unknown command: %s" format(name))
+                    console cprintln("unknown command: %s" format(name))
                 }
             }
         }))
@@ -332,28 +332,39 @@ Console: class extends Model {
 		
 		if(suggs size() > 1) {
 			if(correctToken == "") {
-				cprint("avalaible commands:")
+				cprintln("avalaible commands:")
 			} else {
-				cprint("%s →" format(buffer))
+				cprintln("%s →" format(buffer))
 			}
 			for(sugg in suggs) {
-				cprint(" • %s" format(sugg))
+				cprintln(" • %s" format(sugg))
 			}
 		} else if(suggs size() == 1) {
 			setBuffer("%s%s " format(correctToken,suggs[0]))
 		} else {
 			match(status) {
-				case COMMAND => cprint("Sorry, no command begins with '%s'" format(correctTokens last()))
-				case SHOW => cprint("Sorry, no entity begins with '%s'" format(correctTokens last()))
-				case ENT => cprint("Sorry, no property begins with '%s'" format(correctTokens last()))
+				case COMMAND => cprintln("Sorry, no command begins with '%s'" format(correctTokens last()))
+				case SHOW => cprintln("Sorry, no entity begins with '%s'" format(correctTokens last()))
+				case ENT => cprintln("Sorry, no property begins with '%s'" format(correctTokens last()))
 			}
 		}
 			
 	}
 	
 	cprint: func(line: String) {
+		firstLine := lines get(0) + line
+		lines set(0,firstLine)
+	}
+	
+	cprintln: func ~withcontent(line: String) {
 		lines add(0,line)
-		if(lines size > 100)
+		if(lines size() > 100)
+			lines removeLast()
+	}
+	
+	cprintln: func ~empty {
+		lines add(0,"")
+		if(lines size() > 100)
 			lines removeLast()
 	}
 	
@@ -457,7 +468,7 @@ Console: class extends Model {
 	
 	command: func(cm: String) {
 		if(cm == "") {
-			cprint(String new(20))
+			cprintln(String new(20))
 			return
 		}
 		history add(0,cm)
@@ -468,7 +479,7 @@ Console: class extends Model {
 		token := tokenizer nextToken()
         command := commands get(token)
         if(command == null) {
-            cprint("Unknown command: " + token)
+            cprintln("Unknown command: " + token)
         } else {
             command action(this, tokenizer)
 		}

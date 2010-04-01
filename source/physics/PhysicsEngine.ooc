@@ -33,7 +33,7 @@ PhysicsEngine: class extends Entity {
                 if(body1 == body2) continue // of course.
                 
                 if(body1 geom collide(body2 geom, tempForce)) {
-                    //engine getEntity("console", Console) cprint("%s <> %s ! (%.2f, %.2f, %.2f)\n" format(body1 name, body2 name, tempForce x, tempForce y, tempForce z))
+                    //engine getEntity("console", Console) cprintln("%s <> %s ! (%.2f, %.2f, %.2f)\n" format(body1 name, body2 name, tempForce x, tempForce y, tempForce z))
                     body1 pos += tempForce
                 }
             }
