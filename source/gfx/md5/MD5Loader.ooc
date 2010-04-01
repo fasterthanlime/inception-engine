@@ -49,7 +49,7 @@ MD5Loader: class {
             if (sscanf(buff, " MD5Version %d", version&) == 1) {
                 if (version != 10) {
                     // Bad version
-                    fprintf (stderr, "%s Error: bad model version %d, we only support 10\n" format(class name, version))
+                    fprintf (stderr, "%s Error: bad model version %d, we only support 10\n" format(This name, version))
                     fR close()
                     return null
                 }
@@ -161,7 +161,7 @@ MD5Loader: class {
             }
         }
 
-        printf("[%s] Finished loading %s, got %d meshes, %d joints\n", class name, filename, mdl numMeshes, mdl numJoints)
+        printf("[%s] Finished loading %s, got %d meshes, %d joints\n", This name, filename, mdl numMeshes, mdl numJoints)
 
         mdl allocVertexArrays()
 

@@ -7,6 +7,7 @@ import structs/ArrayList
 
 import text/StringTokenizer
 import console/[Console, Command]
+import hud/[Hud,Window]
 
 main: func (argc: Int, argv: String*) {
 	
@@ -15,6 +16,8 @@ main: func (argc: Int, argv: String*) {
     //--------------- Setup the window
 	win := RenderWindow new(1024, 768, 32, false, "fall test")
 	engine addEntity(win)
+    engine addEntity(Console new(10, 10, 1280 * 2/5, 800 * 2/5))
+	engine addEntity(Window new("window1",60,60,100,100))
     engine addEntity(EventMapper new())
 	
 	//--------------- Setup the physic simulation
@@ -42,8 +45,6 @@ main: func (argc: Int, argv: String*) {
         ogroBody2 setGeometry(AABB new("ogro_body_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
         physx add(ogroBody2, MD5Loader load("data/models/ogro/ogro.md5mesh"))
     }))
-    
-    
     
     //--------------- Start the engine!
 	engine run()
