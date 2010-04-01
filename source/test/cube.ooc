@@ -19,6 +19,11 @@ main: func {
 	engine scene addShader("pshader_1", "data/shaders/test.frag", GL_FRAGMENT_SHADER)
 	engine scene addShader("empty", "data/shaders/empty.vert", GL_VERTEX_SHADER)
 	
+	engine scene addShader("phong_v", "data/shaders/phong.vert", GL_VERTEX_SHADER)
+	engine scene addShader("phong_p", "data/shaders/phong.frag", GL_FRAGMENT_SHADER)
+	
+	engine scene createProgram("phong","phong_p","phong_v")
+	
 	engine scene createProgram("prog_1", null, "vshader_1")
 	engine scene createProgram("screen_program","pshader_1","empty")
 	
