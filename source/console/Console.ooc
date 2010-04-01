@@ -193,16 +193,10 @@ Console: class extends Model {
 			}
 		} 
 		
-		
-			
-		ch := m key as Char
+		ch := (m unicode & 0x7f) as Char
 		
 		// haha c'est tout moche.
-		if((ch >= SDLK_SPACE && ch <= SDLK_z && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
-			if(state & KMOD_SHIFT) {
-				ch -= (97 - 65)
-			}
-			//pc := (e key keysym unicode) as Char
+		if((ch isPrintable() && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {

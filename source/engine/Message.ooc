@@ -27,9 +27,9 @@ MouseMotion: class extends Message {
 }
 
 KeyboardMsg: class extends Message {
-	key: Int
-	type : Int //keyup or keydown
-	init: func ~km (=key, =type) {}
+	key, unicode: Int
+	type : Int // keyup or keydown
+	init: func ~km (=key, =unicode, =type) {}
 }
 
 

@@ -21,6 +21,7 @@ PhysicsEngine: class extends Entity {
         
 		//here we apply all the forces to each physical object
 		for(body in bodies) {
+            if(body fixed) continue
 			for(force in forces) {
 				force compute(body, tempForce)
 				body applyForce(tempForce)

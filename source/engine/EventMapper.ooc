@@ -45,7 +45,7 @@ EventMapper: class extends Entity {
             if(event type == SDL_QUIT) {
                 sendAll(QuitMessage new())
 			} else if(event type == SDL_KEYUP || event type == SDL_KEYDOWN) {
-                msg := KeyboardMsg new(event key keysym sym,event type)
+                msg := KeyboardMsg new(event key keysym sym, event key keysym unicode, event type)
                 if(keyGrabber) {
                     send(keyGrabber, msg)
                 } else {

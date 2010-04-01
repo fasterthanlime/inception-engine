@@ -24,20 +24,26 @@ main: func (argc: Int, argv: String*) {
     engine addEntity(physx)
 	
     //--------------- Add a few cubes
-	cubebody1 := Body new("cube_1_body") .setFixed(true)
-    cubebody2 := Body new("cube_2_body") .setPos(0, 0, 20)
-    physx add(cubebody1)
-    physx add(cubebody2, MD5Loader new() load("data/models/ogro/ogro.md5mesh"))
-
-    cubebody1 setGeometry(AABB new("cube_1_aabb", 1, 1, 1))
-    cubebody2 setGeometry(AABB new("cube_2_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
-	
     path := argc >= 2 ? argv[1] : "data/maps/ground1.r2m"
     engine addEntity(R2MLoader new() load(path))
     
+	groundBody := Body new("ground_body") .setFixed(true)
+    groundBody setGeometry(AABB new("ground_body_aabb", 1, 1, 1))
+    physx add(groundBody)
+    
+    console := Console
+    
     engine getEntity("console", Console) addCommand(Command new("spawn", "Spawn a new entity", func (console: Console, st: StringTokenizer) {
         console cprintln("Spawwwnniiiing!")
+        
+        physx := console engine getEntity("physx", PhysicsEngine)
+        
+        ogroBody2 := Body new("ogro_body") .setPos(rand() % 40 - 20, rand() % 40 - 20, 20)
+        ogroBody2 setGeometry(AABB new("ogro_body_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
+        physx add(ogroBody2, MD5Loader new() load("data/models/ogro/ogro.md5mesh"))
     }))
+    
+    
     
     //--------------- Start the engine!
 	engine run()

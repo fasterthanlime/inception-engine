@@ -23,8 +23,17 @@ Engine: class extends Entity {
 	}
     
     addEntity: func (entity: Entity) {
-        // TODO: check for duplicates
-        entities put(entity name, entity)
+        name := entity name
+        seed := 1
+        evilBro := entities get(name)
+        while(evilBro != null) {
+            name = "%s (%d)" format(entity name, seed)
+            seed += 1
+            evilBro = entities get(name)
+            printf("Bro-ing name, got %s so far.\n", name)
+        }
+        
+        entities put(name, entity)
         entity engine = this
         entity onAdd()
     }
