@@ -61,6 +61,8 @@ EventMapper: class extends Entity {
                 } else {
                     sendAll(msg)
                 }
+			} else if(event type == SDL_MOUSEBUTTONUP || event type == SDL_MOUSEBUTTONDOWN) {
+				sendAll(MouseButton new(event button button, event type, event motion x, event motion y))
 			} else if(event type == SDL_VIDEORESIZE) {
 				sendAll(ResizeEvent new(event resize w, event resize h))
 			}
