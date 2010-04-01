@@ -2,7 +2,8 @@
 use sdl, glew, glu
 import sdl/[Sdl, Video, Event], glew, glu/Glu
 
-import engine/[Message, Entity, GLConsole, Types]
+import engine/[Message, Entity, Types]
+import console/Console
 import gfx/Scene
 
 RenderWindow: class extends Entity {
@@ -202,10 +203,8 @@ RenderWindow: class extends Entity {
         
 	}
     
-    onAdd: func {
-        
-        engine addEntity(GLConsole new(Float3 new(10, 10, 0), Float2 new(width * 2/5, height * 2/5)))
-        
+    onAdd: func {        
+        engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
     }
 	
 	

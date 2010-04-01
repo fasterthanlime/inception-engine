@@ -1,7 +1,8 @@
 use glew
 import glew
-import engine/[Engine,Entity, Update, Types, GLConsole]
+import engine/[Engine,Entity, Update, Types]
 import gfx/[StaticMesh, Scene]
+import console/Console
 
 Model: abstract class extends Entity {
     

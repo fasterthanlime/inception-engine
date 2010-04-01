@@ -1,4 +1,4 @@
-import engine/[Engine, Entity, Property, Update, EventMapper, Message, GLConsole]
+import engine/[Engine, Entity, Property, Update, EventMapper, Message]
 import gfx/[RenderWindow, Cube, Scene, Grid]
 import gfx/md5/[MD5Loader]
 

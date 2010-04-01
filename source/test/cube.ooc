@@ -1,6 +1,6 @@
 use glew
 import glew
-import engine/[Engine, Entity, Property, Update, EventMapper, Message,GLConsole]
+import engine/[Engine, Entity, Property, Update, EventMapper, Message]
 import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
 
 
@@ -29,7 +29,7 @@ main: func {
 	engine scene createProgram("screen_program","pshader_1","empty")
 	
 	engine scene addProgram("screen_program")
-	//engine scene setProgram("cube_1", "prog_1")	
+	engine scene setProgram("cube_1", "prog_1")	
 	
 	engine addEntity(EventMapper new())
 	

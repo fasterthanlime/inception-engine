@@ -1,25 +1,26 @@
-use glew,glu,sdl,ftgl
+use glew, glu, sdl, ftgl
 import ftgl
 import sdl/[Sdl,Event]
 import glew,glu/Glu
-import Engine,Entity,Property,Types,Message,EventMapper
+import engine/[Engine, Entity, Property, Types, Message, EventMapper]
 import gfx/[RenderWindow, Model]
 import structs/[LinkedList, HashMap]
 import text/StringTokenizer
 
-GLConsole: class extends Model {
+import Command
+
+Console: class extends Model {
 
 	lines := LinkedList<String> new()  //stores all lines for displaying(you don't want messages in the history, do you)
 	history := LinkedList<String> new() //only entered commands here
-	commands := HashMap<String,String> new()
-	//commands := LinkedList<String> new()
+	commands := HashMap<String, Command> new()
 	
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
 	buffer := String new(128)
 	inputHeight := 12
 	caretStart := 0
 	
-	size := Float2 new(800,600)
+	size := Float2 new(800, 600)
 	
 	focus := true
 	alpha := 128
@@ -27,15 +28,13 @@ GLConsole: class extends Model {
 	browsingHistory := false
 	iterator: LinkedListIterator<String>
 	
-	COMMAND := 0
-	SHOW := 1
-	ENT := 2
+	COMMAND = 0, SHOW = 1, ENT = 2 : Int
 	
-	init: func ~posSize (=pos, =size) {
+	init: func ~posSize (x, y, width, height: Float) {
         
 		super("console")
-		set("position", pos)
-		set("size",     size)
+		set("position", Float3 new(x, y, 0))
+		set("size",     Float2 new(width, height))
 		listen(KeyboardMsg, This handleKey)
 		show = false
 		initCommands()
@@ -43,60 +42,58 @@ GLConsole: class extends Model {
 	}
 	
 	initCommands: func {
-		commands add("quit", "quits r2l")
-		commands add("help", "help [command]")
-		commands add("show", "show [entity] [...]")
+		addCommand(Command new("show", "show [entity] [...]", func (console: Console, st: StringTokenizer) {
+            ename := st nextToken()
+            pname := st nextToken()
+            
+            ent := console engine getEntity(ename)
+            if(ent == null) {
+                console cprint("sorry, no such entity [%s]" format(ename))
+                return
+            }
+                
+            // display a particular property
+            if(pname != null && !pname isEmpty()) {
+                prop := ent props get(pname)
+                if(prop == null) {
+                    console cprint("sorry, entity [%s] doesn't have a property named [%s]" format(ename, pname))
+                    return
+                }
+                console cprint(prop toString())
+                return
+            }
+            
+            // display all properties
+            console cprint("%s:" format(ename))
+            for(prop in ent props) {
+                console cprint("- %s = %s" format(prop name, prop toString()))
+            }
+        }))
+        
+		addCommand(Command new("help", "help [command]", func (console: Console, st: StringTokenizer) {
+            name := st nextToken()
+            
+            if(name == null) {
+                console cprint("usage: help [command]")
+            } else {
+                command := console commands get(name)
+                if(command != null) {
+                    console cprint("%s: %s" format(name, command getHelp()))
+                } else {
+                    console cprint("unknown command: %s" format(name))
+                }
+            }
+        }))
+        
+		addCommand(Command new("quit", "quits r2l", func (console: Console, st: StringTokenizer) {
+            console sendAll(QuitMessage new())
+        }))
 	}
-	
-	show: func ~entity(ename: String) {
-		if(ename == null) {
-			cprint("usage: %s" format(commands get("show")))
-			return
-		}
-		ent := engine getEntity(ename)
-		if(ent != null) {
-			cprint("%s:" format(ename))
-			for(prop in ent props) {
-				cprint("- %s" format(prop name))
-			}
-		} else {
-			cprint("sorry, no such entity [%s]" format(ename))
-		}
-	}
-	
-	show: func ~entprop(ename,pname: String) {
-		if(pname == null) {
-			show(ename)
-			return
-		}
-		
-		ent := engine getEntity(ename)
-		if(ent != null) {
-			cprint("%s:" format(ename))
-			for(prop in ent props) {
-				cprint("- %s = %s" format(prop name, prop toString()))
-			}
-		} else {
-			cprint("sorry, no such entity [%s]" format(ename))
-		}
-	}
-	
-	quit: func {
-		sendAll(QuitMessage new())
-	}
-	
-	help: func(cm: String) {
-		if(cm == null) {
-			cprint("usage: help [command]")
-		} else {
-			hlpStr := commands get(cm)
-			if(hlpStr != null) {
-				cprint("%s: %s" format(cm,hlpStr))
-			} else {
-				cprint("unknown command: %s" format(cm))
-			}
-		}
-	}
+    
+    addCommand: func (c: Command) {
+        commands put(c getName(), c)
+        c console = this
+    }
 	
 	toggleShow: func {
 		show = !show
@@ -259,9 +256,6 @@ GLConsole: class extends Model {
 		tokenizer := StringTokenizer new(begin, " ")
 		correctTokens := LinkedList<String> new()
 		status := COMMAND
-		
-		
-		
 		
 		level := 0
 		for(token in tokenizer) {
@@ -472,17 +466,11 @@ GLConsole: class extends Model {
 		
 		
 		token := tokenizer nextToken()
-		if(token == "quit") {
-			quit()
-		} else if(token == "help"){
-			arg1 := tokenizer nextToken()
-			help(arg1)
-		} else if(token == "show") {
-			arg1 := tokenizer nextToken()
-			arg2 := tokenizer nextToken()
-			show(arg1,arg2)
-		} else {
-			cprint("unknown command: " + token)
+        command := commands get(token)
+        if(command == null) {
+            cprint("Unknown command: " + token)
+        } else {
+            command action(this, tokenizer)
 		}
 		
 		/*

@@ -48,10 +48,6 @@ ResizeEvent: class extends Message {
 	init: func ~winev(=x,=y) {}
 }
 
-Command: class extends Message {
-}
 
-QuitMessage: class extends Message {
-	
-}
+QuitMessage: class extends Message {}
 

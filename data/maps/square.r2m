@@ -1,7 +1,7 @@
 R2MVersion 1
 
 models {
-    cube cube.md5mesh
+    cube cube/cube.md5mesh
 }
 
 things {
