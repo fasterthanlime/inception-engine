@@ -3,6 +3,7 @@ import glew
 import engine/[Engine, Entity, Property, Update, EventMapper, Message]
 import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
 import console/Console
+import hud/[Hud,Window]
 
 main: func {
 	
@@ -11,6 +12,12 @@ main: func {
 	win := RenderWindow new(1280, 800, 32, false, "render_window")
 	engine addEntity(win)
 	engine addEntity(EventMapper new())
+	
+	hud1 := Hud new("hud")
+	hud1 add(Window new("window1",60,60,100,100))
+	hud1 add(engine getEntity("console",Console))
+	
+	engine addEntity(hud1)
 	
 	engine addEntity(Cube new("cube_1"))
 	engine addEntity(Grid new("grid_1"))
@@ -27,12 +34,6 @@ main: func {
 	engine scene createProgram("prog_1", null, "vshader_1")
 
 	engine scene createProgram("screen_program","pshader_1","empty")
-	
-	console := engine getEntity("console",Console)
-	console cprint("hello there")
-	console cprint(" comment ca va,")
-	console cprint(" j'espere que vui =)")
-	console cprintln()
 	
 	//engine scene addProgram("screen_program")
 	//engine scene setProgram("cube_1", "prog_1")	
