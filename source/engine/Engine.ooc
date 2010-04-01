@@ -12,7 +12,7 @@ Engine: class extends Entity {
     entities := HashMap<String, Entity> new()
     
     scene := Scene new("default_scene")
-	hud := Hud new("default_hud")
+	//hud := Hud new("default_hud")
     time1, time2, dt: UInt32 = 0
 	time: UInt32 = 0
     
@@ -21,9 +21,9 @@ Engine: class extends Entity {
 		addEntity(this)
 		listen(KeyboardMsg, This onKey)
 		addEntity(scene)
-		addEntity(hud)
+		//addEntity(hud)
 		set("scene", scene)
-		set("hud", hud)
+		//set("hud", hud)
 	}
     
     addEntity: func (entity: Entity) {
@@ -35,10 +35,11 @@ Engine: class extends Entity {
             seed += 1
             evilBro = entities get(name)
         }
-        
+        printf("[Engine->addEntity]: Added %s\n",name)
         entities put(name, entity)
         entity engine = this
         entity onAdd()
+		
     }
     
     getEntity: func (name: String) -> Entity {

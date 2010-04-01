@@ -22,6 +22,8 @@ Console: class extends Window {
 	
 	printedLine := true
 	
+	show := false
+	
 	//size := Float2 new(800, 600)
 	
 	browsingHistory := false

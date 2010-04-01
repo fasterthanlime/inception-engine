@@ -15,7 +15,9 @@ Hud: class extends Model {
 	render: func {
 		begin2D()
 		for(window in windows) {
-			window _render()
+			glPushMatrix()
+			window render()
+			glPopMatrix()
 		}
 		end2D()
 	}

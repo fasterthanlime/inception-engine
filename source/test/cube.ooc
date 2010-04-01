@@ -13,32 +13,14 @@ main: func {
 	engine addEntity(win)
 	engine addEntity(EventMapper new())
 	
-	hud1 := Hud new("hud")
+	/*
 	hud1 add(Window new("window1",60,60,100,100))
-	hud1 add(engine getEntity("console",Console))
+	hud1 add(Console new(10, 10, width * 2/5, height * 2/5))
+	*/
 	
-	engine addEntity(hud1)
 	
 	engine addEntity(Cube new("cube_1"))
 	engine addEntity(Grid new("grid_1"))
-	
-	engine scene addShader("vshader_1", "data/shaders/test.vert", GL_VERTEX_SHADER)
-	engine scene addShader("pshader_1", "data/shaders/test.frag", GL_FRAGMENT_SHADER)
-	engine scene addShader("empty", "data/shaders/empty.vert", GL_VERTEX_SHADER)
-	
-	engine scene addShader("phong_v", "data/shaders/phong.vert", GL_VERTEX_SHADER)
-	engine scene addShader("phong_p", "data/shaders/phong.frag", GL_FRAGMENT_SHADER)
-	
-	engine scene createProgram("phong","phong_p","phong_v")
-	
-	engine scene createProgram("prog_1", null, "vshader_1")
-
-	engine scene createProgram("screen_program","pshader_1","empty")
-	
-	//engine scene addProgram("screen_program")
-	//engine scene setProgram("cube_1", "prog_1")	
-	
-	engine addEntity(EventMapper new())
 	
 
 	engine run()

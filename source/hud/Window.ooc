@@ -1,9 +1,9 @@
 import sdl/[Sdl,Event]
 import glew,glu/Glu
 import gfx/Model
-import engine/[Types, Message]
+import engine/[Types, Message, Entity]
 
-Window: class extends Model {
+Window: class extends Entity {
 	
 	focus := true
 	alpha := 128
@@ -259,7 +259,7 @@ Window: class extends Model {
 	wRender: func {}
 	
 	onAdd: func {
-		engine scene addEntity(this)
+		engine addEntity(this)
 	}
 	
 	round: func(rsize: Float) {

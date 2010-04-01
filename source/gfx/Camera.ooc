@@ -83,6 +83,8 @@ Camera: class extends Entity {
 	    gluLookAt(pos x,pos y,pos z,
 				  target x, target y, target z,
 				  0,0,1)
+				  
+		printf("[Camera->look]: %s\n",name)
 	}
 	
 	vectorsFromAngles: func {
