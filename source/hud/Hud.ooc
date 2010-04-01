@@ -3,6 +3,7 @@ import gfx/Model
 import structs/LinkedList
 import Window
 import gfx/RenderWindow
+import engine/Engine
 
 Hud: class extends Model {
 	

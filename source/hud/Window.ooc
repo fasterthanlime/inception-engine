@@ -13,6 +13,8 @@ Window: class extends Entity {
 	
 	border:= 10  //in pixels
 	
+	show := false
+	
 	//hover bools
 	bottom := false
 	top := false
@@ -246,6 +248,8 @@ Window: class extends Entity {
 	}
 	
 	render: func {
+		if(!show)
+			return
 		pos  := get("position", Float3)
 		size := get("size", Float2)
 		

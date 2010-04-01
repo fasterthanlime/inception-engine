@@ -84,7 +84,6 @@ Camera: class extends Entity {
 				  target x, target y, target z,
 				  0,0,1)
 				  
-		printf("[Camera->look]: %s\n",name)
 	}
 	
 	vectorsFromAngles: func {
