@@ -25,6 +25,8 @@ RenderWindow: class extends Entity {
             fprintf(stderr, "SDL initialization failed: %s\n", SDL getError())
 			quit()
 		}
+        
+        SDL enableUnicode(true)
 
 		/* Fetch the video info */
 		videoInfo := SDL getVideoInfo()
