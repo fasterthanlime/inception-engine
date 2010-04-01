@@ -20,6 +20,8 @@ Console: class extends Model {
 	inputHeight := 12
 	caretStart := 0
 	
+	printedLine := true
+	
 	size := Float2 new(800, 600)
 	
 	focus := true
@@ -346,18 +348,43 @@ Console: class extends Model {
 	}
 	
 	cprint: func(line: String) {
-		firstLine := lines get(0) + line
-		lines set(0,firstLine)
+		firstLine: String = null
+		if(lines size() > 0)
+			firstLine = lines get(0)
+		
+		if(firstLine != null) {
+			lines set(0,firstLine + line)
+		} else {
+			lines add(0,"")
+			lines set(0,line)
+		}
+			
+		printedLine = false
 	}
 	
 	cprintln: func ~withcontent(line: String) {
-		lines add(0,line)
+		if(!printedLine) {
+			first := lines get(0)
+			if(first != null) {
+				lines set(0,first + line)
+			} else {
+				lines add(0,line)
+				printedLine = true
+			}	
+		} else {
+			lines add(0,line)
+			printedLine = true
+		}
+		
 		if(lines size() > 100)
 			lines removeLast()
 	}
 	
 	cprintln: func ~empty {
-		lines add(0,"")
+		if(printedLine) {
+			lines add(0,"")
+		}
+		printedLine = true
 		if(lines size() > 100)
 			lines removeLast()
 	}
