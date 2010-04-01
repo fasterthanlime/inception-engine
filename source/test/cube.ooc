@@ -2,7 +2,7 @@ use glew
 import glew
 import engine/[Engine, Entity, Property, Update, EventMapper, Message]
 import gfx/[RenderWindow, Cube, Scene, Grid, Camera]
-
+import console/Console
 
 main: func {
 	
@@ -27,6 +27,12 @@ main: func {
 	engine scene createProgram("prog_1", null, "vshader_1")
 
 	engine scene createProgram("screen_program","pshader_1","empty")
+	
+	console := engine getEntity("console",Console)
+	console cprint("hello there")
+	console cprint(" comment ca va,")
+	console cprint(" j'espere que vui =)")
+	console cprintln()
 	
 	//engine scene addProgram("screen_program")
 	//engine scene setProgram("cube_1", "prog_1")	
