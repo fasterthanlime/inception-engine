@@ -28,8 +28,8 @@ main: func {
 
 	engine scene createProgram("screen_program","pshader_1","empty")
 	
-	engine scene addProgram("screen_program")
-	engine scene setProgram("cube_1", "prog_1")	
+	//engine scene addProgram("screen_program")
+	//engine scene setProgram("cube_1", "prog_1")	
 	
 	engine addEntity(EventMapper new())
 	

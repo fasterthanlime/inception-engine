@@ -343,7 +343,7 @@ Console: class extends Model {
 			setBuffer("%s%s " format(correctToken,suggs[0]))
 		} else {
 			match(status) {
-				case COMMAND => cprintln("Sorry, no command begins with '%s'" format(correctTokens last()))
+				case COMMAND => cprintln("Sorry, no command begins with '%s'" format(buffer))
 				case SHOW => cprintln("Sorry, no entity begins with '%s'" format(correctTokens last()))
 				case ENT => cprintln("Sorry, no property begins with '%s'" format(correctTokens last()))
 			}
