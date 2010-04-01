@@ -28,7 +28,7 @@ joints {
 }
 
 mesh {
-	shader "/opt/sauerbraten/packages/models/ogro/skin.jpg"
+	shader "data/models/ogro/skin.jpg"
 
 	numverts 2010
 	vert 0 ( 0.996094 0.039062 ) 0 2

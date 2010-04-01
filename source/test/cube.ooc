@@ -10,7 +10,7 @@ main: func {
 	
 	win := RenderWindow new(1280, 800, 32, false, "render_window")
 	engine addEntity(win)
-	
+	engine addEntity(EventMapper new())
 	
 	engine addEntity(Cube new("cube_1"))
 	engine addEntity(Grid new("grid_1"))
@@ -18,9 +18,6 @@ main: func {
 	engine scene addShader("vshader_1", "data/shaders/test.vert", GL_VERTEX_SHADER)
 	engine scene createProgram("prog_1", null, "vshader_1")
 	engine scene setProgram("cube_1", "prog_1")	
-	
-	engine addEntity(EventMapper new())
-	
 
 	engine run()
 }
