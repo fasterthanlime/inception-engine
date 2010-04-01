@@ -15,9 +15,9 @@ Scene: class extends Entity {
 	
 	models := HashMap<String,Model> new()
 	shaders := HashMap<String, Int> new()
-	programs := HashMap<String, Int> new()  //shader programs
+	programs := HashMap<String, SProgram> new()  //shader programs
 	
-	globalPrograms := LinkedList<String> new()
+	globalPrograms := HashMap<String,SProgram> new()
 	
 	round : Long = 0
 	
@@ -43,18 +43,18 @@ Scene: class extends Entity {
 		//printf("==================== render %ld ===================\n",round)
 		cam := get("camera",Camera) .look()
 		
-		for(name in globalPrograms) {
-			useProgram(name)
-			printf("using program %s\n",name)
+		for(prg in globalPrograms) {
+			useProgram(prg)
+			//printf("using program %s\n",name)
 		}
 
 	    
 	    for(model in models) {
             model _render()
 		}
-		for(name in globalPrograms) {
+		for(prg in globalPrograms) {
 			glUseProgram(0)
-			printf("unloading program...\n")
+			//printf("unloading program...\n")
 		}
 		
 	    glFlush()
@@ -70,7 +70,7 @@ Scene: class extends Entity {
 	}
 	
 	addProgram: func(name: String) {
-		globalPrograms add(name)
+		globalPrograms put(name,SProgram new(programs get(name) program))
 	}
 	
 	setProgram: func(model,name: String) {
@@ -89,10 +89,12 @@ Scene: class extends Entity {
 		mod setProgram(prg)		
 	}
 	
-	useProgram: func(name: String) {
-		prg := programs get(name)
-		if(prg != null)
-			glUseProgram(prg)
+	useProgram: func(prg: SProgram) {
+		if(prg != null) {
+			glUseProgram(prg program)
+			//printf("using program #%d\n",prg program)
+			glUniform1f(prg timeid,engine getTicks() as Float)
+		}
 	}
 	
 	addShader: func(name: String, filename: String, type: GLenum) {
@@ -145,7 +147,7 @@ Scene: class extends Entity {
 	}
 	
 	loadSrc: func(filename: String) -> String {
-		reader := FileReader new(File new("data/shaders/test.vert"))
+		reader := FileReader new(File new(filename))
 		buffer := Buffer new()
 		while(reader hasNext()) {
 			buffer append(reader read())
@@ -217,7 +219,7 @@ Scene: class extends Entity {
 			return false
 		}
 		
-		programs put(name,program)
+		programs put(name,SProgram new(program))
 		return true
 	}
 }

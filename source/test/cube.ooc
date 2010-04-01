@@ -16,8 +16,14 @@ main: func {
 	engine addEntity(Grid new("grid_1"))
 	
 	engine scene addShader("vshader_1", "data/shaders/test.vert", GL_VERTEX_SHADER)
+	engine scene addShader("pshader_1", "data/shaders/test.frag", GL_FRAGMENT_SHADER)
+	engine scene addShader("empty", "data/shaders/empty.vert", GL_VERTEX_SHADER)
+	
 	engine scene createProgram("prog_1", null, "vshader_1")
-	engine scene setProgram("cube_1", "prog_1")	
+	engine scene createProgram("screen_program","pshader_1","empty")
+	
+	engine scene addProgram("screen_program")
+	//engine scene setProgram("cube_1", "prog_1")	
 	
 	engine addEntity(EventMapper new())
 	

@@ -1,10 +1,10 @@
 import glew
 
 SProgram: class {  //stands for shader program
-	vertexShader, fragmentShader: GLuint
 	program: GLuint
-	init: func(=fragmentShader,=vertexShader) {
-		program = glCreateProgram()
+	timeid: GLuint
+	init: func(=program) {
+		timeid = glGetUniformLocation(program,"time")
 	} 
 
 	del: func {
