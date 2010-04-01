@@ -5,6 +5,8 @@ main: func {
     
     engine := Engine new()
     
+    engine addEntity(RenderWindow new(800, 600, 32, false, "AskName test."))
+    
     player :=   Entity new("Player") \
         .addUpdate(Update new(func -> Bool {
             "username: " print()

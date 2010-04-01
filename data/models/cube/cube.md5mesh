@@ -9,7 +9,7 @@ joints {
 }
 
 mesh {
-	shader "data/models/rock.tga"
+	shader "data/models/cube/rock.jpg"
 
 	numverts 24
 	vert 0 ( 0.000000 1.000000 ) 0 1

@@ -10,7 +10,7 @@ main: func {
 	
 	win := RenderWindow new(1280, 800, 32, false, "render_window")
 	engine addEntity(win)
-	
+	engine addEntity(EventMapper new())
 	
 	engine addEntity(Cube new("cube_1"))
 	engine addEntity(Grid new("grid_1"))
@@ -25,6 +25,7 @@ main: func {
 	engine scene createProgram("phong","phong_p","phong_v")
 	
 	engine scene createProgram("prog_1", null, "vshader_1")
+
 	engine scene createProgram("screen_program","pshader_1","empty")
 	
 	engine scene addProgram("screen_program")

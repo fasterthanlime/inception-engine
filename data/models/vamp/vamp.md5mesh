@@ -9,7 +9,7 @@ joints {
 }
 
 mesh {
-	shader "data/models/textures/vamp.png"
+	shader "data/models/vamp/vamp.png"
 
 	numverts 322
 	vert 0 ( 0.571935 0.576506 ) 0 1

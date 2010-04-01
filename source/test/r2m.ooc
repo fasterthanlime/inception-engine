@@ -10,11 +10,12 @@ main: func (argc: Int, argv: String*) {
 	engine := Engine new()
 	
 	win := RenderWindow new(1200, 800, 32, false, "render_window")
-	
-	engine addEntity(Grid new("grid_1"))
-    
-	engine addEntity(EventMapper new())
 	engine addEntity(win)
+    engine addEntity(EventMapper new())
+    
+	engine addEntity(Grid new("grid_1"))
+    path := argc >= 2 ? argv[1] : "data/maps/square.r2m"
+    engine addEntity(R2MLoader new() load(path))
     
 	engine run()
 }
