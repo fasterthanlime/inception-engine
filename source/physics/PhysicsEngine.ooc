@@ -5,6 +5,7 @@ import gfx/Model
 import console/Console
 
 PhysicsEngine: class extends Entity {
+    
 	forces := LinkedList<Force> new()
 	bodies := LinkedList<Body> new()
 	tempForce := Float3 new(0,0,0)

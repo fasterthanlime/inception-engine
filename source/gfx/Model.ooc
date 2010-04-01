@@ -22,7 +22,7 @@ Model: abstract class extends Entity {
 	}
 	
 	setProgram: func(=sprogram) {
-		timeid = glGetUniformLocation(sprogram,"time")
+		timeid = glGetUniformLocation(sprogram, "time")
 	}
 	
 	setPos: func(x,y,z: Float) {
@@ -48,6 +48,6 @@ Model: abstract class extends Entity {
 	render: abstract func {}
 	
 	onAdd: func {
-		engine scene models put(name,this)
+        engine scene addModel(this)
 	}
 }

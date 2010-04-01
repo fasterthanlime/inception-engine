@@ -849,4 +849,8 @@ Console: class extends Model {
 		glEnd()
 		glPopMatrix()
 	}
+    
+    onAdd: func {
+        engine scene getFrontPass() add(this)
+    }
 }

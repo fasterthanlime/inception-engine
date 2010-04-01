@@ -11,7 +11,7 @@ main: func (argc: Int, argv: String*) {
     engine addEntity(win)
     
     path := argc >= 2 ? argv[1] : "data/models/ogro/ogro.md5mesh"
-	engine addEntity(MD5Loader new() load(path))
+	engine addEntity(MD5Loader load(path))
 	engine addEntity(Grid new("grid_1"))
     
 	engine run()

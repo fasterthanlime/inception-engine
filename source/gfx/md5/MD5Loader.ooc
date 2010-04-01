@@ -26,12 +26,15 @@
  */
 
 import io/[File, FileReader]
+import structs/HashMap
 import MD5Model
 
 MD5Loader: class {
     
+    cache := static HashMap<String, MD5Model> new()
+    
     /// Load an MD5 model from file.
-    load: func (filename: String) -> MD5Model {
+    load: static func (filename: String) -> MD5Model {
         mdl := MD5Model new(filename)
         version: Int
         currMesh := 0

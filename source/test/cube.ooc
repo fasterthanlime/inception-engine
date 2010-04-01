@@ -35,10 +35,8 @@ main: func {
 	console cprintln()
 	
 	//engine scene addProgram("screen_program")
-	//engine scene setProgram("cube_1", "prog_1")	
+	//engine scene setProgram(engine getEntity("cube_1"), "prog_1")	
 	
 	engine addEntity(EventMapper new())
-	
-
 	engine run()
 }
