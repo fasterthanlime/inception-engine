@@ -112,3 +112,15 @@ Float2: class {
 		}
 	}
 }
+
+Int2: class {
+	clients: Entity[]
+	x,y: Int
+	init: func(=x,=y) {}
+	
+	set: func(=x,=y){
+		for(client in clients) {
+			client send(client,ValueChange get(this))
+		}
+	}
+}

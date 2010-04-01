@@ -26,6 +26,9 @@ Console: class extends Model {
 	
 	focus := true
 	alpha := 128
+
+	selected := false
+	hovered := false
 	
 	browsingHistory := false
 	iterator: LinkedListIterator<String>
@@ -38,6 +41,8 @@ Console: class extends Model {
 		set("position", Float3 new(x, y, 0))
 		set("size",     Float2 new(width, height))
 		listen(KeyboardMsg, This handleKey)
+		listen(MouseButton, This mouseHandle)
+		listen(MouseMotion, This mouseMotion)
 		show = false
 		initCommands()
         
@@ -96,6 +101,37 @@ Console: class extends Model {
         commands put(c getName(), c)
         c console = this
     }
+	
+	
+	mouseHandle: static func(m: MouseButton) {
+		this := m target
+		if(m type == SDL_MOUSEBUTTONDOWN) {
+			if(hovered) {
+				selected = true
+			} else {
+				selected = false
+			}
+		}
+		
+		if(m type == SDL_MOUSEBUTTONUP) {
+			selected = false
+		}
+	}
+	
+	mouseMotion: static func(m: MouseMotion) {
+		this := m target
+		pos := get("position", Float3)
+		size := get("size", Float2)
+		if(m x >= pos x && m x <= (pos x + size x) && 
+		   m y >= pos y && m y <= (pos y + size y)) {
+			   hovered = true
+		   } else {
+			   hovered = false
+		   }
+		   
+		if(selected)
+			pos set(pos x + m dx, pos y + m dy,0)
+	}
 	
 	toggleShow: func {
 		show = !show
@@ -425,9 +461,13 @@ Console: class extends Model {
         glDisable(GL_BLEND)
 	}
 	
-	background: func {		
+	background: func {
+		alpha2 := alpha
+		if(hovered)
+			alpha2 = alpha + 30
+		
 		glBegin(GL_QUADS)
-			glColor4ub(255, 255, 255,alpha)
+			glColor4ub(255, 255, 255,alpha2)
 			glVertex2i(0, 0)
 			glVertex2i(size x, 0)
 			glVertex2i(size x,size y)

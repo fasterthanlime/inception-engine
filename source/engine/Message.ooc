@@ -26,6 +26,13 @@ MouseMotion: class extends Message {
 	init: func ~mm (=x,=y,=dx,=dy){}
 }
 
+MouseButton: class extends Message {
+	button: Int 
+	type: Int // up/down
+	x,y: Int  //event coordinates
+	init: func ~mousebut (=button,=type,=x,=y) {}
+}
+
 KeyboardMsg: class extends Message {
 	key, unicode: Int
 	type : Int // keyup or keydown
