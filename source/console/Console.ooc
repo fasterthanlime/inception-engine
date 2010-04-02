@@ -416,7 +416,7 @@ Console: class extends Window {
 		glPushMatrix()
 		glColor3ub(255,255,255)
 		glTranslated(0, 0, 0)
-		font render(1, inputHeight, 0.2, 1, buffer)
+		font render(1, inputHeight, 0.2, true, buffer)
         
         // draw caret
         if(caretStart > 0) {
@@ -424,7 +424,7 @@ Console: class extends Window {
             textWidth : Float = (bbox urx / 5)
             glTranslated(textWidth - 2, 0, 0)
         }
-        font render(1, inputHeight, 0.2, 1, "|")
+        font render(1, inputHeight, 0.2, true, "|")
         
         upperpos := pos y
         posy := pos y + size y + 5
@@ -443,7 +443,7 @@ Console: class extends Window {
 			if(posy == posy - inputHeight)
 				break
 			glTranslated(0,-inputHeight,0)
-			font render(1, inputHeight, 0.2, 1, line)
+			font render(1, inputHeight, 0.2, true, line)
 		}
         
 		glPopMatrix()

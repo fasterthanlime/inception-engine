@@ -30,6 +30,7 @@ import glew, devil
 
 import structs/ArrayList
 import ../Model
+import engine/Types
 
 // Vectors
 Vec2: cover {
@@ -198,6 +199,15 @@ MD5Model: class extends Model {
     
     init: func ~md5 (.name) {
         super(name)
+    }
+    
+    clone: func -> This {
+        // That's ee-vil.
+        copy := gc_malloc(This instanceSize) as This
+        memcpy(copy, this, This instanceSize)
+        copy pos = Float3 new()
+        copy rot = Float3 new()
+        copy
     }
     
     /**

@@ -3,7 +3,7 @@ import glew
 import glu/Glu
 import sdl/Video
 import engine/[Entity, Update, Engine, Types]
-import gfx/[Model, RenderWindow, Camera, SProgram]
+import gfx/[Model, RenderWindow, Camera, ShaderProgram]
 import structs/[LinkedList, HashMap, ArrayList]
 import io/[File, FileReader]
 import text/Buffer
@@ -23,9 +23,8 @@ Scene: class extends Entity {
     backPass, mainPass, frontPass: Pass
     
 	shaders := HashMap<String, Int> new()
-	programs := HashMap<String, SProgram> new() // shader programs
-	
-	globalPrograms := HashMap<String, SProgram> new()
+	programs := HashMap<String, ShaderProgram> new()
+	globalPrograms := HashMap<String, ShaderProgram> new()
 	
 	round : Long = 0
 	
@@ -61,9 +60,9 @@ Scene: class extends Entity {
 		
         cam := get("camera", Camera) .look()
 		
-		for(prg in globalPrograms) {
-			useProgram(prg)
-			//printf("using program %s\n",name)
+        // this is probably wrong. I think we can only use one shader at a time
+		for(shader in globalPrograms) {
+			useProgram(shader)
 		}
 
 	    for(pass in passes) {
@@ -72,9 +71,8 @@ Scene: class extends Entity {
             }
         }
         
-		for(prg in globalPrograms) {
+		for(shader in globalPrograms) {
 			glUseProgram(0)
-			//printf("unloading program...\n")
 		}
 		
 	    glFlush()
@@ -89,22 +87,22 @@ Scene: class extends Entity {
 	}
 	
 	addProgram: func(name: String) {
-		globalPrograms put(name,SProgram new(programs get(name) program))
+		globalPrograms put(name, ShaderProgram new(programs get(name) id))
 	}
 	
 	setProgram: func(model: Model, name: String) {
-		prg := programs get(name)
-		if(prg == null) {
-			printf("[Scene->setProgram]: No such program '%s'\n",name)
+		program := programs get(name)
+		if(program == null) {
+			printf("[Scene->setProgram]: No such program '%s'\n", name)
 			return
 		}
 		
-		model setProgram(prg)		
+		model setProgram(program)
 	}
 	
-	useProgram: func(prg: SProgram) {
+	useProgram: func(prg: ShaderProgram) {
 		if(prg != null) {
-			glUseProgram(prg program)
+			glUseProgram(prg id)
 			//printf("using program #%d\n",prg program)
 			glUniform1f(prg timeid,engine getTicks() as Float)
 		}
@@ -130,7 +128,7 @@ Scene: class extends Entity {
 		
 		
 		if(shader == 0) {
-			printf("[Engine]: Error, could not create shader '%s'\n",name)
+			printf("[Engine]: Error, could not create shader '%s'\n", name)
 			glDeleteShader(shader)
 			return
 		}
@@ -238,7 +236,7 @@ Scene: class extends Entity {
 			return false
 		}
 		
-		programs put(name,SProgram new(program))
+		programs put(name, ShaderProgram new(program))
 		return true
 	}
 }

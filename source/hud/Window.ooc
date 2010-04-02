@@ -38,15 +38,12 @@ Window: class extends Entity {
 	drcorners := false
 	
 	
-	
 	init: func ~windowinit (.name,x, y, width, height: Float) {
 		super(name)
 		set("position", Float3 new(x, y, 0))
 		set("size",     Float2 new(width, height))
 		listen(MouseButton, This mouseHandle)
-		listen(MouseMotion, This mouseMotion)
-		
-        
+		listen(MouseMotion, This mouseMotion)        
 	}
 	
 	mouseHandle: static func(m: MouseButton) {
@@ -250,6 +247,7 @@ Window: class extends Entity {
 	render: func {
 		if(!show)
 			return
+            
 		pos  := get("position", Float3)
 		size := get("size", Float2)
 		

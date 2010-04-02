@@ -36,11 +36,16 @@ Engine: class extends Entity {
             seed += 1
             evilBro = entities get(name)
         }
-        printf("[Engine->addEntity]: Added %s\n",name)
+        
+        entity name = name
         entities put(name, entity)
         entity engine = this
         entity onAdd()
-		
+    }
+    
+    removeEntity: func (entity: Entity) {
+        entity onRemove()
+        entities remove(entity getName())
     }
 	
 	getHud: func -> Hud {
@@ -83,23 +88,5 @@ Engine: class extends Entity {
     exit: func {
 		exit(0)
 	}
-	
-	/*
-	addSpawnable: func(name: String, ent: Entity) {
-		spawnables put(name,ent class)
-	}
-	
-	spawn: func(className,name: String,pos: Float3) -> Bool {
-		ent := spawnables get(className)
-		if(ent == null)
-			return false
-			
-		spawned := ent new(name)
-		//spawned setPos(pos)
-		
-		addEntity(spawned)
-		
-		return true
-	}
-	*/
+
 }

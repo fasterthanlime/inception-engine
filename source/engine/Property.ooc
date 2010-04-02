@@ -1,4 +1,5 @@
 import engine/Types
+import text/StringTokenizer
 
 Property: abstract class {
     
@@ -21,6 +22,7 @@ GenericProperty: class <T> extends Property {
     }
     
     set: func (=value) {}
+    
     get: func -> T { value }
     
     toString: func -> String {
@@ -39,6 +41,24 @@ GenericProperty: class <T> extends Property {
                 "(%.2f, %.2f, %.2f)" format(f x, f y, f z)
             case =>
                 T name
+        }
+    }
+    
+    fromString: func (st: StringTokenizer) -> String {
+        match(T) {
+            case String =>
+                tok := st nextToken()
+                if(tok != null) set(tok)
+                ""
+            case Float =>
+                tok := st nextToken()
+                if(tok != null) set(tok toFloat())
+                ""
+            case Int =>
+                tok := st nextToken()
+                if(tok != null) set(tok toInt())
+                ""
+            // TODO: add other types
         }
     }
     

@@ -1,7 +1,7 @@
 use glew
 import glew
 import engine/[Engine,Entity, Update, Types]
-import gfx/[StaticMesh, Scene]
+import gfx/[StaticMesh, Scene, ShaderProgram]
 import console/Console
 
 Model: abstract class extends Entity {
@@ -10,8 +10,8 @@ Model: abstract class extends Entity {
 	pos := Float3 new()
 	rot := Float3 new()
 	
-	sprogram : GLuint = 0
-	timeid : Int = 0
+	shader: ShaderProgram
+	timeid: Int = 0
 	
 	show := true
 	
@@ -21,8 +21,8 @@ Model: abstract class extends Entity {
 		set("rotation", rot)
 	}
 	
-	setProgram: func(=sprogram) {
-		timeid = glGetUniformLocation(sprogram, "time")
+	setProgram: func(=shader) {
+		timeid = glGetUniformLocation(shader id, "time")
 	}
 	
 	setPos: func(x,y,z: Float) {
@@ -32,7 +32,11 @@ Model: abstract class extends Entity {
 	_render: func {
 		if(!show)
 			return
-		if(sprogram > 0) {glUseProgram(sprogram) ; glUniform1f(timeid,engine getTicks() as Float)}
+            
+		if(shader) {
+            glUseProgram(shader id)
+            glUniform1f(timeid, engine getTicks() as Float)
+        }
 			
 		
 		glPushMatrix()
@@ -41,7 +45,9 @@ Model: abstract class extends Entity {
 		render()
 		glPopMatrix()
         
-		if(sprogram > 0) glUseProgram(0)
+		if(shader) {
+            glUseProgram(0)
+        }
 	}
 	
 	render: abstract func {}

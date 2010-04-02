@@ -22,6 +22,8 @@ Entity: class {
     
     addUpdate: func (update: Update) { updates add(update) }
     
+    getName: func -> String { name }
+    
     update: func {
         
         if(!updates isEmpty()) {
@@ -48,8 +50,8 @@ Entity: class {
         }
     }
     
-    listen: func <T> (T: Class, call: Func (T)) {
-        receivers add(Receiver new(T, call))
+    listen: func (type: MessageClass, call: Func (Message)) {
+        receivers add(Receiver new(type, call))
     }
     
     send: func (target: Entity, msg: Message) {
@@ -72,6 +74,10 @@ Entity: class {
                 send(entity, msg clone())
             }
         }
+    }
+    
+    annihilate: func {
+        
     }
     
     // Generic properties convenience functions
@@ -99,7 +105,15 @@ Entity: class {
         return gp get()
     }
     
+    /**
+     * Called after it has been added to the Engine
+     */
     onAdd: func {}
+    
+    /**
+     * Called before being removed from the Engine
+     */
+    onRemove: func {}
 }
 
 Receiver: class {

@@ -35,6 +35,10 @@ MD5Loader: class {
     
     /// Load an MD5 model from file.
     load: static func (filename: String) -> MD5Model {
+        
+        cached := This cache get(filename)
+        if(cached != null) return cached clone()
+        
         mdl := MD5Model new(filename)
         version: Int
         currMesh := 0
@@ -166,6 +170,8 @@ MD5Loader: class {
         mdl allocVertexArrays()
 
         fR close()
+        
+        This cache put(filename, mdl)
         return mdl
     }
 

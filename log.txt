@@ -1,0 +1,141 @@
+rock -allerrors -driver=sequence -v -noclean -gcc -g +-O0 -noclean +-w -sourcepath=source/  test/fall -o=fall.x
+- Parsing source//test/fall.ooc
+- Parsing source//engine/Engine.ooc
+- Parsing /usr/lib/ooc/ooc-glew/out/glew.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/stdio.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/types.ooc
+- Parsing /blue/Dev/rock/custom-sdk//structs/List.ooc
+- Parsing /blue/Dev/rock/custom-sdk//text/Buffer.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/Writer.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/Reader.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/math.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/memory.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/system.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/string.ooc
+- Parsing /blue/Dev/rock/custom-sdk//lang/vararg.ooc
+- Parsing /blue/Dev/rock/custom-sdk//structs/ArrayList.ooc
+- Parsing /usr/lib/ooc/ooc-sdl/sdl/Sdl.ooc
+- Parsing /usr/lib/ooc/ooc-sdl/sdl/Event.ooc
+- Parsing /blue/Dev/rock/custom-sdk//structs/HashMap.ooc
+- Parsing source//engine/Entity.ooc
+- Parsing /blue/Dev/rock/custom-sdk//structs/Stack.ooc
+- Parsing source//engine/Property.ooc
+- Parsing source//engine/Types.ooc
+- Parsing source//engine/Update.ooc
+- Parsing source//engine/Message.ooc
+- Parsing /blue/Dev/rock/custom-sdk//structs/LinkedList.ooc
+- Parsing /blue/Dev/rock/custom-sdk//os/Terminal.ooc
+- Parsing /blue/Dev/rock/custom-sdk//text/StringTokenizer.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/File.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/FileReader.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/FileWriter.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/native/FileWin32.ooc
+- Parsing /blue/Dev/rock/custom-sdk//native/win32/types.ooc
+- Parsing /blue/Dev/rock/custom-sdk//io/native/FileUnix.ooc
+- Parsing /blue/Dev/rock/custom-sdk//os/Time.ooc
+- Parsing source//gfx/Scene.ooc
+- Parsing /usr/lib/ooc/ooc-glu/glu/Glu.ooc
+- Parsing /usr/lib/ooc/ooc-sdl/sdl/Video.ooc
+- Parsing source//gfx/Model.ooc
+- Parsing source//gfx/StaticMesh.ooc
+- Parsing source//console/Console.ooc
+- Parsing /blue/Dev/ooc-ftgl/source/ftgl.ooc
+- Parsing source//engine/EventMapper.ooc
+- Parsing source//gfx/RenderWindow.ooc
+- Parsing source//hud/Window.ooc
+- Parsing source//console/Command.ooc
+- Parsing source//gfx/Camera.ooc
+- Parsing source//gfx/SProgram.ooc
+- Parsing source//hud/Hud.ooc
+- Parsing source//gfx/Cube.ooc
+- Parsing source//gfx/Grid.ooc
+- Parsing source//gfx/Line.ooc
+- Parsing source//physics/Body.ooc
+- Parsing source//physics/Force.ooc
+- Parsing source//physics/Geometry.ooc
+- Parsing source//gfx/md5/MD5Loader.ooc
+- Parsing source//gfx/md5/MD5Model.ooc
+- Parsing /blue/Dev/ooc-devil/source/devil.ooc
+- Parsing source//gfx/r2m/R2MLoader.ooc
+- Parsing source//gfx/r2m/R2MModel.ooc
+- Parsing source//physics/PhysicsEngine.ooc
+- Parsing source//physics/AABB.ooc
+name = getName, refScore = -2147483648, ref = (nil)
+engine/Engine.ooc:48:32 [ERROR] No such function Entity.getName()
+        entities remove(entity getName())
+                               ^^^^^^^   
+name = remove, refScore = -2147483648, ref = (nil)
+engine/Engine.ooc:48:18 [ERROR] No such function HashMap.remove(<unknown type>)
+        entities remove(entity getName())
+                 ^^^^^^                  
+name = getName, refScore = -2147483648, ref = (nil)
+engine/Engine.ooc:48:32 [ERROR] No such function Entity.getName()
+        entities remove(entity getName())
+                               ^^^^^^^   
+name = remove, refScore = -2147483648, ref = (nil)
+engine/Engine.ooc:48:18 [ERROR] No such function HashMap.remove(<unknown type>)
+        entities remove(entity getName())
+                 ^^^^^^                  
+glew.ooc:3671:74 [ERROR] Can't resolve type GLuint64EXT!
+glPresentFrameDualFillNV: extern func (video_slot:GLuint, minPresentTime:GLuint64EXT, beginPresentTimeId:GLuint, presentDurationId:GLuint, type:GLenum, target0:GLenum, fill0:GLuint, target1:GLenum, fill1:GLuint, target2:GLenum, fill2:GLuint, target3:GLenum, fill3:GLuint) -> Void
+                                                                                                                                                                                                                                                                                       
+glew.ooc:3916:73 [ERROR] Can't resolve type GLuint64EXT!
+glGetVideoui64vNV: extern func (video_slot:GLuint, pname:GLenum, params:GLuint64EXT*) -> Void
+                                                                                             
+glew.ooc:4659:72 [ERROR] Can't resolve type GLuint64EXT!
+glGetQueryObjectui64vEXT: extern func (id:GLuint, pname:GLenum, params:GLuint64EXT*) -> Void
+                                                                                            
+glew.ooc:4770:71 [ERROR] Can't resolve type GLuint64EXT!
+glPresentFrameKeyedNV: extern func (video_slot:GLuint, minPresentTime:GLuint64EXT, beginPresentTimeId:GLuint, presentDurationId:GLuint, type:GLenum, target0:GLenum, fill0:GLuint, key0:GLuint, target1:GLenum, fill1:GLuint, key1:GLuint) -> Void
+                                                                                                                                                                                                                                                  
+name = setProgram, refScore = -2147483648, ref = (nil)
+gfx/Scene.ooc:102:9 [ERROR] No such function Model.setProgram(SProgram)
+        model setProgram(prg)        
+              ^^^^^^^^^^             
+name = setProgram, refScore = -2147483648, ref = (nil)
+gfx/Scene.ooc:102:9 [ERROR] No such function Model.setProgram(SProgram)
+        model setProgram(prg)        
+              ^^^^^^^^^^             
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:419:8 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+        font render(1, inputHeight, 0.2, 1, buffer)
+             ^^^^^^                                
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:427:14 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+        font render(1, inputHeight, 0.2, 1, "|")
+             ^^^^^^                             
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:446:9 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+            font render(1, inputHeight, 0.2, 1, line)
+                 ^^^^^^                              
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:419:8 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+        font render(1, inputHeight, 0.2, 1, buffer)
+             ^^^^^^                                
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:427:14 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+        font render(1, inputHeight, 0.2, 1, "|")
+             ^^^^^^                             
+name = render, refScore = -2147483648, ref = (nil)
+console/Console.ooc:446:9 [ERROR] No such function Ftgl.render(Int, Int, Float, Int, String)
+            font render(1, inputHeight, 0.2, 1, line)
+                 ^^^^^^                              
+name = enableUnicode, refScore = -2147483648, ref = (nil)
+gfx/RenderWindow.ooc:29:13 [ERROR] No such function SDLClass.enableUnicode(Bool)
+        SDL enableUnicode(true)
+            ^^^^^^^^^^^^^      
+name = wmSetCaption, refScore = -2147483648, ref = (nil)
+gfx/RenderWindow.ooc:214:12 [ERROR] No such function SDLVideoClass.wmSetCaption(String, Pointer)
+        SDLVideo wmSetCaption(title, null)
+                 ^^^^^^^^^^^^             
+name = enableUnicode, refScore = -2147483648, ref = (nil)
+gfx/RenderWindow.ooc:29:13 [ERROR] No such function SDLClass.enableUnicode(Bool)
+        SDL enableUnicode(true)
+            ^^^^^^^^^^^^^      
+name = wmSetCaption, refScore = -2147483648, ref = (nil)
+gfx/RenderWindow.ooc:214:12 [ERROR] No such function SDLVideoClass.wmSetCaption(String, Pointer)
+        SDLVideo wmSetCaption(title, null)
+                 ^^^^^^^^^^^^             
+Tinkerer going round in circles. 6 modules remaining.
+[1m[31m[FAIL]
+[0mmake: *** [fall] Erreur 1

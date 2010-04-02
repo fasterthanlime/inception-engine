@@ -1,4 +1,4 @@
-OOC_FLAGS=-driver=sequence -v -noclean -gcc -g +-O0 -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
+OOC_FLAGS=-driver=sequence -v -gcc -g +-O0 -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
 OOC?=rock
 
 %:
@@ -8,4 +8,4 @@ all:
 	@echo "Usage: make <testname>"
 
 clean:
-	rm -rf *_tmp/ *.x
+	rm -rf rock_tmp/ *.x
