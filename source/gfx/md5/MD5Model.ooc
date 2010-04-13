@@ -342,7 +342,7 @@ MD5Model: class extends Model {
 
         // Draw each mesh of the model
         for (i in 0..numMeshes) {
-            prepareMesh(meshes[i], skeleton)
+            //prepareMesh(meshes[i], skeleton)
             glBindTexture(GL_TEXTURE_2D, meshes[i] textureID)
             glVertexPointer  (3, GL_FLOAT, 0, vertexArray)
             glTexCoordPointer(2, GL_FLOAT, 0, texCoordArray)

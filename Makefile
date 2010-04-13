@@ -1,5 +1,6 @@
-OOC_FLAGS=-driver=sequence -v -gcc -g +-O0 -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
+OOC_FLAGS=-driver=sequence -v -gcc -g -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
 OOC?=rock
+TEST?=fall
 
 %:
 	${OOC} ${OOC_FLAGS} test/$@ -o=$@.x
@@ -9,3 +10,6 @@ all:
 
 clean:
 	rm -rf rock_tmp/ *.x
+
+prof:
+	GC_DONT_GC=1 valgrind --tool=callgrind ./${TEST}.x

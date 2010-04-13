@@ -172,6 +172,8 @@ MD5Loader: class {
         fR close()
         
         This cache put(filename, mdl)
+        
+        mdl prepareMesh(mdl meshes[0], mdl baseSkel)
         return mdl
     }
 

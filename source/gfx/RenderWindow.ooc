@@ -86,7 +86,7 @@ RenderWindow: class extends Entity {
 		SDL WM_GrabInput(SDL_GRAB_ON)
 		SDL showCursor(SDL_DISABLE)
         
-        toggleFullScreen()
+        //toggleFullScreen()
 		
 		glewInit()
         
