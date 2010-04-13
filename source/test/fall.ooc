@@ -7,7 +7,7 @@ import structs/ArrayList
 
 import text/StringTokenizer
 import console/[Console, Command]
-import hud/[Hud,Window]
+import hud/[Hud,Window,FPSCounter]
 
 main: func (argc: Int, argv: String*) {
 	
@@ -17,7 +17,7 @@ main: func (argc: Int, argv: String*) {
 	win := RenderWindow new(1024, 768, 16, false, "fall test")
 	engine addEntity(win)
     engine addEntity(Console new(10, 10, 1280 * 2/5, 800 * 2/5))
-	engine addEntity(Window new("window1",60,60,100,100))
+	//engine addEntity(Window new("window1",60,60,100,100))
     engine addEntity(EventMapper new())
 	
 	//--------------- Setup the physic simulation

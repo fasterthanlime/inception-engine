@@ -2,6 +2,9 @@ use glew,glu,sdl
 import glew,glu/Glu,sdl/[Sdl, Event]
 import engine/[Types, Entity, Property, Message]
 
+FIRST_PERSON := 1
+THIRD_PERSON := 2
+
 Camera: class extends Entity {
 	phi, theta: Float
 	forward := Float3 new(0,0,0)
@@ -14,6 +17,8 @@ Camera: class extends Entity {
 	kbackward := false
 	kstrafe_left := false
 	kstrafe_right := false
+	
+	mode := FIRST_PERSON
 	
 	init: func ~cam (.name){
 		super(name)
@@ -66,8 +71,8 @@ Camera: class extends Entity {
 	}
 	
 	look: func {
-		pos := get("pos",Float3)
-		target := get("target",Float3)
+		//pos := get("pos",Float3)
+		//target := get("target",Float3)
 		speed := get("speed",Float)
         
 		if(kforward) { pos = pos + forward * speed }
@@ -77,8 +82,8 @@ Camera: class extends Entity {
         
 		target = pos + forward
         
-		set("pos",pos)
-		set("target",target)
+		//set("pos",pos)
+		//set("target",target)
 		
 	    gluLookAt(pos x,pos y,pos z,
 				  target x, target y, target z,
