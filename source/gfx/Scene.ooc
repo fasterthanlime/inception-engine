@@ -1,7 +1,7 @@
 use glew,sdl,glu
 import glew
 import glu/Glu
-import sdl/Video
+import sdl/[Video,Sdl]
 import engine/[Entity, Update, Engine, Types]
 import gfx/[Model, RenderWindow, Camera, ShaderProgram]
 import structs/[LinkedList, HashMap, ArrayList]
@@ -26,6 +26,10 @@ Scene: class extends Entity {
 	programs := HashMap<String, ShaderProgram> new()
 	globalPrograms := HashMap<String, ShaderProgram> new()
 	
+	time1 : UInt32 = 0
+	time2 : UInt32 = 0
+	fps : UInt32 = 0
+	
 	round : Long = 0
 	
 	init: func ~scene(.name) {
@@ -45,7 +49,7 @@ Scene: class extends Entity {
     getFrontPass: func -> Pass { frontPass }
 	
 	render: func -> Bool {
-		
+		time2 = SDL getTicks()
 		glClearColor(0,0,0,0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	    //glMatrixMode(GL_MODELVIEW)
@@ -77,7 +81,13 @@ Scene: class extends Entity {
 		
 	    glFlush()
 	    SDLVideo glSwapBuffers()
-	    usleep(30000)
+	    //usleep(30000)
+		if(time2 - time1 >= 1000) {
+			time1 = time2
+			printf("fps: %d\n",fps)
+			fps = 0
+		}
+		fps += 1
 		
 	    return true
 	}
