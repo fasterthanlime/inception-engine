@@ -2,6 +2,7 @@ import sdl/[Sdl,Event]
 import glew,glu/Glu
 import gfx/Model
 import engine/[Types, Message, Entity]
+import math
 
 Window: class extends Entity {
 	

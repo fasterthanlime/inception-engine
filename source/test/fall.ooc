@@ -4,6 +4,7 @@ import gfx/md5/MD5Loader
 import gfx/r2m/R2MLoader
 import physics/[PhysicsEngine, Body, Force, Geometry, AABB]
 import structs/ArrayList
+import math
 
 import text/StringTokenizer
 import console/[Console, Command]

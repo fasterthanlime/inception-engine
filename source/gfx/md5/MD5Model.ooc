@@ -26,7 +26,7 @@
  */
 
 use math, glew, devil
-import glew, devil
+import glew, devil, math
 
 import structs/ArrayList
 import ../Model

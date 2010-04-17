@@ -1,6 +1,7 @@
 use glew,glu,sdl
 import glew,glu/Glu,sdl/[Sdl, Event]
 import engine/[Types, Entity, Property, Message]
+import math
 
 FIRST_PERSON := 1
 THIRD_PERSON := 2

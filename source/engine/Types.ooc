@@ -1,7 +1,6 @@
 import Update,Entity,Message
 import structs/[ArrayList,LinkedList]
-
-PI := 3.141592653
+import math
 
 Float3: class {
 	clients: Entity[]
