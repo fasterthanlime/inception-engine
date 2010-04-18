@@ -85,9 +85,12 @@ Entity: class {
     set: func <T> (name: String, value: T) {
         prop := props get(name)
         if(prop) {
-            prop set(value)
+            if(!prop instanceOf(GenericProperty)) {
+                Exception new(This, "Attempting to set value of %s as if it was a generic property, but it's a %s" format(name, prop class name)) throw()
+            }
+            prop as GenericProperty set(value)
         } else {
-            prop := GenericProperty new(name, value)
+            prop = GenericProperty new(name, value)
             props put(name, prop)
         }
     }
