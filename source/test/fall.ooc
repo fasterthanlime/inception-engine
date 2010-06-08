@@ -4,7 +4,7 @@ import gfx/md5/MD5Loader
 import gfx/r2m/R2MLoader
 import physics/[PhysicsEngine, Body, Force, Geometry, AABB]
 import structs/ArrayList
-import math
+import math, math/Random
 
 import text/StringTokenizer
 import console/[Console, Command]
@@ -42,7 +42,7 @@ main: func (argc: Int, argv: String*) {
         
         physx := console engine getEntity("physx", PhysicsEngine)
         
-        ogroBody2 := Body new("ogro_body") .setPos(rand() % 40 - 20, rand() % 40 - 20, 20)
+        ogroBody2 := Body new("ogro_body") .setPos(Random random() % 40 - 20, Random random() % 40 - 20, 20)
         ogroBody2 setGeometry(AABB new("ogro_body_aabb", 3.83 / 2.0, 2.571 / 2.0, 5.295 / 2.0))
         physx add(ogroBody2, MD5Loader load("data/models/ogro/ogro.md5mesh"))
     }))

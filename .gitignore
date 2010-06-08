@@ -1,3 +1,4 @@
 *_tmp
 *.x
 *.blend1
+.libs

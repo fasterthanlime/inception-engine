@@ -9,9 +9,9 @@ Entity: class {
     id: Int
     
     props := HashMap<String, Property> new()
-    updates : Update[]
-    receivers : Receiver[]
-    queue : Message[]
+    updates := ArrayList<Update> new()
+    receivers := ArrayList<Receiver> new()
+    queue := ArrayList<Message> new()
     
     idSeed := static 0
     

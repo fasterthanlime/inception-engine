@@ -3,7 +3,7 @@ import structs/[ArrayList,LinkedList]
 import math
 
 Float3: class {
-	clients: Entity[]
+	clients := ArrayList<Entity> new()
 	bindings := LinkedList<This> new()
 	x,y,z: Float
 	
@@ -101,7 +101,7 @@ operator ^ (v1,v2: Float3) -> Float3 {
 }
 
 Float2: class {
-	clients: Entity[]
+	clients := ArrayList<Entity> new()
 	x,y: Float
 	init: func(=x,=y) {}
 	
@@ -113,7 +113,7 @@ Float2: class {
 }
 
 Int2: class {
-	clients: Entity[]
+	clients := ArrayList<Entity> new()
 	x,y: Int
 	init: func(=x,=y) {}
 	

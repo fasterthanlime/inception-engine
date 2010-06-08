@@ -13,7 +13,7 @@ R2MThing: class {
 
 R2MModel: class extends Model {    
     models := HashMap<String, MD5Model> new()
-    things : R2MThing[]
+    things := ArrayList<R2MThing> new()
     path: String
     
     init: func ~name (.name, =path) {

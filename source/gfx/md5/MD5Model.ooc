@@ -275,9 +275,9 @@ MD5Model: class extends Model {
     }
 
     allocVertexArrays: func {
-        vertexArray   = gc_malloc(sizeof(GLfloat) * maxVerts * 3) // 3 floats per vertex
-        texCoordArray = gc_malloc(sizeof(GLfloat) * maxVerts * 2) // 2 floats per vertex
-        vertexIndices = gc_malloc(sizeof(GLuint)  * maxTris  * 3) // 3 indices per faces
+        vertexArray   = gc_malloc(Float size * maxVerts * 3) // 3 floats per vertex
+        texCoordArray = gc_malloc(Float size * maxVerts * 2) // 2 floats per vertex
+        vertexIndices = gc_malloc(UInt  size * maxTris  * 3) // 3 indices per faces
     }
     
     /**

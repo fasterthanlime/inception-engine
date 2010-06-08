@@ -216,7 +216,7 @@ Console: class extends Window {
 		} else if(m key== SDLK_END) {
 			caretStart = buffer length()
 			
-		} else if((ch isPrintable() && ch != SDLK_LSHIFT && ch!= SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
+		} else if((ch isPrintable() && ch != SDLK_LSHIFT && ch != SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {
