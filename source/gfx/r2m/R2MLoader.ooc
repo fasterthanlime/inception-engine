@@ -35,6 +35,7 @@ R2MLoader: class {
                     pos := Float3 new(0, 0, 0)
                     
                     if(sscanf(buff toCString(), " %s ( %f %f %f )" toCString(), name data, pos x&, pos y&, pos z&) == 4) {
+                        name sizeFromData()
                         mdl addThing(R2MThing new(name toString(), pos))
                     }
                     
@@ -50,6 +51,9 @@ R2MLoader: class {
                     buff = fR readLine()
                     
                     if(sscanf(buff toCString(), " %s %s" toCString(), name data, path data) == 2) {
+                        path sizeFromData()
+                        name sizeFromData()
+                        ("Read path name = " + path toString()) println()
                         mdl addModel(name clone() toString(), "data/models/" + path toString())
                     }
                     

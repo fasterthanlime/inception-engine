@@ -50,14 +50,14 @@ MD5Loader: class {
             // Read whole line
             buff := fR readLine()
             
-            if (sscanf(buff, " MD5Version %d", version&) == 1) {
+            if (sscanf(buff toCString(), " MD5Version %d", version&) == 1) {
                 if (version != 10) {
                     // Bad version
                     fprintf (stderr, "%s Error: bad model version %d, we only support 10\n" format(This name, version))
                     fR close()
                     return null
                 }
-            } else if (sscanf (buff, " numJoints %d", mdl numJoints&) == 1) {
+            } else if (sscanf (buff toCString(), " numJoints %d", mdl numJoints&) == 1) {
                 if (mdl numJoints > 0) {                    
                     // Allocate memory for base skeleton joints
                     mdl baseSkel = gc_malloc (mdl numJoints * MD5Joint size)
@@ -65,7 +65,7 @@ MD5Loader: class {
                         mdl baseSkel[i] = MD5Joint new()
                     }
                 }
-            } else if (sscanf (buff, " numMeshes %d", mdl numMeshes&) == 1) {
+            } else if (sscanf (buff toCString(), " numMeshes %d", mdl numMeshes&) == 1) {
                 if (mdl numMeshes > 0) {
                     // Allocate memory for meshes
                     mdl meshes = gc_malloc (mdl numMeshes * MD5Mesh size)
@@ -73,7 +73,7 @@ MD5Loader: class {
                         mdl meshes[i] = MD5Mesh new()
                     }
                 }
-            } else if (strncmp (buff, "joints {", 8) == 0) {
+            } else if (strncmp (buff toCString(), "joints {", 8) == 0) {
                 // Read each joint
                 for(i in 0..mdl numJoints) {
                     joint := mdl baseSkel[i]
@@ -81,7 +81,7 @@ MD5Loader: class {
                     // Read whole line
                     buff = fR readLine()
 
-                    if (sscanf (buff, "%s %d ( %f %f %f ) ( %f %f %f )",
+                    if (sscanf (buff toCString(), "%s %d ( %f %f %f ) ( %f %f %f )",
                       joint name, joint parent&, joint pos x&,
                       joint pos y&, joint pos z&, joint orient x&,
                       joint orient y&, joint orient z&) == 8) {
@@ -89,7 +89,7 @@ MD5Loader: class {
                         joint orient computeW()
                     }
                 }
-            } else if (strncmp (buff, "mesh {", 6) == 0) {
+            } else if (strncmp (buff toCString(), "mesh {", 6) == 0) {
                 mesh := mdl meshes[currMesh]
                 vertIndex := 0
                 triIndex := 0
@@ -97,11 +97,11 @@ MD5Loader: class {
                 fdata: Float[4]
                 idata: Int[4]
 
-                while ((buff[0] != '}') && fR hasNext?()) {
+                while ((buff size != 0 && buff[0] != '}') && fR hasNext?()) {
                     // Read whole line
                     buff = fR readLine()
 
-                    if (strstr (buff, "shader ")) {
+                    if (strstr (buff toCString(), "shader ")) {
                         quote := 0; j := 0
 
                         // Copy the shader name whithout the quote marks 
@@ -116,7 +116,7 @@ MD5Loader: class {
                             }
                             i += 1
                         }
-                    } else if (sscanf (buff, " numverts %d", mesh numVerts&) == 1) {
+                    } else if (sscanf (buff toCString(), " numverts %d", mesh numVerts&) == 1) {
                         if (mesh numVerts > 0) {
                             // Allocate memory for vertices 
                             mesh vertices = gc_malloc(MD5Vertex instanceSize * mesh numVerts)
@@ -124,7 +124,7 @@ MD5Loader: class {
 
                         if (mesh numVerts > mdl maxVerts)
                             mdl maxVerts = mesh numVerts
-                    } else if (sscanf (buff, " numtris %d", mesh numTris&) == 1) {
+                    } else if (sscanf (buff toCString(), " numtris %d", mesh numTris&) == 1) {
                         if (mesh numTris > 0) {
                             // Allocate memory for triangles
                             mesh triangles = gc_malloc (MD5Triangle instanceSize * mesh numTris)
@@ -132,25 +132,25 @@ MD5Loader: class {
 
                         if (mesh numTris > mdl maxTris)
                             mdl maxTris = mesh numTris
-                    } else if (sscanf (buff, " numweights %d", mesh numWeights&) == 1) {
+                    } else if (sscanf (buff toCString(), " numweights %d", mesh numWeights&) == 1) {
                         if (mesh numWeights > 0) {
                             // Allocate memory for vertex weights 
                             mesh weights = gc_malloc(MD5Weight instanceSize * mesh numWeights)
                         }
-                    } else if (sscanf (buff, " vert %d ( %f %f ) %d %d", vertIndex&,
+                    } else if (sscanf (buff toCString(), " vert %d ( %f %f ) %d %d", vertIndex&,
                        fdata[0]&, fdata[1]&, idata[0]&, idata[1]&) == 5) {
                         // Copy vertex data 
                         mesh vertices[vertIndex] st x = fdata[0]
                         mesh vertices[vertIndex] st y = 1 - fdata[1]
                         mesh vertices[vertIndex] start = idata[0]
                         mesh vertices[vertIndex] count = idata[1]
-                    } else if (sscanf (buff, " tri %d %d %d %d", triIndex&,
+                    } else if (sscanf (buff toCString(), " tri %d %d %d %d", triIndex&,
                                idata[0]&, idata[1]&, idata[2]&) == 4) {
                         // Copy triangle data 
                         mesh triangles[triIndex ] a = idata[0]
                         mesh triangles[triIndex ] b = idata[1]
                         mesh triangles[triIndex ] c = idata[2]
-                    } else if (sscanf (buff, " weight %d %d %f ( %f %f %f )",
+                    } else if (sscanf (buff toCString(), " weight %d %d %f ( %f %f %f )",
                                weightIndex&, idata[0]&, fdata[3]&,
                                fdata[0]&, fdata[1]&, fdata[2]&) == 6) {
                         // Copy vertex data 
@@ -171,10 +171,10 @@ MD5Loader: class {
 
         fR close()
         
-        This cache put(filename, mdl)
+        cache put(filename, mdl)
         
         mdl prepareMesh(mdl meshes[0], mdl baseSkel)
-        return mdl
+        mdl
     }
 
 }
