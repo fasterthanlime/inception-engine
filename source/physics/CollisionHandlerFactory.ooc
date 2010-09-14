@@ -27,7 +27,7 @@ CollisionHandlerFactory: abstract class {
                     case Sphere =>
                         return sphereBoxCH
                     case Box =>
-                        return sphereSphereCH
+                        return boxBoxCH
                 }
         }
         
