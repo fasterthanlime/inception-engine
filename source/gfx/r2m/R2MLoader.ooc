@@ -53,7 +53,6 @@ R2MLoader: class {
                     if(sscanf(buff toCString(), " %s %s" toCString(), name data, path data) == 2) {
                         path sizeFromData()
                         name sizeFromData()
-                        ("Read path name = " + path toString()) println()
                         mdl addModel(name clone() toString(), "data/models/" + path toString())
                     }
                     

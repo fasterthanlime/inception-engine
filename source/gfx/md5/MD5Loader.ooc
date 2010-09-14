@@ -43,7 +43,8 @@ MD5Loader: class {
         version: Int
         currMesh := 0
         i: Int
-        
+
+        ("Loading md5 model " + filename) println()
         fR := FileReader new(filename, "rb")
         
         while(fR hasNext?()) {
@@ -66,6 +67,7 @@ MD5Loader: class {
                     }
                 }
             } else if (sscanf (buff toCString(), " numMeshes %d", mdl numMeshes&) == 1) {
+                "Got %d meshes" printfln(mdl numMeshes)
                 if (mdl numMeshes > 0) {
                     // Allocate memory for meshes
                     mdl meshes = gc_malloc (mdl numMeshes * MD5Mesh size)
@@ -97,16 +99,17 @@ MD5Loader: class {
                 fdata: Float[4]
                 idata: Int[4]
 
-                while ((buff size != 0 && buff[0] != '}') && fR hasNext?()) {
+                while ((buff size == 0 || buff[0] != '}') && fR hasNext?()) {
+                    
                     // Read whole line
                     buff = fR readLine()
-
+                    
                     if (strstr (buff toCString(), "shader ")) {
                         quote := 0; j := 0
 
                         // Copy the shader name whithout the quote marks 
                         i := 0
-                        while(i < buff length() && (quote < 2)) {
+                        while(i < buff size && (quote < 2)) {
                             if (buff[i] == '"')
                                 quote += 1
 
@@ -165,7 +168,7 @@ MD5Loader: class {
             }
         }
 
-        printf("[%s] Finished loading %s, got %d meshes, %d joints\n", This name, filename, mdl numMeshes, mdl numJoints)
+        printf("[%s] Finished loading %s, got %d meshes, %d joints\n", This name toCString(), filename toCString(), mdl numMeshes, mdl numJoints)
 
         mdl allocVertexArrays()
 

@@ -9,7 +9,7 @@ all:
 	@echo "Usage: make <testname>"
 
 clean:
-	rm -rf rock_tmp/ *.x
+	rm -rf rock_tmp/ .libs/ *.x
 
 prof:
 	GC_DONT_GC=1 valgrind --tool=callgrind ./${TEST}.x
