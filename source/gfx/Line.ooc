@@ -18,8 +18,8 @@ Line: class extends Model {
 	}
 	
 	init: func ~withmodel(.name,m1,m2: Body) {
-		lineb := Float3 new(0,0,0)
-		linee := Float3 new(0,0,0)
+		lineb := Float3 new()
+		linee := Float3 new()
 	
 		m1 getPos() bind(lineb)
 		m2 getPos() bind(linee)
