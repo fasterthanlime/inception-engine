@@ -9,6 +9,8 @@ Model: abstract class extends Entity {
 	mesh : StaticMesh
 	pos := Float3 new()
 	rot := Float3 new()
+
+    writeDepth := true
 	
 	shader: ShaderProgram
 	timeid: Int = 0
@@ -25,8 +27,8 @@ Model: abstract class extends Entity {
 		timeid = glGetUniformLocation(shader id, "time" toCString())
 	}
 	
-	setPos: func(x,y,z: Float) {
-		pos set(x,y,z)
+	setPos: func(x, y, z: Float) {
+		pos set(x, y, z)
 	}
 	
 	_render: func {
@@ -41,8 +43,11 @@ Model: abstract class extends Entity {
 		
 		glPushMatrix()
 		glTranslated(pos x, pos y, pos z)
-		
+
+        if(!writeDepth) glDepthMask(false)
 		render()
+        if(!writeDepth) glDepthMask(true)
+        
 		glPopMatrix()
         
 		if(shader) {

@@ -24,8 +24,6 @@ Console: class extends Window {
 	
 	show = false
 	
-	//size := Float2 new(800, 600)
-	
 	browsingHistory := false
 	iterator: LinkedListIterator<String>
 	
@@ -312,7 +310,7 @@ Console: class extends Window {
 		
 		if(suggs size > 1) {
 			if(correctToken == "") {
-				cprintln("avalaible commands:")
+				cprintln("available commands:")
 			} else {
 				cprintln("%s ->" format(buffer toCString()))
 			}
@@ -364,10 +362,10 @@ Console: class extends Window {
 			firstLine = lines get(0)
 		
 		if(firstLine != null) {
-			lines set(0,firstLine + line)
+			lines set(0, firstLine + line)
 		} else {
-			lines add(0,"")
-			lines set(0,line)
+			lines add(0, "")
+			lines set(0, line)
 		}
 			
 		printedLine = false
@@ -377,13 +375,13 @@ Console: class extends Window {
 		if(!printedLine) {
 			first := lines get(0)
 			if(first != null) {
-				lines set(0,first + line)
+				lines set(0, first + line)
 			} else {
-				lines add(0,line)
+				lines add(0, line)
 				printedLine = true
 			}	
 		} else {
-			lines add(0,line)
+			lines add(0, line)
 			printedLine = true
 		}
 		
@@ -470,13 +468,13 @@ Console: class extends Window {
 	
 	command: func(cm: String) {
 		if(cm == "") {
-			//cprintln(String new(20))
             cprintln("")
 			return
 		}
-		history add(0,cm)
-		lines add(0,cm)
-		tokenizer := StringTokenizer new(cm," ")
+        
+		history add(0, cm)
+		lines add(0, cm)
+		tokenizer := StringTokenizer new(cm, " ")
 		
 		
 		token := tokenizer nextToken()
@@ -489,7 +487,7 @@ Console: class extends Window {
 		
 		/*
 		match(token) {
-			case "quit" => {sendAll(QuitMessage new())}
+			case "quit" => { sendAll(QuitMessage new()) }
 		}
 		*/
 		

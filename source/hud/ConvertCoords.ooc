@@ -6,12 +6,12 @@ import math
 
 ConvertCoords: class extends Entity {
 
+    coords := Float3 new(0, 0, 0)
+
     init: func {
         super("3d_coords")
-        set("x", 0.0)
-        set("y", 0.0)
-        set("z", 0.0)
-
+        set("coords", coords)
+        
         listen(MouseMotion, |_m|
             m := _m as MouseMotion
         
@@ -29,14 +29,11 @@ ConvertCoords: class extends Entity {
             winX = m x
             winY = viewport[3] - (m y as Float)
             glReadPixels(m x, winY as Int, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, winZ&)
-            //winZ = 0
             
             gluUnProject(winX, winY, winZ, modelview, projection, viewport, posX&, posY&, posZ&)
 
-            set("x", posX as Float)
-            set("y", posY as Float)
-            set("z", posZ as Float)
-            
+            coords set(posX, posY, posZ)
+            set("coords", coords)
             "Got world coords (%.2f, %.2f, %.2f) / mouse coords (%.2f, %.2f, %.2f)" printfln(posX, posY, posZ, winX, winY, winZ)
         )
     }

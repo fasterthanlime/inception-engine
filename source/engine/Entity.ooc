@@ -16,8 +16,8 @@ Entity: class {
     idSeed := static 0
     
     init: func ~withName(=name) {
-        This idSeed += 1
-        id = This idSeed
+        idSeed += 1
+        id = idSeed
     }
     
     addUpdate: func (update: Update) { updates add(update) }

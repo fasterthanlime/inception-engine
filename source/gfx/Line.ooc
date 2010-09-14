@@ -9,12 +9,13 @@ exp: extern func(Double) -> Double
 
 Line: class extends Model {
 	
-	begin,end: Float3
+	begin, end: Float3
 	
-	init: func ~line(.name,=begin,=end) {
+	init: func ~line(.name, begin := Float3 new(), end := Float3 new()) {
 		super(name)
-		set("begin",begin)
-		set("end",end)
+        (this begin, this end) = (begin, end)
+		set("begin", begin)
+		set("end", end)
 	}
 	
 	init: func ~withmodel(.name,m1,m2: Body) {

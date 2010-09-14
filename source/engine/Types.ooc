@@ -5,29 +5,33 @@ import math
 Float3: class {
 	clients := ArrayList<Entity> new()
 	bindings := LinkedList<This> new()
-	x,y,z: Float
+	x, y, z: Float
 	
-	init: func ~xyz (=x,=y,=z) {}
+	init: func ~xyz (=x, =y, =z) {}
     
     init: func ~zero { x = y = z = 0 }
 	
-	set: func(=x,=y,=z){
+	set: func (=x, =y, =z) {
 		for(client in clients) {
-			client send(client,ValueChange get(this))
+			client send(client, ValueChange get(this))
 		}
 		
 		for(bindf in bindings) {
 			bindf sset(this)
 		}
 	}
+
+    set: func ~f3 (other: This) {
+        set(other x, other y, other z)
+    }
 	
-	addSet: func(x,y,z: Float) {
+	addSet: func(x, y, z: Float) {
 		this x += x
 		this y += y
 		this z += z
 		
 		for(client in clients) {
-			client send(client,ValueChange get(this))
+			client send(client, ValueChange get(this))
 		}
 		
 		for(bindf in bindings) {
@@ -39,10 +43,10 @@ Float3: class {
 		bindings add(f)
 	}
 	
-	sset: func(f: Float3) { //silent set, do not dispatch it to everyone that wanted it, muahhaha
-		this x = f x
-		this y = f y
-		this z = f z
+	sset: func(f: Float3) { // silent set, doesn't dispatch it to everyone that wanted it, muahhaha
+		x = f x
+		y = f y
+		z = f z
 	}
 	
 	normalize: func {
@@ -102,24 +106,24 @@ operator ^ (v1,v2: Float3) -> Float3 {
 
 Float2: class {
 	clients := ArrayList<Entity> new()
-	x,y: Float
-	init: func(=x,=y) {}
+	x, y: Float
+	init: func(=x, =y) {}
 	
-	set: func(=x,=y){
+	set: func(=x, =y){
 		for(client in clients) {
-			client send(client,ValueChange get(this))
+			client send(client, ValueChange get(this))
 		}
 	}
 }
 
 Int2: class {
 	clients := ArrayList<Entity> new()
-	x,y: Int
-	init: func(=x,=y) {}
+	x, y: Int
+	init: func(=x, =y) {}
 	
-	set: func(=x,=y){
+	set: func(=x, =y) {
 		for(client in clients) {
-			client send(client,ValueChange get(this))
+			client send(client, ValueChange get(this))
 		}
 	}
 }

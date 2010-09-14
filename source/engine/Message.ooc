@@ -29,7 +29,7 @@ MouseMotion: class extends Message {
 MouseButton: class extends Message {
 	button: Int 
 	type: Int // up/down
-	x,y: Int  //event coordinates
+	x, y: Int  //event coordinates
 	init: func ~mousebut (=button,=type,=x,=y) {}
 }
 
