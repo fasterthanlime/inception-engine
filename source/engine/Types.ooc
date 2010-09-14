@@ -51,6 +51,12 @@ Float3: class {
 		y /= l
 		z /= l
 	}
+    
+    negate: func {
+        x = -x
+        y = -y
+        z = -z
+    }
 	
     scalarProduct: func (b: Float3) {
         x * b x + y * b y + z * b z
