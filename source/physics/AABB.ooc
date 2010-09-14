@@ -1,6 +1,9 @@
 import engine/[Entity, Types]
 import Geometry
 
+/**
+ * @deprecated
+ */
 AABB: class extends Geometry {
     
     init: func ~aabb (.name, x, y, z: Float) {
