@@ -32,9 +32,9 @@ Console: class extends Window {
 	COMMAND = 0, SHOW = 1, ENT = 2 : Int
 	
 	init: func ~consoleinit (x, y, width, height: Float) {
-		super("console",x,y,width,height)
+		super("console", x, y, width, height)
 		show = false
-		listen(KeyboardMsg,This handleKey)
+		listen(KeyboardMsg, This handleKey)
 		initCommands()
 	}
 	
@@ -49,7 +49,7 @@ Console: class extends Window {
             
             ent := console engine getEntity(ename)
             if(ent == null) {
-                console cprintln("sorry, no such entity [%s]" format(ename))
+                console cprintln("sorry, no such entity [%s]" format(ename toCString()))
                 return
             }
                 
@@ -57,7 +57,7 @@ Console: class extends Window {
             if(pname != null && !pname empty?()) {
                 prop := ent props get(pname)
                 if(prop == null) {
-                    console cprintln("sorry, entity [%s] doesn't have a property named [%s]" format(ename, pname))
+                    console cprintln("sorry, entity [%s] doesn't have a property named [%s]" format(ename toCString(), pname toCString()))
                     return
                 }
                 console cprintln(prop toString())
@@ -65,9 +65,9 @@ Console: class extends Window {
             }
             
             // display all properties
-            console cprintln("%s:" format(ename))
+            console cprintln("%s:" format(ename toCString()))
             for(prop in ent props) {
-                console cprintln("- %s = %s" format(prop name, prop toString()))
+                console cprintln("- %s = %s" format(prop name toCString(), prop toString() toCString()))
             }
         }))
         
@@ -79,9 +79,9 @@ Console: class extends Window {
             } else {
                 command := console commands get(name)
                 if(command != null) {
-                    console cprintln("%s: %s" format(name, command getHelp()))
+                    console cprintln("%s: %s" format(name toCString(), command getHelp() toCString()))
                 } else {
-                    console cprintln("unknown command: %s" format(name))
+                    console cprintln("unknown command: %s" format(name toCString()))
                 }
             }
         }))
@@ -314,10 +314,10 @@ Console: class extends Window {
 			if(correctToken == "") {
 				cprintln("avalaible commands:")
 			} else {
-				cprintln("%s →" format(buffer))
+				cprintln("%s ->" format(buffer toCString()))
 			}
 			for(sugg in suggs) {
-				cprintln(" • %s" format(sugg))
+				cprintln(" * %s" format(sugg toCString()))
 			}
             
             limit := 9999999

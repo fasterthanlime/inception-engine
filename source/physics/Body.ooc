@@ -74,7 +74,7 @@ Body: class extends Entity {
 	}
 	
 	getPos: func -> Float3 {
-		return pos
+		pos
 	}
 	
 	setVel: func(x,y,z: Float) {

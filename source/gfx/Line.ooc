@@ -29,9 +29,10 @@ Line: class extends Model {
 	
 	render: func {
 		glLineWidth(6)
-		d :=  exp(-dist(begin,end))
+		//d := exp(-dist(begin,end))
 		//glColor3f(1.0 - d,d,0)
-		glColor3f(1,0,0)
+        
+		glColor3f(1, 0, 0)
 		glBegin(GL_LINES)
 		glVertex3f(begin x, begin y, begin z)
 		glVertex3f(end x, end y, end z)

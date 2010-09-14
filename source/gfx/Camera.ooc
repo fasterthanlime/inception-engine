@@ -1,5 +1,6 @@
-use glew,glu,sdl
-import glew,glu/Glu,sdl/[Sdl, Event]
+use glew, glu, sdl
+
+import glew, glu/Glu, sdl/[Sdl, Event]
 import engine/[Types, Entity, Property, Message]
 import math
 
@@ -8,11 +9,11 @@ THIRD_PERSON := 2
 
 Camera: class extends Entity {
 	phi, theta: Float
-	forward := Float3 new(0,0,0)
-	left := Float3 new(0,0,0)
+	forward := Float3 new(0, 0, 0)
+	left := Float3 new(0, 0, 0)
 	
-	pos := Float3 new(5,0,0)
-	target := Float3 new(0,0,0)
+	pos := Float3 new(5, 0, 0)
+	target := Float3 new(0, 0, 0)
 	
 	kforward := false
 	kbackward := false
@@ -23,7 +24,7 @@ Camera: class extends Entity {
 	
 	init: func ~cam (.name){
 		super(name)
-		set("pos", pos)
+		set("pos",  pos)
 		set("target", target)
 		set("speed", 1.0)
 		set("sensitivity", 0.2)
@@ -72,9 +73,9 @@ Camera: class extends Entity {
 	}
 	
 	look: func {
-		//pos := get("pos",Float3)
-		//target := get("target",Float3)
-		speed := get("speed",Float)
+		pos = get("pos", Float3)
+		target = get("target", Float3)
+		speed := get("speed", Float)
         
 		if(kforward) { pos = pos + forward * speed }
 		if(kbackward) { pos = pos - forward * speed }
@@ -83,13 +84,14 @@ Camera: class extends Entity {
         
 		target = pos + forward
         
-		//set("pos",pos)
-		//set("target",target)
+		set("pos", pos)
+		set("target", target)
+
+        //"Camera pos / target = %s / %s" printfln(pos toString() toCString(), target toString() toCString())
 		
 	    gluLookAt(pos x,pos y,pos z,
 				  target x, target y, target z,
 				  0,0,1)
-				  
 	}
 	
 	vectorsFromAngles: func {
@@ -103,7 +105,7 @@ Camera: class extends Entity {
 		else if(phi < -89)
 			phi = -89
         
-        rTemp := cos(phi*PI/180.0)
+        rTemp := cos(phi * PI / 180.0)
         forward z = sin(phi * PI / 180.0)
         forward x = rTemp * cos(theta * PI / 180.0)
         forward y = rTemp * sin(theta * PI / 180.0)

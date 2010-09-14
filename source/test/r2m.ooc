@@ -5,7 +5,7 @@ import gfx/r2m/R2MLoader
 import physics/[PhysicsEngine, Body, Force]
 import structs/ArrayList
 
-main: func (argc: Int, argv: String*) {
+main: func (argc: Int, argv: Char*) {
 	
 	engine := Engine new()
 	
@@ -14,7 +14,7 @@ main: func (argc: Int, argv: String*) {
     engine addEntity(EventMapper new())
     
 	engine addEntity(Grid new("grid_1"))
-    path := argc >= 2 ? argv[1] : "data/maps/square.r2m"
+    path := argc >= 2 ? argv[1] toString() : "data/maps/square.r2m"
     engine addEntity(R2MLoader new() load(path))
     
 	engine run()

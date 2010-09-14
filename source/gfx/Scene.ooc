@@ -84,7 +84,7 @@ Scene: class extends Entity {
         time1 = SDL getTicks()
         ticksPerFrame := 100
         delta := time1 - time2
-        "delta = %d" printfln(delta)
+        //"delta = %d" printfln(delta)
         usleep((ticksPerFrame - delta) * 100)
         
 		

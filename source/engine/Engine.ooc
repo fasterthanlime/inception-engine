@@ -17,7 +17,7 @@ Engine: class extends Entity {
     time1, time2, dt: UInt32 = 0
 	time: UInt32 = 0
     
-    init: func ~engine{
+    init: func ~engine {
 		super("r2l_engine")
 		addEntity(this)
 		listen(KeyboardMsg, This onKey)
@@ -29,9 +29,9 @@ Engine: class extends Entity {
     
     addEntity: func (entity: Entity) {
         name := entity name
-        seed := 1
+        seed := 2
         evilBro := entities get(name)
-        while(evilBro != null) {
+        while(evilBro) {
             name = "%s__%d" format(entity name, seed)
             seed += 1
             evilBro = entities get(name)
@@ -65,7 +65,6 @@ Engine: class extends Entity {
 	}
     
     run: func {
-        // Disabled for debugging
         while(true) {
 			time1 = time2
             for(ent in entities) {

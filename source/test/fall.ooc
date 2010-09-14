@@ -15,10 +15,12 @@ main: func (argc: Int, argv: String*) {
 	engine := Engine new()
 	
     //--------------- Setup the window
-	win := RenderWindow new(1024, 768, 16, false, "fall test")
+    width := 1024
+    height := 768
+    
+	win := RenderWindow new(width, height, 16, false, "fall test")
 	engine addEntity(win)
-    engine addEntity(Console new(10, 10, 1280 * 2/5, 800 * 2/5))
-	//engine addEntity(Window new("window1",60,60,100,100))
+    engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
     engine addEntity(EventMapper new())
 	
 	//--------------- Setup the physic simulation
@@ -34,8 +36,6 @@ main: func (argc: Int, argv: String*) {
 	groundBody := Body new("ground_body") .setFixed(true)
     groundBody setGeometry(AABB new("ground_body_aabb", 30, 30, 1))
     physx add(groundBody)
-    
-    console := Console
     
     engine getEntity("console", Console) addCommand(Command new("spawn", "Spawn a new entity", func (console: Console, st: StringTokenizer) {
         console cprintln("Spawwwnniiiing!")
