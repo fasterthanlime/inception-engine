@@ -1,4 +1,4 @@
-OOC_FLAGS=-driver=sequence -v -gcc -allerrors -g -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
+OOC_FLAGS=-driver=sequence -v -gcc -g -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
 OOC?=rock
 TEST?=fall
 

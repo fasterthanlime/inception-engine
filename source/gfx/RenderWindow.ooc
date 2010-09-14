@@ -134,35 +134,6 @@ RenderWindow: class extends Entity {
 
 		return true
 	}
-	
-
-	/*
-	handleEvent: func(event: Event) -> Bool {
-		match(event type) {
-			case SDL_ACTIVEEVENT => {
-			    if (event active gain == 0)
-					isActive = false
-			    else
-					isActive = true
-			}
-			   
-			case SDL_VIDEORESIZE => {
-			    surface = SDLVideo setMode(event resize w, event resize h, 32, videoFlags)
-			    if (!surface)
-				{
-				    fprintf(stderr, "Could not get a surface after resize: %s\n", SDL getError())
-				    quit()
-				}
-			    resizeWindow(event resize w, event resize h)
-			    return true
-			}
-			 
-			case SDL_KEYDOWN => return handleKeyPress(event key keysym&)
-			   
-			case SDL_QUIT => return false
-		}
-		return false
-	}*/
 		
 	onKey: static func(m: KeyboardMsg) {
 		this := m target

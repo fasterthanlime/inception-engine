@@ -80,13 +80,13 @@ Scene: class extends Entity {
 		
 	    glFlush()
 	    SDLVideo glSwapBuffers()
-	    //usleep(30000)
-		if(time2 - time1 >= 1000) {
-			time1 = time2
-			printf("fps: %d\n",fps)
-			fps = 0
-		}
-		fps += 1
+
+        time1 = SDL getTicks()
+        ticksPerFrame := 100
+        delta := time1 - time2
+        "delta = %d" printfln(delta)
+        usleep((ticksPerFrame - delta) * 100)
+        
 		
 	    return true
 	}
