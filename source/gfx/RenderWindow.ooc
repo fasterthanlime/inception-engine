@@ -215,6 +215,6 @@ RenderWindow: class extends Entity {
 	
 	
 	title: func(=title) {
-		SDLVideo wmSetCaption(title, null)
+		SDLVideo wmSetCaption(title toCString(), null)
 	}
 }

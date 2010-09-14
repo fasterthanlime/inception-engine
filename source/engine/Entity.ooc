@@ -26,10 +26,10 @@ Entity: class {
     
     update: func {
         
-        if(!updates isEmpty()) {
+        if(!updates empty?()) {
             //printf("[%d] %s got %d updates to run\n", id, name, updates size())
             iter := updates iterator()
-            while(iter hasNext()) {
+            while(iter hasNext?()) {
                 up := iter next()
                 //printf("[%d] %s running update %s\n", id, name, up class name)
                 if(!up run(this)) {
@@ -39,11 +39,11 @@ Entity: class {
         }
         
         
-        while(!queue isEmpty()) {
+        while(!queue empty?()) {
             msg := queue get(0)
             queue removeAt(0)
             for(r in receivers) {
-                if(r messageType inheritsFrom(msg class)) {
+                if(r messageType inheritsFrom?(msg class)) {
                     r call(msg)
                 }
             }
@@ -65,7 +65,7 @@ Entity: class {
         for(entity in engine entities) {
             has := true
             for(receiver in entity receivers) {
-                if(receiver messageType inheritsFrom(msg class)) {
+                if(receiver messageType inheritsFrom?(msg class)) {
                     has = true
                     break
                 }
@@ -85,7 +85,7 @@ Entity: class {
     set: func <T> (name: String, value: T) {
         prop := props get(name)
         if(prop) {
-            if(!prop instanceOf(GenericProperty)) {
+            if(!prop instanceOf?(GenericProperty)) {
                 Exception new(This, "Attempting to set value of %s as if it was a generic property, but it's a %s" format(name, prop class name)) throw()
             }
             prop as GenericProperty set(value)
@@ -98,11 +98,11 @@ Entity: class {
     get: func <T> (name: String, T: Class) -> T {
         prop := props get(name)
         if(!prop) return null
-        if(!prop instanceOf(GenericProperty)) {
+        if(!prop instanceOf?(GenericProperty)) {
             Exception new(This, "Attempting to get (%s, %s), but the property isn't generic but a %s" format(name, T name, prop class name)) throw()
         }
         gp := prop as GenericProperty<T>
-        if(!gp T inheritsFrom(T)) {
+        if(!gp T inheritsFrom?(T)) {
             Exception new(This, "Attempting to get (%s, %s), but the property has incompatible type %s" format(name, T name, gp T name)) throw()
         }
         return gp get()

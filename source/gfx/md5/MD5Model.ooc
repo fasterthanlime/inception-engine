@@ -1,4 +1,4 @@
-/**
+/*
  * md5mesh model loader + animation
  *
  * Copyright (c) 2005-2007 David HENRY
@@ -126,14 +126,14 @@ Quat4: cover {
 
 /* Joint */
 MD5Joint: class {
-    name: String
+    name: Char*
     parent: Int
     
     pos: Vec3
     orient: Quat4
     
     init: func {
-        name = String new(64)
+        name = gc_malloc(64)
     }
 }
 
@@ -171,11 +171,11 @@ MD5Mesh: class {
 
     numVerts, numTris, numWeights: Int
 
-    shader: String
+    shader: Char*
     textureID: GLuint = -1
     
     init: func {
-        shader = String new(256)
+        shader = gc_malloc(256)
     }
 }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * md5mesh model loader + animation
  *
  * Copyright (c) 2005-2007 David HENRY
@@ -46,7 +46,7 @@ MD5Loader: class {
         
         fR := FileReader new(filename, "rb")
         
-        while(fR hasNext()) {
+        while(fR hasNext?()) {
             // Read whole line
             buff := fR readLine()
             
@@ -97,7 +97,7 @@ MD5Loader: class {
                 fdata: Float[4]
                 idata: Int[4]
 
-                while ((buff[0] != '}') && fR hasNext()) {
+                while ((buff[0] != '}') && fR hasNext?()) {
                     // Read whole line
                     buff = fR readLine()
 

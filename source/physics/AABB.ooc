@@ -14,7 +14,7 @@ AABB: class extends Geometry {
      */
     collide: func (g: Geometry, reaction: Float3) -> Bool {
         
-        if(!g instanceOf(This)) return false
+        if(!g instanceOf?(This)) return false
         
         reaction x = reaction y = reaction z = 0
         
@@ -48,6 +48,7 @@ AABB: class extends Geometry {
         }
         
         // TODO: fill
+        false
         
     }
     

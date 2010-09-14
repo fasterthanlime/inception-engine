@@ -22,7 +22,7 @@ Model: abstract class extends Entity {
 	}
 	
 	setProgram: func(=shader) {
-		timeid = glGetUniformLocation(shader id, "time")
+		timeid = glGetUniformLocation(shader id, "time" toCString())
 	}
 	
 	setPos: func(x,y,z: Float) {

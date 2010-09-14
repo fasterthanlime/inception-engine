@@ -13,44 +13,44 @@ R2MLoader: class {
         
         version: Int
         
-        while(fR hasNext()) {
+        while(fR hasNext?()) {
             
             // Read whole line
             buff := fR readLine()
             
-            if (sscanf(buff, " MD5Version %d", version&) == 1) {
+            if (sscanf(buff toCString(), " MD5Version %d" toCString(), version&) == 1) {
                 if (version > MAX_VERSION_SUPPORTED) {
                     // Bad version
                     fprintf (stderr, "%s Error: bad model version %d, we only support up to %d\n" format(class name, version, MAX_VERSION_SUPPORTED))
                     fR close()
                     return null
                 }
-            } if(buff startsWith("things {")) {
+            } if(buff startsWith?("things {")) {
                 
-                while(buff[0] != '}' && fR hasNext()) {
+                while(buff[0] != '}' && fR hasNext?()) {
                     
                     buff = fR readLine()
                     
-                    name := String new(256)
+                    name := Buffer new(256)
                     pos := Float3 new(0, 0, 0)
                     
-                    if(sscanf(buff, " %s ( %f %f %f )", name, pos x&, pos y&, pos z&) == 4) {
-                        mdl addThing(R2MThing new(name, pos))
+                    if(sscanf(buff toCString(), " %s ( %f %f %f )" toCString(), name data, pos x&, pos y&, pos z&) == 4) {
+                        mdl addThing(R2MThing new(name toString(), pos))
                     }
                     
                 }
                 
-            } else if(buff startsWith("models {")) {
+            } else if(buff startsWith?("models {")) {
                 
-                name := String new(256)
-                path := String new(1024)
+                name := Buffer new(256)
+                path := Buffer new(1024)
                 
-                while(buff[0] != '}' && fR hasNext()) {
+                while(buff[0] != '}' && fR hasNext?()) {
                     
                     buff = fR readLine()
                     
-                    if(sscanf(buff, " %s %s", name, path) == 2) {
-                        mdl addModel(name clone(), "data/models/" + path)
+                    if(sscanf(buff toCString(), " %s %s" toCString(), name data, path data) == 2) {
+                        mdl addModel(name clone() toString(), "data/models/" + path toString())
                     }
                     
                 }

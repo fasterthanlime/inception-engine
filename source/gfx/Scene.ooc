@@ -6,7 +6,6 @@ import engine/[Entity, Update, Engine, Types]
 import gfx/[Model, RenderWindow, Camera, ShaderProgram]
 import structs/[LinkedList, HashMap, ArrayList]
 import io/[File, FileReader]
-import text/Buffer
 
 include unistd
 usleep: extern func(Int)
@@ -149,22 +148,22 @@ Scene: class extends Entity {
 			glDeleteShader(shader)
 			return
 		}
-		
-		glShaderSource(shader, 1, src&, null)
+
+        glShaderSource(shader, 1, src&, null)
 		glCompileShader(shader)
 		
 		glGetShaderiv(shader, GL_COMPILE_STATUS, compile_status&)
 		if( compile_status != GL_TRUE ) {
 			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, logsize&)
 			
-			log := String new(logsize)
-			
+			log := gc_malloc(logsize) as Char*
 			glGetShaderInfoLog(shader, logsize, logsize&, log)
+            
 			printf("[Engine]: Error while compiling shader '%s'\n",filename)
 			printf("=====================================\n")
-			printf("%s\n",src)
+			printf("%s\n", src)
 			printf("=====================================\n")
-			printf("\t%s\n",log)
+			printf("\t%s\n", log)
 			glDeleteShader(shader)
 			return
 		}
@@ -173,15 +172,15 @@ Scene: class extends Entity {
 		
 	}
 	
-	loadSrc: func(filename: String) -> String {
+	loadSrc: func(filename: String) -> Char* {
 		reader := FileReader new(File new(filename))
 		buffer := Buffer new()
-		while(reader hasNext()) {
+		while(reader hasNext?()) {
 			buffer append(reader read())
 		}
 		
-		src := buffer toString() clone()
-		src[src length() - 1] = '\0'
+		src := buffer toCString()
+		src[buffer size - 1] = '\0'
 		
 		return src
 	}
@@ -206,7 +205,6 @@ Scene: class extends Entity {
 		vsh : GLuint = 0
 		psh : GLuint = 0
 		logsize : GLint = 0
-		log: String
 		
 		if(pshader != "" && pshader != null) {
 			psh = shaders get(pshader)
@@ -234,8 +232,7 @@ Scene: class extends Entity {
 		glGetProgramiv(program, GL_LINK_STATUS, link_status&)
 		if(link_status != GL_TRUE) {
 			glGetProgramiv(program, GL_INFO_LOG_LENGTH, logsize&);
-			log = String new(logsize)
-			
+			log := gc_malloc(logsize) as Char*
 			glGetProgramInfoLog(program, logsize, logsize&, log);
 			
 			fprintf(stderr, "impossible de lier le program :\n%s", log)

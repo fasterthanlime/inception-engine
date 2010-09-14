@@ -1,6 +1,6 @@
 import engine/[Entity, Types]
 
-Geometry: class extends Entity {
+Geometry: abstract class extends Entity {
     
     init: func ~coll (.name) {
         super(name)

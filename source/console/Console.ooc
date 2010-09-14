@@ -16,7 +16,7 @@ Console: class extends Window {
 	commands := HashMap<String, Command> new()
 	
 	font := Ftgl new(80, 72, "data/fonts/Terminus.ttf")
-	buffer := String new(128)
+	buffer := Buffer new(128) toString()
 	inputHeight := 12
 	caretStart := 0
 	
@@ -54,7 +54,7 @@ Console: class extends Window {
             }
                 
             // display a particular property
-            if(pname != null && !pname isEmpty()) {
+            if(pname != null && !pname empty?()) {
                 prop := ent props get(pname)
                 if(prop == null) {
                     console cprintln("sorry, entity [%s] doesn't have a property named [%s]" format(ename, pname))
@@ -154,7 +154,7 @@ Console: class extends Window {
 		match(m key) {
 			case SDLK_RETURN => {
 				command(buffer)
-				buffer = String new(128)
+				buffer = Buffer new(128) toString()
 				caretStart = 0
 				browsingHistory = false
 			}
@@ -165,7 +165,7 @@ Console: class extends Window {
 					browsingHistory = true
 				}
 				
-				if(iterator hasNext()) {
+				if(iterator hasNext?()) {
 					setBuffer(iterator next() clone())
 				}
 			}
@@ -176,10 +176,10 @@ Console: class extends Window {
 					browsingHistory = true
 				}
 				
-				if(iterator hasPrev()) {
+				if(iterator hasPrev?()) {
 					setBuffer(iterator prev() clone())
 				} else {
-					buffer = String new(128)
+					buffer = Buffer new(128) toString()
 					browsingHistory = false
 				}
 			}
@@ -196,7 +196,7 @@ Console: class extends Window {
 		
 		ch := (m unicode & 0x7f) as Char
 		
-		// haha c'est tout mom keye.
+		// haha c'est tout moche.
 		if(m key == SDLK_BACKSPACE && caretStart > 0) {
 			buffer = buffer substring(0, caretStart - 1) + buffer substring(caretStart, buffer length())
 			caretStart -= 1
@@ -216,7 +216,7 @@ Console: class extends Window {
 		} else if(m key== SDLK_END) {
 			caretStart = buffer length()
 			
-		} else if((ch isPrintable() && ch != SDLK_LSHIFT && ch != SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
+		} else if((ch printable?() && ch != SDLK_LSHIFT && ch != SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {
@@ -244,7 +244,7 @@ Console: class extends Window {
 					suggs clear()
 					if(commands get(token) == null) {
 						for(key in commands getKeys()) {
-							if(key startsWith(token)) {
+							if(key startsWith?(token)) {
 								suggs add(key)
 							}
 						}
@@ -261,7 +261,7 @@ Console: class extends Window {
 						ent := engine getEntity(token)
 						if(ent == null) {
 							for(key in engine entities getKeys()) {
-								if(key startsWith(token)) {
+								if(key startsWith?(token)) {
 									suggs add(key)
 								}
 							}
@@ -281,7 +281,7 @@ Console: class extends Window {
 							prop := ent props get(token)
 							if(prop == null) {
 								for(key in ent props getKeys()) {
-									if(key startsWith(token)) {
+									if(key startsWith?(token)) {
 										suggs add(key)
 									}
 								}
@@ -304,13 +304,13 @@ Console: class extends Window {
 		
 		if(begin == "") {
 			for(key in commands getKeys()) {
-				if(key startsWith("")) {
+				if(key startsWith?("")) {
 					suggs add(key)
 				}
 			}
 		}
 		
-		if(suggs size() > 1) {
+		if(suggs size > 1) {
 			if(correctToken == "") {
 				cprintln("avalaible commands:")
 			} else {
@@ -346,13 +346,13 @@ Console: class extends Window {
             }
             setBuffer("%s%s" format(correctToken, suggs[0] substring(0, best)))
             
-		} else if(suggs size() == 1) {
+		} else if(suggs size == 1) {
 			setBuffer("%s%s " format(correctToken, suggs[0]))
 		} else {
 			match(status) {
-				case COMMAND => cprintln("Sorry, no command begins with '%s'"  format(buffer))
-				case SHOW    => cprintln("Sorry, no entity begins with '%s'"   format(correctTokens last()))
-				case ENT     => cprintln("Sorry, no property begins with '%s'" format(correctTokens last()))
+				case COMMAND => cprintln("Sorry, no command begins with '%s'"  format(buffer toCString()))
+				case SHOW    => cprintln("Sorry, no entity begins with '%s'"   format(correctTokens last() toCString()))
+				case ENT     => cprintln("Sorry, no property begins with '%s'" format(correctTokens last() toCString()))
 			}
 		}
 			
@@ -360,7 +360,7 @@ Console: class extends Window {
 	
 	cprint: func(line: String) {
 		firstLine: String = null
-		if(lines size() > 0)
+		if(lines size > 0)
 			firstLine = lines get(0)
 		
 		if(firstLine != null) {
@@ -387,7 +387,7 @@ Console: class extends Window {
 			printedLine = true
 		}
 		
-		if(lines size() > 100)
+		if(lines size > 100)
 			lines removeLast()
 	}
 	
@@ -396,7 +396,7 @@ Console: class extends Window {
 			lines add(0,"")
 		}
 		printedLine = true
-		if(lines size() > 100)
+		if(lines size > 100)
 			lines removeLast()
 	}
 	
@@ -405,7 +405,7 @@ Console: class extends Window {
 		size := get("size", Float2)
 		//printf("rendering text\n")
 		glPushMatrix()
-		glTranslated(0,size y - 2 * inputHeight,0)
+		glTranslated(0, size y - 2 * inputHeight, 0)
 		bufferDraw()
 		glPopMatrix()
 	}
@@ -454,7 +454,7 @@ Console: class extends Window {
 		lastSpace := 0
 		elemStart := 0
 		line := _line clone()
-		size := get("size",Float2)
+		size := get("size", Float2)
 		
 		for(i in 0..line length()) {
 			bbox := font getFontBBox(i - elemStart)
@@ -470,7 +470,8 @@ Console: class extends Window {
 	
 	command: func(cm: String) {
 		if(cm == "") {
-			cprintln(String new(20))
+			//cprintln(String new(20))
+            cprintln("")
 			return
 		}
 		history add(0,cm)

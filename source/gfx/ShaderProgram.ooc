@@ -6,7 +6,7 @@ ShaderProgram: class {  //stands for shader program
 	timeid: GLuint
     
 	init: func(=id) {
-		timeid = glGetUniformLocation(id, "time")
+		timeid = glGetUniformLocation(id, "time" toCString())
 	} 
 
 	del: func {

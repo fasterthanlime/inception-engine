@@ -58,7 +58,7 @@ Engine: class extends Entity {
     
     getEntity: func ~over <T> (name: String, T: Class) -> T {
 		ent := entities get(name)
-		if(!ent class inheritsFrom(T)) {
+		if(!ent class inheritsFrom?(T)) {
             Exception new(This, "Attempting to get (%s, %s), but the entity has incompatible type %s" format(name, T name, ent class name)) throw()
         }
         return ent
