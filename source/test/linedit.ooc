@@ -16,7 +16,7 @@ main: func (argc: Int, argv: Char*) {
     width := 1280
     height := 1024
     
-	win := RenderWindow new(width, height, 16, false, "fall test")
+	win := RenderWindow new(width, height, 16, false, "track editor")
 	engine addEntity(win)
     engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
     engine addEntity(EventMapper new())
