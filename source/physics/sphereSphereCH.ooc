@@ -1,13 +1,13 @@
-import maths
+import math
 import engine/[Entity, Types]
-import Geometry
+import Geometry, Sphere
 
 /**
  * .
  *
  * @version 1.0.0, 2010-09-14
  */
-sphereSphereCH: func(sphere1, sphere2: Sphere, reaction: Float3) -> Bool {
+sphereSphereCH: func (sphere1, sphere2: Sphere, reaction: Float3) -> Bool {
 
     pos1    := sphere1 get("position", Float3)
     radius1 := sphere1 get("radius",   Float)
@@ -21,7 +21,7 @@ sphereSphereCH: func(sphere1, sphere2: Sphere, reaction: Float3) -> Bool {
     currentSquareDistance := diffX*diffX + diffY*diffY + diffZ*diffZ
     squareDistance := (radius1 + radius2)*(radius1 + radius2)
     if (currentSquareDistance <= squareDistance) {
-        factor = sqrt(currentSquareDistance/squareDistance)
+        factor := sqrt(currentSquareDistance/squareDistance)
         reaction set(diffX*(factor-1), diffY*(factor-1), diffZ*(factor-1))
         return true
     } else {

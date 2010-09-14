@@ -3,7 +3,7 @@ import Geometry
 
 Sphere: class extends Geometry {
 
-    init: func (.name, radius) {
+    init: func (.name, radius: Float) {
         super(name)
         set("radius", radius)
     }

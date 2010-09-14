@@ -1,4 +1,6 @@
 import engine/[Entity, Types]
+import CollisionHandlerFactory
+import ooc-hackit
 
 Geometry: abstract class extends Entity {
     
@@ -19,7 +21,7 @@ Geometry: abstract class extends Entity {
         collisionHandler := CollisionHandlerFactory \
             getHandler(this, g)
 
-        if (collisionHandler) {
+        if (collisionHandler as Closure valid?()) {
             return collisionHandler(this, g, reaction)
         } else {
             ("No handler available for (" +
@@ -33,3 +35,4 @@ Geometry: abstract class extends Entity {
     }
     
 }
+
