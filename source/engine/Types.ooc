@@ -9,7 +9,9 @@ Float3: class {
 	
 	init: func ~xyz (=x, =y, =z) {}
     
-    init: func ~zero { x = y = z = 0 }
+    init: func ~zero {
+        x = y = z = 0
+    }
 	
 	set: func (=x, =y, =z) {
 		for(client in clients) {
@@ -23,6 +25,10 @@ Float3: class {
 
     set: func ~f3 (other: This) {
         set(other x, other y, other z)
+    }
+
+    clone: func -> This {
+        new(x, y, z)
     }
 	
 	addSet: func(x, y, z: Float) {
@@ -65,19 +71,20 @@ Float3: class {
     }
     
 	length: func -> Float {
-		return sqrt(squaredLength())
+		sqrt(squaredLength())
 	}
 	
 	toString: func -> String {
-		return "(%.2f,%.2f,%.2f)" format(x,y,z)
+		"(%.2f,%.2f,%.2f)" format(x,y,z)
 	}
 }
 
 dist: func(f1,f2: Float3) -> Float {
-	return sqrt((f1 x - f2 x)*(f1 x - f2 x) +
-				(f1 y - f2 y)*(f1 y - f2 y) +
-				(f1 z - f2 z)*(f1 z - f2 z)
-				)
+	sqrt(
+        (f1 x - f2 x) * (f1 x - f2 x) +
+        (f1 y - f2 y) * (f1 y - f2 y) +
+        (f1 z - f2 z) * (f1 z - f2 z)
+    )
 }
 
 operator * (v1: Float3, n: Float) -> Float3 {

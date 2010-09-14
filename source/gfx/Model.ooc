@@ -1,7 +1,7 @@
 use glew
 import glew
 import engine/[Engine,Entity, Update, Types]
-import gfx/[StaticMesh, Scene, ShaderProgram]
+import gfx/[StaticMesh, Scene, ShaderProgram, Texture]
 import console/Console
 
 Model: abstract class extends Entity {
@@ -14,6 +14,8 @@ Model: abstract class extends Entity {
 	
 	shader: ShaderProgram
 	timeid: Int = 0
+
+    texture: Texture = null
 	
 	show := true
 	
@@ -33,26 +35,23 @@ Model: abstract class extends Entity {
 	
 	_render: func {
 		if(!show)
-			return
+			return // don't render hidden objects
             
 		if(shader) {
             glUseProgram(shader id)
             glUniform1f(timeid, engine getTicks() as Float)
         }
-			
+        if(texture) texture enable()
+        if(!writeDepth) glDepthMask(false)
 		
 		glPushMatrix()
-		glTranslated(pos x, pos y, pos z)
-
-        if(!writeDepth) glDepthMask(false)
-		render()
-        if(!writeDepth) glDepthMask(true)
-        
+            glTranslated(pos x, pos y, pos z)
+            render()
 		glPopMatrix()
-        
-		if(shader) {
-            glUseProgram(0)
-        }
+
+        if(!writeDepth) glDepthMask(true)
+        if(texture) texture disable()
+		if(shader) glUseProgram(0)
 	}
 	
 	render: abstract func {}

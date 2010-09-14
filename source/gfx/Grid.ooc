@@ -1,13 +1,14 @@
 use glew
 import glew
 import gfx/Model
-import engine/[Property,Types]
+import engine/[Property, Types]
 
 Grid: class extends Model {
+    
 	init: func ~grid(.name) {
 		super(name)	
-		set("x_range", Float2 new(-10, 10)) 
-		set("y_range", Float2 new(-10, 10)) 
+		set("x_range", Float2 new(-10, 10))
+		set("y_range", Float2 new(-10, 10))
 		set("position", Float3 new(0, 0, 0))
 		set("color", Float3 new(1, 1, 1))
 	}
@@ -37,11 +38,16 @@ Grid: class extends Model {
 		
 		glColor4f(color x, color y, color z, 0.5)
 		glBegin(GL_QUADS)
-		glVertex3f(xrange x, yrange x, 0)
-		glVertex3f(xrange x, yrange y, 0)
-		glVertex3f(xrange y, yrange y, 0)
-		glVertex3f(xrange y, yrange x, 0)
+            glTexCoord2f(0, 0)
+            glVertex3f(xrange x, yrange x, 0)
+            glTexCoord2f(0, 1)
+            glVertex3f(xrange x, yrange y, 0)
+            glTexCoord2f(1, 1)
+            glVertex3f(xrange y, yrange y, 0)
+            glTexCoord2f(1, 0)
+            glVertex3f(xrange y, yrange x, 0)
 		glEnd()
 		glDisable(GL_BLEND)
 	}
+    
 }

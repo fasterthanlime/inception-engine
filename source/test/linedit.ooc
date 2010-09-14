@@ -1,5 +1,5 @@
 import engine/[Engine, Entity, Property, Update, EventMapper, Message, Types]
-import gfx/[RenderWindow, Cube, Scene, Grid, Line, Camera]
+import gfx/[RenderWindow, Cube, Scene, Grid, Line, Camera, Texture]
 import gfx/md5/MD5Loader
 import gfx/r2m/R2MLoader
 import sdl/Event
@@ -22,7 +22,14 @@ main: func (argc: Int, argv: Char*) {
     engine addEntity(EventMapper new())
     engine addEntity(ConvertCoords new())
 
-    engine addEntity(Grid new("grid_1"))
+    //--------------- Create the grid
+    grid := Grid new("grid_1")
+    grid set("x_range", Float2 new(0, 1))
+    grid set("y_range", Float2 new(0, 1))
+    grid texture = Texture new("data/maps/circuit_couleur1.png")
+    engine addEntity(grid)
+
+    //--------------- Adjust the cam
     cam := engine getEntity("default_cam") as Camera
     cam set("sensitivity", 0)
     cam set("speed", 0)
@@ -30,8 +37,11 @@ main: func (argc: Int, argv: Char*) {
     cam set("target", Float3 new(0, 0, 0))
     cam phi = -90
 
-    cube := Cube new("mouse_cube")
-    cube set("side", 0.2)
+    //--------------- Create a mouse pointer
+    pointer := Grid new("mouse_pointer")
+    pointer set("x_range", Float2 new(-0.1, 0.1))
+    pointer set("y_range", Float2 new(-0.1, 0.1))
+    
     cube writeDepth = false
     engine getEntity("3d_coords") get("coords", Float3) bind(cube pos)
     engine scene addModel(cube)
@@ -73,6 +83,12 @@ LineTracer: class extends Entity {
                 case SDL_MOUSEBUTTONUP =>
                     line get("end", Float3) set(coords x, coords y, 1)
                     line show = false
+
+                    engine scene addModel(Line new(
+                        "lineDrawn",
+                        line get("begin", Float3) clone(),
+                        line get("end",   Float3) clone()
+                    ))
             }
         )
     }
