@@ -48,6 +48,7 @@ Model: abstract class extends Entity {
 		
 		glPushMatrix()
             glTranslated(pos x, pos y, pos z)
+            glRotated(rot z, 0, 0, 1)
             render()
 		glPopMatrix()
 
