@@ -124,6 +124,10 @@ operator * (v1: Float3, n: Float) -> Float3 {
 	return Float3 new(v1 x * n, v1 y * n, v1 z * n)
 }
 
+operator / (v1: Float3, n: Float) -> Float3 {
+	return Float3 new(v1 x / n, v1 y / n, v1 z / n)
+}
+
 operator + (v1,v2: Float3) -> Float3 {
 	return Float3 new(v1 x + v2 x, v1 y + v2 y, v1 z + v2 z)
 }
