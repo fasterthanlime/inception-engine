@@ -28,6 +28,9 @@ Line: class extends Model {
 	}
 	
 	render: func {
+        begin = get("begin", Float3)
+        end   = get("end",   Float3)
+        
 		glLineWidth(6)
 		glColor3f(1, 0, 0)
 		glBegin(GL_LINES)

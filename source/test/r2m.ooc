@@ -14,8 +14,8 @@ main: func (argc: Int, argv: CString*) {
     engine addEntity(EventMapper new())
 
     grid := Grid new("grid_1")
-    grid set("x_range", Float2 new(-40, 40))
-    grid set("y_range", Float2 new(-40, 40))
+    grid set("x_range", Float2 new(-50, 50))
+    grid set("y_range", Float2 new(-50, 50))
 	engine addEntity(grid)
     path := argc >= 2 ? argv[1] toString() : "data/maps/square.r2m"
     engine addEntity(R2MLoader new() load(path))

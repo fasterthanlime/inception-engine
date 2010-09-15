@@ -5,7 +5,8 @@ import math
 
 R2MLoader: class {
 
-    MAX_VERSION_SUPPORTED := 2
+    MAX_VERSION_SUPPORTED := static 2
+    trackScale := 100.0
     
     load: func (filename: String) -> R2MModel {
         
@@ -51,12 +52,16 @@ R2MLoader: class {
                     end := Float3 new(0, 0, 0)
                     
                     if(sscanf(buff toCString(), " ( %f %f ) ( %f %f )" toCString(), begin x&, begin y&, end x&, end y&) == 4) {
+                        // shift and scale our coordinates
+                        begin addSet(-0.5, -0.5, 0). scale(trackScale)
+                        end   addSet(-0.5, -0.5, 0). scale(trackScale)
+                        
                         diff := end - begin
                         length := diff length() * 0.5
                         
                         pos := begin + (diff * 0.5)
 
-                        width := 0.1
+                        width := 2.0
                         
                         diff normalize()
                         angle := (atan2(diff y, diff x) - atan2(1, 0)) * 180.0 / PI

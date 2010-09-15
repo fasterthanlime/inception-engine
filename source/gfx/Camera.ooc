@@ -89,9 +89,9 @@ Camera: class extends Entity {
 
         //"Camera pos / target = %s / %s" printfln(pos toString() toCString(), target toString() toCString())
 		
-	    gluLookAt(pos x,pos y,pos z,
+	    gluLookAt(pos x, pos y, pos z,
 				  target x, target y, target z,
-				  0,0,1)
+				  0, 0, 1)
 	}
 	
 	vectorsFromAngles: func {

@@ -1,5 +1,6 @@
 import engine/[Engine, Entity, Property, Update, EventMapper, Message, Types]
 import gfx/[RenderWindow, Cube, Scene, Quad, Line, Camera, Texture]
+import gfx/r2m/[R2MLoader]
 import physics/PhysicsEngine
 
 import text/StringTokenizer
@@ -13,8 +14,8 @@ main: func (argc: Int, argv: Char*) {
 	engine := Engine new()
 	
     //--------------- Setup the window
-    width := 1280
-    height := 1024
+    width := 640
+    height := 480
 	win := RenderWindow new(width, height, 16, false, "kart test")
 	engine addEntity(win)
 
@@ -34,6 +35,10 @@ main: func (argc: Int, argv: Char*) {
     track set("y_range", Float2 new(-trackSide, trackSide))
     track texture = Texture new("data/maps/circuit_couleur1.png")
     engine scene addModel(track)
+
+    loader := R2MLoader new()
+    loader trackScale = trackSide * 2
+    engine addEntity(loader load("data/maps/edited_track.r2m"))
 
     //--------------- Add our kart
     engine addEntity(Kart new())

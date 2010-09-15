@@ -76,16 +76,19 @@ Float3: class {
 	}
 	
 	normalize: func {
-		l := length()
-		x /= l
-		y /= l
-		z /= l
+        scale(1 / length())
 	}
     
     negate: func {
         x = -x
         y = -y
         z = -z
+    }
+
+    scale: func (factor: Float) {
+        x *= factor
+        y *= factor
+        z *= factor
     }
 	
     dot: func (b: Float3) -> Float {
@@ -157,6 +160,15 @@ Float2: class {
 		for(client in clients) {
 			client send(client, ValueChange get(this))
 		}
+	}
+
+    scale: func (factor: Float) {
+        x *= factor
+        y *= factor
+    }
+
+    normalize: func {
+        scale(1 / length())
 	}
     
     dot: func (b: Float2) -> Float {

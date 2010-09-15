@@ -2,7 +2,7 @@ import engine/[Types,Entity]
 import Force, Geometry
 import structs/LinkedList
 
-DAMP := 0.990
+DAMP := 0.9990
 
 Body: class extends Entity {
     

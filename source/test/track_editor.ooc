@@ -8,6 +8,9 @@ import text/StringTokenizer
 import console/[Console, Command]
 import hud/[Hud, Window, ConvertCoords, FPSCounter]
 
+import structs/ArrayList
+import io/FileWriter
+
 main: func (argc: Int, argv: Char*) {
 	
 	engine := Engine new()
@@ -16,7 +19,7 @@ main: func (argc: Int, argv: Char*) {
     width := 1280
     height := 1024
     
-	win := RenderWindow new(width, height, 16, false, "track editor")
+	win := RenderWindow new(width, height, 32, false, "Ice Cream Madness [Track Editor]")
 	engine addEntity(win)
     engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
     engine addEntity(EventMapper new())
@@ -33,7 +36,7 @@ main: func (argc: Int, argv: Char*) {
     cam := engine getEntity("default_cam") as Camera
     cam set("sensitivity", 0)
     cam set("speed", 0)
-    cam set("pos", Float3 new(0.5, 0.5, 2.0))
+    cam set("position", Float3 new(0.5, 0.5, 2.0))
     cam set("target", Float3 new(0.5, 0.5, 0))
     cam phi = -90
 
@@ -57,6 +60,7 @@ main: func (argc: Int, argv: Char*) {
 LineTracer: class extends Entity {
 
     line := Line new("mouse_line")
+    lines := ArrayList<Line> new()
 
     init: func {
         super("line_tracer")
@@ -85,12 +89,38 @@ LineTracer: class extends Entity {
                     line get("end", Float3) set(coords)
                     line show = false
 
-                    engine scene addModel(Line new(
+                    newLine := Line new(
                         "lineDrawn",
                         line get("begin", Float3) clone(),
                         line get("end",   Float3) clone()
-                    ))
+                    )
+                    lines add(newLine)
+                    engine scene addModel(newLine)
             }
+        )
+
+        listen(KeyboardMsg, |_m|
+            m := _m as KeyboardMsg
+
+            path := "data/maps/edited_track.r2m"
+            ("Saving track to " + path) println()
+
+            fW := FileWriter new(path)
+            fW write("R2MVersion 2\n\n")
+            fW write("models {\n")
+            fW write("  trackbound cube/cube.md5mesh\n")
+            fW write("}\n\n")
+
+            fW write("trackbounds {\n")
+            lines each(|line|
+                fW write(" ( %f %f ) ( %f %f )\n" format(
+                    line get("begin", Float3) x,
+                    line get("begin", Float3) y,
+                    line get("end", Float3) x,
+                    line get("end", Float3) y
+                ))
+            )
+            fW write("}\n")
         )
     }
     

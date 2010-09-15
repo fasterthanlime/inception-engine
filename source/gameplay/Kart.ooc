@@ -21,6 +21,10 @@ Kart: class extends Entity {
     bboxModel := Cube new("kart_bbox")
     body := Body new("kart_body")
     
+    orientationAxis := Line new("kart_direction")
+    velocityAxis := Line new("kart_velocity")
+    axisLength := 25.0
+    
     cam: Camera
     camMode := CameraMode THIRD_PERSON
 
@@ -56,14 +60,14 @@ Kart: class extends Entity {
     update: func {
         super()
 
-        aFactor := 0.92
+        aFactor := 0.9
         bFactor := 1.0 - aFactor
 
-        maxSpeed := 200.0
+        maxSpeed := 260.0
         currentSpeed := dist(Float3 new(), body vel)
 
-        turnSpeed := 1.5
-        actualTurnSpeed := turnSpeed * (1.0 - ((maxSpeed - currentSpeed) / maxSpeed))
+        turnSpeed := 1.3
+        actualTurnSpeed := turnSpeed * (1.0 - ((maxSpeed - currentSpeed) / maxSpeed * 0.3))
         
         if(turnLeft) {
             alpha += actualTurnSpeed
@@ -75,18 +79,49 @@ Kart: class extends Entity {
             speed := currentSpeed
 
             if(brake) {
-                if(speed > 0.0) speed *= 0.5
+                if(speed > 0.0) speed *= 0.95
             } else if(accelerate) {
-                if(speed < maxSpeed) speed += 5.0
+                if(speed < maxSpeed) speed += 10.0
             }
 
             body vel set(
-                cos(alpha * PI / 180.0) * speed,
-                sin(alpha * PI / 180.0) * speed,
+                body vel x * 0.87 + (cos(alpha * PI / 180.0) * speed) * 0.13,
+                body vel y * 0.87 + (sin(alpha * PI / 180.0) * speed) * 0.13,
                 0
             )
         }
-        "current / max = %.2f / %.2f" printfln(currentSpeed, maxSpeed)
+        
+        velDir := Float2 new(body vel x, body vel y)
+        velDir normalize()
+        
+        unitDir := Float2 new(cos(alpha * PI / 180.0), sin(alpha * PI / 180.0))
+        dot := velDir dot(unitDir)
+
+        if(-1.0 < dot && dot < 1.0) {
+            velNorm := body vel length()
+            // less adherence if we brake
+            body vel scale(brake ? dot : (dot * 0.5 + 0.5))
+
+            epsilon := brake ? 0.9999 : 0.9
+            body vel set(
+                (body vel x * epsilon) + (unitDir x * velNorm * (1.0 - epsilon)),
+                (body vel y * epsilon) + (unitDir y * velNorm * (1.0 - epsilon)),
+                0
+            )
+        }
+        
+        orientationAxis get("end", Float3) set(
+            body pos x + (unitDir x * axisLength),
+            body pos y + (unitDir y * axisLength),
+            0.1
+        )
+
+        velocityAxis get("end", Float3) set(
+            body pos x + (body vel x / maxSpeed * axisLength),
+            body pos y + (body vel y / maxSpeed * axisLength),
+            0.1
+        )
+        "dot = %.2f | current / max = %.2f / %.2f" printfln(dot, currentSpeed, maxSpeed)
         
         if(camMode == CameraMode THIRD_PERSON) {
             cameraDistance := 30
@@ -101,10 +136,10 @@ Kart: class extends Entity {
     
             cam theta = (cam theta * 0.9) + (alpha * 0.1)
             
-            cam phi = -25
+            cam phi = -20
             cam vectorsFromAngles()
         } else if(camMode == CameraMode BIRDS_EYE) {
-            cameraHeight := 120
+            cameraHeight := 700
             cam get("position", Float3) set(
                 body pos x,
                 body pos y,
@@ -140,10 +175,17 @@ Kart: class extends Entity {
 
         // add and bind the bounding box
         engine scene addModel(bboxModel)
-        bboxModel set("side", 4.0)
+        bboxModel set("scale", Float3 new(4.0, 4.0, 6.0))
         bboxModel wire = true
         body pos bind(bboxModel pos)
         body rot bind(bboxModel rot)
+
+        // add the orientationAxis
+        engine scene addModel(orientationAxis)
+        body pos bind(orientationAxis get("begin", Float3))
+        
+        engine scene addModel(velocityAxis)
+        body pos bind(velocityAxis get("begin", Float3))
     }
 
 }
