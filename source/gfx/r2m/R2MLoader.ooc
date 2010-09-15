@@ -1,10 +1,11 @@
 import io/[File, FileReader]
-import R2MModel
+import R2MModel, ../Cube
 import engine/Types
+import math
 
 R2MLoader: class {
 
-    MAX_VERSION_SUPPORTED := 1
+    MAX_VERSION_SUPPORTED := 2
     
     load: func (filename: String) -> R2MModel {
         
@@ -18,7 +19,7 @@ R2MLoader: class {
             // Read whole line
             buff := fR readLine()
             
-            if (sscanf(buff toCString(), " MD5Version %d" toCString(), version&) == 1) {
+            if (sscanf(buff toCString(), " R2MVersion %d" toCString(), version&) == 1) {
                 if (version > MAX_VERSION_SUPPORTED) {
                     // Bad version
                     fprintf (stderr, "%s Error: bad model version %d, we only support up to %d\n" format(class name, version, MAX_VERSION_SUPPORTED))
@@ -36,9 +37,38 @@ R2MLoader: class {
                     
                     if(sscanf(buff toCString(), " %s ( %f %f %f )" toCString(), name data, pos x&, pos y&, pos z&) == 4) {
                         name sizeFromData()
-                        mdl addThing(R2MThing new(name toString(), pos))
+                        mdl addThing(R2MThing new(mdl models get(name toString()), pos))
                     }
                     
+                }
+                
+            } if(buff startsWith?("trackbounds {")) {
+                
+                while(buff[0] != '}' && fR hasNext?()) {
+                    buff = fR readLine()
+                    
+                    begin := Float3 new(0, 0, 0)
+                    end := Float3 new(0, 0, 0)
+                    
+                    if(sscanf(buff toCString(), " ( %f %f ) ( %f %f )" toCString(), begin x&, begin y&, end x&, end y&) == 4) {
+                        diff := end - begin
+                        length := diff length() * 0.5
+                        
+                        pos := begin + (diff * 0.5)
+
+                        width := 0.1
+                        
+                        diff normalize()
+                        angle := (atan2(diff y, diff x) - atan2(1, 0)) * 180.0 / PI
+                        ("begin / end = " + begin toString() + " / " + end toString() + ", pos = " + pos toString() + " angle = %.2f" format(angle)) println()
+
+                        cube := Cube new("trackbound")
+                        cube set("scale", Float3 new(width, length, width))
+                        
+                        thing := R2MThing new(cube, pos)
+                        thing rot z = angle
+                        mdl addThing(thing)
+                    }
                 }
                 
             } else if(buff startsWith?("models {")) {

@@ -5,15 +5,18 @@ import gfx/r2m/R2MLoader
 import physics/[PhysicsEngine, Body, Force]
 import structs/ArrayList
 
-main: func (argc: Int, argv: Char*) {
+main: func (argc: Int, argv: CString*) {
 	
 	engine := Engine new()
 	
 	win := RenderWindow new(1200, 800, 32, false, "render_window")
 	engine addEntity(win)
     engine addEntity(EventMapper new())
-    
-	engine addEntity(Grid new("grid_1"))
+
+    grid := Grid new("grid_1")
+    grid set("x_range", Float2 new(-40, 40))
+    grid set("y_range", Float2 new(-40, 40))
+	engine addEntity(grid)
     path := argc >= 2 ? argv[1] toString() : "data/maps/square.r2m"
     engine addEntity(R2MLoader new() load(path))
     

@@ -5,14 +5,16 @@ import ../md5/[MD5Loader, MD5Model]
 import glew
 
 R2MThing: class {
-    model: String
-    pos: Float3
+    model: Model
+
+    pos : Float3
+    rot := Float3 new()
     
     init: func (=model, =pos) {}
 }
 
 R2MModel: class extends Model {    
-    models := HashMap<String, MD5Model> new()
+    models := HashMap<String, Model> new()
     things := ArrayList<R2MThing> new()
     path: String
     
@@ -24,8 +26,8 @@ R2MModel: class extends Model {
         for(thing in things) {
             glPushMatrix()
                 glTranslated(thing pos x, thing pos y, thing pos z)
-                model := models get(thing model)
-                model render()
+                glRotated(thing rot z, 0, 0, 1)
+                if(thing model) thing model render()
             glPopMatrix()
         }
     }
