@@ -42,14 +42,18 @@ Model: abstract class extends Entity {
             glUniform1f(timeid, engine getTicks() as Float)
         }
         if(texture) texture enable()
-        if(!writeDepth) glDepthMask(false)
+        if(!writeDepth) {
+            glDepthMask(false)
+        }
 		
 		glPushMatrix()
             glTranslated(pos x, pos y, pos z)
             render()
 		glPopMatrix()
 
-        if(!writeDepth) glDepthMask(true)
+        if(!writeDepth) {
+            glDepthMask(true)
+        }
         if(texture) texture disable()
 		if(shader) glUseProgram(0)
 	}

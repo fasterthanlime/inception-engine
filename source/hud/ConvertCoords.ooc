@@ -31,6 +31,7 @@ ConvertCoords: class extends Entity {
             glReadPixels(m x, winY as Int, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, winZ&)
             
             gluUnProject(winX, winY, winZ, modelview, projection, viewport, posX&, posY&, posZ&)
+            posZ += 0.0001
 
             coords set(posX, posY, posZ)
             set("coords", coords)
