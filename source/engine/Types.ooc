@@ -13,10 +13,10 @@ extend Float {
     }
     
     max: func(others: ...) -> This {
-        minimum := this
+        maximum := this
         others each(|other|
             val := other as Float
-            if(val > minimum) minimum = val
+            if(val > maximum) maximum = val
         )
         minimum
     }
