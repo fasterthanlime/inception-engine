@@ -101,7 +101,7 @@ Float3: class {
 	}
 	
 	toString: func -> String {
-		"(%.2f,%.2f,%.2f)" format(x,y,z)
+		"(%.2f, %.2f, %.2f)" format(x,y,z)
 	}
 }
 
@@ -121,7 +121,7 @@ dist: func ~f3 (f1, f2: Float3) -> Float {
 }
 
 operator * (v1: Float3, n: Float) -> Float3 {
-	return Float3 new(v1 x * n, v1 y * n, v1 z * n)
+	Float3 new(v1 x * n, v1 y * n, v1 z * n)
 }
 
 operator / (v1: Float3, n: Float) -> Float3 {
@@ -129,7 +129,7 @@ operator / (v1: Float3, n: Float) -> Float3 {
 }
 
 operator + (v1,v2: Float3) -> Float3 {
-	return Float3 new(v1 x + v2 x, v1 y + v2 y, v1 z + v2 z)
+	Float3 new(v1 x + v2 x, v1 y + v2 y, v1 z + v2 z)
 }
 
 operator += (v1,v2: Float3) {
@@ -137,11 +137,11 @@ operator += (v1,v2: Float3) {
 }
 
 operator - (v1,v2: Float3) -> Float3 {
-	return Float3 new(v1 x - v2 x, v1 y - v2 y, v1 z - v2 z)
+	Float3 new(v1 x - v2 x, v1 y - v2 y, v1 z - v2 z)
 }
 
 operator ^ (v1,v2: Float3) -> Float3 {
-	return Float3 new (
+	Float3 new (
 		v1 y * v2 z - v1 z * v2 y,
 		v1 z * v2 x - v1 x * v2 z,
 		v1 x * v2 y - v2 y * v2 x
