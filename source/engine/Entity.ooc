@@ -8,10 +8,30 @@ Entity: class {
     name: String
     id: Int
     
-    props := HashMap<String, Property> new()
-    updates := ArrayList<Update> new()
-    receivers := ArrayList<Receiver> new()
-    queue := ArrayList<Message> new()
+    props : HashMap<String, Property> {
+        get {
+            if (!props) props = HashMap<String, Property> new()
+            return props
+        }
+    }
+    updates : ArrayList<Update> {
+        get {
+            if (!updates) updates = ArrayList<Update> new()
+            return updates
+        }
+    }
+    receivers : ArrayList<Receiver> {
+        get {
+            if (!receivers) receivers = ArrayList<Receiver> new()
+            return receivers
+        }
+    }
+    queue : ArrayList<Message> {
+        get {
+            if (!queue) queue = ArrayList<Message> new()
+            return queue
+        }
+    }
     
     idSeed := static 0
     
