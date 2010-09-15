@@ -5,7 +5,7 @@ import Geometry, Sphere, Box
 /**
  * Check collision beetween sphere and box in plane XY.
  *
- * @version 1.0.0, 2010-09-14
+ * @version 1.0.1, 2010-09-15
  */
 sphereBoxCH: func (sphere: Sphere, box: Box, reaction: Float3) -> Bool {
     
