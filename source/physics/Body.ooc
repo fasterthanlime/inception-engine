@@ -38,6 +38,8 @@ Body: class extends Entity {
 	evolve: func(dt: Float) { // in seconds
 		if(fixed)
 			return
+
+        "Evolving body, dt = %.2f, vel = %s" printfln(dt, vel toString() toCString())
             
 		for(force in forces) {
             force compute(this, tmpForce)
