@@ -2,7 +2,7 @@ import engine/[Types,Entity]
 import Force, Geometry
 import structs/LinkedList
 
-DAMP := 0.90
+DAMP := 0.990
 
 Body: class extends Entity {
     
@@ -39,7 +39,7 @@ Body: class extends Entity {
 		if(fixed)
 			return
 
-        "Evolving body, dt = %.2f, vel = %s" printfln(dt, vel toString() toCString())
+        //"Evolving body, dt = %.2f, vel = %s" printfln(dt, vel toString() toCString())
             
 		for(force in forces) {
             force compute(this, tmpForce)

@@ -24,7 +24,7 @@ Camera: class extends Entity {
 	
 	init: func ~cam (.name){
 		super(name)
-		set("pos",  pos)
+		set("position",  pos)
 		set("target", target)
 		set("speed", 1.0)
 		set("sensitivity", 0.2)
@@ -73,7 +73,7 @@ Camera: class extends Entity {
 	}
 	
 	look: func {
-		pos = get("pos", Float3)
+		pos = get("position", Float3)
 		target = get("target", Float3)
 		speed := get("speed", Float)
         
@@ -84,7 +84,7 @@ Camera: class extends Entity {
         
 		target set(pos + forward)
         
-		set("pos", pos)
+		set("position", pos)
 		set("target", target)
 
         //"Camera pos / target = %s / %s" printfln(pos toString() toCString(), target toString() toCString())
@@ -95,7 +95,7 @@ Camera: class extends Entity {
 	}
 	
 	vectorsFromAngles: func {
-		pos = get("pos", Float3)
+		pos = get("position", Float3)
 		target = get("target", Float3)
 		speed := get("speed", Float)
 		

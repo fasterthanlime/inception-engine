@@ -18,6 +18,7 @@ Model: abstract class extends Entity {
     texture: Texture = null
 	
 	show := true
+    wire := false
 	
 	init: func ~model (.name) {
 		super(name)
@@ -42,9 +43,8 @@ Model: abstract class extends Entity {
             glUniform1f(timeid, engine getTicks() as Float)
         }
         if(texture) texture enable()
-        if(!writeDepth) {
-            glDepthMask(false)
-        }
+        if(!writeDepth) glDepthMask(false)
+        if(wire) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 		
 		glPushMatrix()
             glTranslated(pos x, pos y, pos z)
@@ -52,9 +52,8 @@ Model: abstract class extends Entity {
             render()
 		glPopMatrix()
 
-        if(!writeDepth) {
-            glDepthMask(true)
-        }
+        if(wire) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        if(!writeDepth) glDepthMask(true)
         if(texture) texture disable()
 		if(shader) glUseProgram(0)
 	}

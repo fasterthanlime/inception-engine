@@ -29,8 +29,9 @@ main: func (argc: Int, argv: Char*) {
 
     //--------------- Load the track
     track := Quad new("track")
-    track set("x_range", Float2 new(-300, 300))
-    track set("y_range", Float2 new(-300, 300))
+    trackSide := 600.0
+    track set("x_range", Float2 new(-trackSide, trackSide))
+    track set("y_range", Float2 new(-trackSide, trackSide))
     track texture = Texture new("data/maps/circuit_couleur1.png")
     engine scene addModel(track)
 
