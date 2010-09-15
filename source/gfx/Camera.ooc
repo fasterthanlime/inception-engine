@@ -82,7 +82,7 @@ Camera: class extends Entity {
 		if(kstrafe_left) { pos = pos + left * speed }
 		if(kstrafe_right) { pos = pos - left * speed }
         
-		target = pos + forward
+		target set(pos + forward)
         
 		set("pos", pos)
 		set("target", target)
@@ -95,9 +95,9 @@ Camera: class extends Entity {
 	}
 	
 	vectorsFromAngles: func {
-		pos := get("pos",Float3)
-		target := get("target",Float3)
-		speed := get("speed",Float)
+		pos = get("pos", Float3)
+		target = get("target", Float3)
+		speed := get("speed", Float)
 		
 		up := Float3 new(0,0,1)
 		if(phi > 89)
@@ -113,8 +113,8 @@ Camera: class extends Entity {
         left = up ^ forward
         left normalize()
     
-        target = pos + forward
+        target set(pos + forward)
 		
-		set("target",target)
+		set("target", target)
 	}
 }
