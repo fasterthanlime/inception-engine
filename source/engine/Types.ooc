@@ -88,12 +88,12 @@ Float3: class {
         z = -z
     }
 	
-    scalarProduct: func (b: Float3) {
+    dot: func (b: Float3) -> Float {
         x * b x + y * b y + z * b z
     }
     
     squaredLength: func -> Float {
-        x * x + y * y + z * z
+        dot(this)
     }
     
 	length: func -> Float {
@@ -153,6 +153,18 @@ Float2: class {
 		for(client in clients) {
 			client send(client, ValueChange get(this))
 		}
+	}
+    
+    dot: func (b: Float2) -> Float {
+        x * b x + y * b y
+    }
+    
+    squaredLength: func -> Float {
+        dot(this)
+    }
+    
+	length: func -> Float {
+		sqrt(squaredLength())
 	}
 }
 
