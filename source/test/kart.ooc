@@ -5,7 +5,7 @@ import physics/PhysicsEngine
 
 import text/StringTokenizer
 import console/[Console, Command]
-import hud/[Hud, Window, ConvertCoords, FPSCounter]
+import hud/[Hud, Window, ConvertCoords, SpeedoMeter]
 
 import gameplay/Kart
 
@@ -14,8 +14,8 @@ main: func (argc: Int, argv: Char*) {
 	engine := Engine new()
 	
     //--------------- Setup the window
-    width := 640
-    height := 480
+    width := 1280
+    height := 800
 	win := RenderWindow new(width, height, 16, false, "kart test")
 	engine addEntity(win)
 
@@ -41,7 +41,11 @@ main: func (argc: Int, argv: Char*) {
     engine addEntity(loader load("data/maps/edited_track.r2m"))
 
     //--------------- Add our kart
-    engine addEntity(Kart new())
+    kart := Kart new()
+    engine addEntity(kart)
+
+    //--------------- Add the speedometer
+    engine addEntity(SpeedoMeter new(kart))
     
     //--------------- Start the engine!
 	engine run()

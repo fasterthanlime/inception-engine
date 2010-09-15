@@ -1,13 +1,13 @@
 import glew,glu/Glu
 import gfx/Model
 import structs/LinkedList
-import Window
+import Widget
 import gfx/RenderWindow
 import engine/Engine
 
 Hud: class extends Model {
 	
-	windows := LinkedList<Window> new()
+	widgets := LinkedList<Widget> new()
 	
 	init: func ~hud(.name) {
 		super(name)
@@ -15,20 +15,16 @@ Hud: class extends Model {
 
 	render: func {
 		begin2D()
-		for(window in windows) {
+		for(widget in widgets) {
 			glPushMatrix()
-			window render()
+			widget render()
 			glPopMatrix()
 		}
 		end2D()
 	}
 	
-	add: func(win: Window) {
-		if(win == null) {
-			printf("[Hud]: Trying to add a null window\n")
-			return
-		}
-		windows add(win)
+	add: func(widget: Widget) {
+		widgets add(widget)
 	}
 
 

@@ -401,8 +401,8 @@ Console: class extends Window {
 	
 	drawText: func {
 		size := get("size", Float2)
-		//printf("rendering text\n")
-		glPushMatrix()
+
+        glPushMatrix()
 		glTranslated(0, size y - 2 * inputHeight, 0)
 		bufferDraw()
 		glPopMatrix()

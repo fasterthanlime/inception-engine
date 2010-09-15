@@ -3,6 +3,7 @@ import glew
 import Model
 import engine/Types
 import physics/Body
+import gfx/gl/GLPrimitives
 
 include math
 
@@ -31,13 +32,8 @@ Line: class extends Model {
         begin = get("begin", Float3)
         end   = get("end",   Float3)
         
-		glLineWidth(6)
 		glColor3f(1, 0, 0)
-		glBegin(GL_LINES)
-            glVertex3f(begin x, begin y, begin z)
-            glVertex3f(end x, end y, end z)
-		glEnd()
-		glLineWidth(1)
+        glLine(begin x, end x, begin y, end y, begin z, end z)
 	}
 
 

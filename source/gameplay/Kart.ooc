@@ -20,6 +20,13 @@ Kart: class extends Entity {
     model := MD5Loader load("data/models/tricycle/tricycle.md5mesh")
     bboxModel := Cube new("kart_bbox")
     body := Body new("kart_body")
+
+    maxSpeed := 260.0
+    speed: Float {
+        get {
+            body vel length() / maxSpeed
+        }
+    }
     
     orientationAxis := Line new("kart_direction")
     velocityAxis := Line new("kart_velocity")
@@ -60,10 +67,9 @@ Kart: class extends Entity {
     update: func {
         super()
 
-        aFactor := 0.9
+        aFactor := 0.6
         bFactor := 1.0 - aFactor
 
-        maxSpeed := 260.0
         currentSpeed := dist(Float3 new(), body vel)
 
         turnSpeed := 1.3
@@ -121,11 +127,10 @@ Kart: class extends Entity {
             body pos y + (body vel y / maxSpeed * axisLength),
             0.1
         )
-        "dot = %.2f | current / max = %.2f / %.2f" printfln(dot, currentSpeed, maxSpeed)
         
         if(camMode == CameraMode THIRD_PERSON) {
-            cameraDistance := 30
-            cameraHeight := 25
+            cameraDistance := 20
+            cameraHeight := 15
 
             pos := cam get("position", Float3)
             pos set(

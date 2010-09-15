@@ -1,20 +1,22 @@
+use sdl, glew, glu
+
 import sdl/[Sdl,Event]
-import glew,glu/Glu
+import glew, glu/Glu
 import gfx/Model
 import engine/[Types, Message, Entity]
 import math
 
-Window: class extends Entity {
-	
+import Widget
+
+Window: class extends Widget {
+
+    alpha := 128
 	focus := true
-	alpha := 128
 
 	selected := false
 	hovered := false
 	
 	border:= 10  //in pixels
-	
-	show := false
 	
 	//hover bools
 	bottom := false
@@ -41,11 +43,21 @@ Window: class extends Entity {
 	
 	init: func ~windowinit (.name,x, y, width, height: Float) {
 		super(name)
-		set("position", Float3 new(x, y, 0))
+        set("position", Float3 new(x, y, 0))
 		set("size",     Float2 new(width, height))
 		listen(MouseButton, This mouseHandle)
 		listen(MouseMotion, This mouseMotion)        
 	}
+
+    render: func {
+        if(!show) return
+            
+		pos := get("position", Float3)
+		glTranslated(pos x, pos y, 0)
+        background()
+		round(border)
+		wRender()
+    }
 	
 	mouseHandle: static func(m: MouseButton) {
 		this := m target
@@ -243,26 +255,6 @@ Window: class extends Entity {
 			glVertex2i(size x,size y)
 			glVertex2i(0, size y)
 		glEnd()         
-	}
-	
-	render: func {
-		if(!show)
-			return
-            
-		pos  := get("position", Float3)
-		size := get("size", Float2)
-		
-		glTranslated(pos x, pos y, 0)
-		background()
-		round(border)
-		glDisable(GL_BLEND)
-		wRender()
-	}
-	
-	wRender: func {}
-	
-	onAdd: func {
-		engine getHud() add(this)
 	}
 	
 	round: func(rsize: Float) {
