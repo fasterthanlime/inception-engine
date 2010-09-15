@@ -3,7 +3,8 @@ import engine/[Entity, Types]
 import Geometry, Sphere
 
 /**
- * .
+ * Check collision beetween two spheres. General implementation, works
+ * in 2D and 3D.
  *
  * @version 1.0.0, 2010-09-14
  */

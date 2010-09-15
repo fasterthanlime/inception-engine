@@ -57,10 +57,10 @@ sphereBoxCH: func (sphere: Sphere, box: Box, reaction: Float3) -> Bool {
         // Rotate reaction vector
         rotationAngle := boxAngles x
         (reaction x, reaction y) = (
-            sphereCenter x * cos(rotationAngle) -
-                sphereCenter y * sin(rotationAngle),
-            sphereCenter x * sin(rotationAngle) +
-                sphereCenter y * cos(rotationAngle))
+            reaction x * cos(rotationAngle) -
+                reaction y * sin(rotationAngle),
+            reaction x * sin(rotationAngle) +
+                reaction y * cos(rotationAngle))
     }
 
     return intersect

@@ -2,6 +2,26 @@ import Update,Entity,Message
 import structs/[ArrayList,LinkedList]
 import math
 
+extend Float {
+    min: func(others: ...) -> This {
+        minimum := this
+        others each(|other|
+            val := other as Float
+            if(val < minimum) minimum = val
+        )
+        minimum
+    }
+    
+    max: func(others: ...) -> This {
+        minimum := this
+        others each(|other|
+            val := other as Float
+            if(val > minimum) minimum = val
+        )
+        minimum
+    }
+}
+
 Float3: class {
 	clients := ArrayList<Entity> new()
 	bindings := LinkedList<This> new()
