@@ -18,7 +18,7 @@ extend Float {
             val := other as Float
             if(val > maximum) maximum = val
         )
-        minimum
+        maximum
     }
 }
 
@@ -105,7 +105,14 @@ Float3: class {
 	}
 }
 
-dist: func(f1,f2: Float3) -> Float {
+dist: func ~f2 (f1, f2: Float2) -> Float {
+	sqrt(
+        (f1 x - f2 x) * (f1 x - f2 x) +
+        (f1 y - f2 y) * (f1 y - f2 y)
+    )
+}
+
+dist: func ~f3 (f1, f2: Float3) -> Float {
 	sqrt(
         (f1 x - f2 x) * (f1 x - f2 x) +
         (f1 y - f2 y) * (f1 y - f2 y) +
