@@ -6,7 +6,7 @@ import sdl/Event
 
 import text/StringTokenizer
 import console/[Console, Command]
-import hud/[Hud, Window, ConvertCoords, FPSCounter]
+import hud/[Hud, Window, ConvertCoords]
 
 import structs/ArrayList
 import io/FileWriter

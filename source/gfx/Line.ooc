@@ -9,13 +9,14 @@ include math
 
 Line: class extends Model {
 	
-	begin, end: Float3
+	begin, end, color: Float3
 	
-	init: func ~line(.name, begin := Float3 new(), end := Float3 new()) {
+	init: func ~line(.name, begin := Float3 new(), end := Float3 new(), color := Float3 new(1, 0, 0)) {
 		super(name)
         (this begin, this end) = (begin, end)
 		set("begin", begin)
 		set("end", end)
+        set("color", color)
 	}
 	
 	init: func ~withmodel(.name,m1,m2: Body) {
@@ -31,8 +32,9 @@ Line: class extends Model {
 	render: func {
         begin = get("begin", Float3)
         end   = get("end",   Float3)
+        color = get("color", Float3)
         
-		glColor3f(1, 0, 0)
+		glColor3f(color x, color y, color z)
         glLine(begin x, end x, begin y, end y, begin z, end z)
 	}
 

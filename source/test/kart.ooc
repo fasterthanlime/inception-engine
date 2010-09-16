@@ -38,7 +38,9 @@ main: func (argc: Int, argv: Char*) {
 
     loader := R2MLoader new()
     loader trackScale = trackSide * 2
-    engine addEntity(loader load("data/maps/edited_track.r2m"))
+    level := loader load("data/maps/edited_track.r2m")
+    level name = "level"
+    engine addEntity(level)
 
     //--------------- Add our kart
     kart := Kart new()

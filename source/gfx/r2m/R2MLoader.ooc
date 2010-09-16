@@ -1,6 +1,6 @@
 import io/[File, FileReader]
 import R2MModel, ../Cube
-import engine/Types
+import engine/Types, physics/Box
 import math
 
 R2MLoader: class {
@@ -68,11 +68,18 @@ R2MLoader: class {
                         ("begin / end = " + begin toString() + " / " + end toString() + ", pos = " + pos toString() + " angle = %.2f" format(angle)) println()
 
                         cube := Cube new("trackbound")
+                        cube wire = true
                         cube set("scale", Float3 new(width, length, width))
                         
                         thing := R2MThing new(cube, pos)
                         thing rot z = angle
                         mdl addThing(thing)
+
+                        box := Box new("trackbound_geom")
+                        box set("position", pos)
+                        box set("scale", Float3 new(width, length, width))
+                        box set("eulerAngles", Float3 new(0, 0, angle))
+                        mdl geometries add(box)
                     }
                 }
                 

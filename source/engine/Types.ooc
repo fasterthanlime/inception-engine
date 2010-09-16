@@ -104,7 +104,7 @@ Float3: class {
 	}
 	
 	toString: func -> String {
-		"(%.2f, %.2f, %.2f)" format(x,y,z)
+		"(%.2f, %.2f, %.2f)" format(x, y, z)
 	}
 }
 
@@ -154,7 +154,12 @@ operator ^ (v1,v2: Float3) -> Float3 {
 Float2: class {
 	clients := ArrayList<Entity> new()
 	x, y: Float
+    
 	init: func(=x, =y) {}
+
+    init: func ~zero {
+        x = y = 0
+    }
 	
 	set: func(=x, =y){
 		for(client in clients) {
@@ -181,6 +186,10 @@ Float2: class {
     
 	length: func -> Float {
 		sqrt(squaredLength())
+	}
+
+    toString: func -> String {
+		"(%.2f, %.2f)" format(x, y)
 	}
 }
 

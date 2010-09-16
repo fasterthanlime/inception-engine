@@ -3,9 +3,11 @@ import Geometry
 
 Box: class extends Geometry {
 
-    init: func (.name, scale: Float3, eulerAngles: Float3) {
+    init: func (.name) {
         super(name)
-        set("scale", scale clone())
-        set("eulerAngles", eulerAngles clone())
+        set("scale", Float3 new(1, 1, 1))
+        set("eulerAngles", Float3 new(0, 0, 0))
     }
+    
 }
+

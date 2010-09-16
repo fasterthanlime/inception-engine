@@ -1,5 +1,5 @@
 import structs/[ArrayList, HashMap]
-import engine/Types, gfx/Model
+import engine/Types, gfx/Model, physics/Geometry
 import ../md5/[MD5Loader, MD5Model]
 
 import glew
@@ -16,6 +16,7 @@ R2MThing: class {
 R2MModel: class extends Model {    
     models := HashMap<String, Model> new()
     things := ArrayList<R2MThing> new()
+    geometries := ArrayList<Geometry> new()
     path: String
     
     init: func ~name (.name, =path) {
@@ -27,7 +28,13 @@ R2MModel: class extends Model {
             glPushMatrix()
                 glTranslated(thing pos x, thing pos y, thing pos z)
                 glRotated(thing rot z, 0, 0, 1)
-                if(thing model) thing model render()
+
+                
+                if(thing model) {
+                    if(thing model wire) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+                    thing model render()
+                    if(thing model wire) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+                }
             glPopMatrix()
         }
     }
