@@ -2,6 +2,11 @@ R2MVersion 2
 
 models {
   trackbound cube/cube.md5mesh
+  sapin sapin/sapin.md5mesh
+}
+
+things {
+  sapin ( -300 300 0 )
 }
 
 trackbounds {

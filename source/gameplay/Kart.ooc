@@ -15,20 +15,12 @@ CameraMode: enum {
     BIRDS_EYE
 }
 
-kart_minPt := Float2 new()
-kart_maxPt := Float2 new()
-
 Kart: class extends Entity {
 
     model := MD5Loader load("data/models/tricycle/tricycle.md5mesh")
     bboxModel := Cube new("kart_bbox")
     body := Body new("kart_body")
     geom := Box new("kart_geom")
-
-    minmaxLine1 := Line new("minmax")
-    minmaxLine2 := Line new("minmax")
-    minmaxLine3 := Line new("minmax")
-    minmaxLine4 := Line new("minmax")
 
     maxSpeed := 230.0
     speed: Float {
@@ -160,7 +152,7 @@ Kart: class extends Entity {
             cam phi = -20
             cam vectorsFromAngles()
         } else if(camMode == CameraMode BIRDS_EYE) {
-            cameraHeight := 120
+            cameraHeight := 1000
             cam get("position", Float3) set(
                 body pos x,
                 body pos y,
@@ -210,25 +202,6 @@ Kart: class extends Entity {
                 break
             }
         }
-
-        minX := body pos x + (kart_minPt x * cos(alphaRad))
-        maxX := body pos x + (kart_maxPt x * cos(alphaRad))
-        minY := body pos y + (kart_minPt y * sin(alphaRad))
-        maxY := body pos y + (kart_maxPt y * sin(alphaRad))
-
-        epsilon := 0.1
-
-        minmaxLine1 get("begin", Float3) set(minX, minY, epsilon)
-        minmaxLine1 get("end",   Float3) set(maxX, minY, epsilon)
-
-        minmaxLine2 get("begin", Float3) set(maxX, minY, epsilon)
-        minmaxLine2 get("end",   Float3) set(maxX, maxY, epsilon)
-        
-        minmaxLine3 get("begin", Float3) set(maxX, maxY, epsilon)
-        minmaxLine3 get("end",   Float3) set(minX, maxY, epsilon)
-
-        minmaxLine4 get("begin", Float3) set(minX, maxY, epsilon)
-        minmaxLine4 get("end",   Float3) set(minX, minY, epsilon)
     }
     
     onAdd: func {
@@ -255,20 +228,16 @@ Kart: class extends Entity {
         body rot bind(geom get("eulerAngles", Float3))
         geom get("scale", Float3) set(bboxModel get("scale", Float3))
 
-        // add minmax lines
-        engine scene addModel(minmaxLine1)
-        engine scene addModel(minmaxLine2)
-        engine scene addModel(minmaxLine3)
-        engine scene addModel(minmaxLine4)
-
         // add various axis
         engine scene addModel(orientationAxis)
         body pos bind(orientationAxis get("begin", Float3))
         orientationAxis set("color", Float3 new(0, 1, 0))
+        orientationAxis show = false
         
         engine scene addModel(velocityAxis)
         body pos bind(velocityAxis get("begin", Float3))
         orientationAxis set("color", Float3 new(1, 0, 1))
+        orientationAxis show = false
     }
 
 }
