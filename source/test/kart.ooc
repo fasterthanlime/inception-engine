@@ -44,6 +44,7 @@ main: func (argc: Int, argv: Char*) {
 
     //--------------- Add our kart
     kart := Kart new()
+    kart body get("position", Float3) set(-500, 350, 0)
     engine addEntity(kart)
 
     //--------------- Add the speedometer

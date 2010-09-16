@@ -30,7 +30,7 @@ Kart: class extends Entity {
     minmaxLine3 := Line new("minmax")
     minmaxLine4 := Line new("minmax")
 
-    maxSpeed := 260.0
+    maxSpeed := 230.0
     speed: Float {
         get {
             body vel length() / maxSpeed
@@ -39,7 +39,6 @@ Kart: class extends Entity {
     
     orientationAxis := Line new("kart_direction")
     velocityAxis := Line new("kart_velocity")
-    reactionAxis := Line new("reation_axis")
     axisLength := 25.0
     
     cam: Camera
@@ -92,6 +91,8 @@ Kart: class extends Entity {
         } else if(turnRight) {
             alpha -= actualTurnSpeed
         }
+
+        alphaRad := alpha * PI / 180.0
             
         if(brake || accelerate) {
             speed := currentSpeed
@@ -104,8 +105,8 @@ Kart: class extends Entity {
             }
 
             body vel set(
-                body vel x * 0.87 + (cos(alpha * PI / 180.0) * speed) * 0.13,
-                body vel y * 0.87 + (sin(alpha * PI / 180.0) * speed) * 0.13,
+                body vel x * 0.87 + (cos(alphaRad) * speed) * 0.13,
+                body vel y * 0.87 + (sin(alphaRad) * speed) * 0.13,
                 0
             )
         } else {
@@ -115,7 +116,7 @@ Kart: class extends Entity {
         velDir := Float2 new(body vel x, body vel y)
         velDir normalize()
         
-        unitDir := Float2 new(cos(alpha * PI / 180.0), sin(alpha * PI / 180.0))
+        unitDir := Float2 new(cos(alphaRad), sin(alphaRad))
         dot := velDir dot(unitDir)
 
         if(-1.0 < dot && dot < 1.0) {
@@ -149,8 +150,8 @@ Kart: class extends Entity {
 
             pos := cam get("position", Float3)
             pos set(
-                pos x * aFactor + (body pos x - cos(alpha * PI / 180.0) * cameraDistance) * bFactor,
-                pos y * aFactor + (body pos y - sin(alpha * PI / 180.0) * cameraDistance) * bFactor,
+                pos x * aFactor + (body pos x - cos(alphaRad) * cameraDistance) * bFactor,
+                pos y * aFactor + (body pos y - sin(alphaRad) * cameraDistance) * bFactor,
                 cameraHeight
             )
     
@@ -188,21 +189,32 @@ Kart: class extends Entity {
         
         for(trackbound in level geometries) {
             if(geom collide(trackbound, reaction)) {
+                /*
                 ("Got a collision! geom pos = " + geom get("position", Float3) toString() +
                     ", geom rot = " + geom get("eulerAngles", Float3) toString() +
                     ", trackbound pos = " + trackbound get("position", Float3) toString() +
                     " reaction = " + reaction toString()) println()
-            }
-            
-            break
-        }
-        reactionAxis get("end", Float3) set(body pos + reaction)
-        body pos += reaction
+                */
+                body pos += reaction
 
-        minX := body pos x + (kart_minPt x * cos(alpha * PI / 180.0))
-        maxX := body pos x + (kart_maxPt x * cos(alpha * PI / 180.0))
-        minY := body pos y + (kart_minPt y * sin(alpha * PI / 180.0))
-        maxY := body pos y + (kart_maxPt y * sin(alpha * PI / 180.0))
+                velDir = Float2 new(body vel x, body vel y)
+                velDir normalize()
+
+                reac2D := Float2 new(reaction x, reaction y)
+                reac2D normalize()
+                dot = velDir dot(reac2D)
+
+                body vel -= (reaction * dot)
+                body vel scale(body vel length() > (maxSpeed * 0.5) ? 0.7 : 0.97)
+
+                break
+            }
+        }
+
+        minX := body pos x + (kart_minPt x * cos(alphaRad))
+        maxX := body pos x + (kart_maxPt x * cos(alphaRad))
+        minY := body pos y + (kart_minPt y * sin(alphaRad))
+        maxY := body pos y + (kart_maxPt y * sin(alphaRad))
 
         epsilon := 0.1
 
@@ -228,19 +240,20 @@ Kart: class extends Entity {
         
         physx := engine getEntity("physx") as PhysicsEngine
         physx add(body, model)
-        model show = false
+        //model show = false
 
         // add and bind the bounding box
         engine scene addModel(bboxModel)
         bboxModel set("scale", Float3 new(4.0, 4.0, 6.0))
-        bboxModel wire = true
+        //bboxModel wire = true
+        bboxModel show = false
         body pos bind(bboxModel pos)
         body rot bind(bboxModel rot)
 
         // bind the geom
         body pos bind(geom get("position", Float3))
         body rot bind(geom get("eulerAngles", Float3))
-        bboxModel get("scale", Float3) bind(geom get("scale", Float3))
+        geom get("scale", Float3) set(bboxModel get("scale", Float3))
 
         // add minmax lines
         engine scene addModel(minmaxLine1)
@@ -256,10 +269,6 @@ Kart: class extends Entity {
         engine scene addModel(velocityAxis)
         body pos bind(velocityAxis get("begin", Float3))
         orientationAxis set("color", Float3 new(1, 0, 1))
-
-        engine scene addModel(reactionAxis)
-        body pos bind(reactionAxis get("begin", Float3))
-        reactionAxis set("color", Float3 new(1, 1, 0))
     }
 
 }

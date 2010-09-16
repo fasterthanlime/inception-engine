@@ -61,14 +61,14 @@ R2MLoader: class {
                         
                         pos := begin + (diff * 0.5)
 
-                        width := 2.0
+                        width := 5.0
                         
                         diff normalize()
                         angle := (atan2(diff y, diff x) - atan2(1, 0)) * 180.0 / PI
                         ("begin / end = " + begin toString() + " / " + end toString() + ", pos = " + pos toString() + " angle = %.2f" format(angle)) println()
 
                         cube := Cube new("trackbound")
-                        cube wire = true
+                        //cube wire = true
                         cube set("scale", Float3 new(width, length, width))
                         
                         thing := R2MThing new(cube, pos)

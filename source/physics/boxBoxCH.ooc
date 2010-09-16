@@ -21,11 +21,13 @@ boxBoxCH: func (box1, box2: Box, reaction: Float3) -> Bool {
     b2Scale  := box2 get("scale", Float3)
     b2Alpha  := box2 get("eulerAngles", Float3) z
 
+    /*
     (
      "Box-box! [" + b1Center toString() + " x " + b1Scale toString() + (" °%.2f] vs [" format(b1Alpha)) +
                     b2Center toString() + " x " + b2Scale toString() + (" °%.2f]" format(b2Alpha))
     ) println()
-
+    */
+    
     b1Alpha *= (PI / 180.0)
     b2Alpha *= (PI / 180.0)
 
@@ -45,35 +47,44 @@ boxBoxCH: func (box1, box2: Box, reaction: Float3) -> Bool {
     )
     yAxis normalize()
 
+    //("xAxis = " + xAxis toString() + " / yAxis = " + yAxis toString()) println()
+
     /*
         x' = cos(theta) * x - sin(theta) * y
         y' = sin(theta) * x + cos(theta) * y 
      */
 
     // compute corners of box 1, and test them one by one
-    corner := Float2 new(
-        b1Center x + (b1Cos * b1Scale x - b1Sin * b1Scale y) - b2Center x,
-        b1Center y + (b1Sin * b1Scale x + b1Cos * b1Scale y) - b2Center y
-    )
-    if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
+    for(i in 0..3) {
+    
+        corner := Float2 new(
+            b1Center x + (b1Cos * b1Scale x - b1Sin * b1Scale y) - b2Center x,
+            b1Center y + (b1Sin * b1Scale x + b1Cos * b1Scale y) - b2Center y
+        )
+        if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
 
-    corner set(
-        b1Center x + (b1Cos * -b1Scale x - b1Sin * b1Scale y) - b2Center x,
-        b1Center y + (b1Sin * -b1Scale x + b1Cos * b1Scale y) - b2Center y
-    )
-    if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
+        corner set(
+            b1Center x + (b1Cos * -b1Scale x - b1Sin * b1Scale y) - b2Center x,
+            b1Center y + (b1Sin * -b1Scale x + b1Cos * b1Scale y) - b2Center y
+        )
+        if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
 
-    corner set(
-        b1Center x + (b1Cos * -b1Scale x - b1Sin * -b1Scale y) - b2Center x,
-        b1Center y + (b1Sin * -b1Scale x + b1Cos * -b1Scale y) - b2Center y
-    )
-    if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
+        corner set(
+            b1Center x + (b1Cos * -b1Scale x - b1Sin * -b1Scale y) - b2Center x,
+            b1Center y + (b1Sin * -b1Scale x + b1Cos * -b1Scale y) - b2Center y
+        )
+        if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
 
-    corner set(
-        b1Center x + (b1Cos * b1Scale x - b1Sin * -b1Scale y) - b2Center x,
-        b1Center y + (b1Sin * b1Scale x + b1Cos * -b1Scale y) - b2Center y
-    )
-    if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
+        corner set(
+            b1Center x + (b1Cos * b1Scale x - b1Sin * -b1Scale y) - b2Center x,
+            b1Center y + (b1Sin * b1Scale x + b1Cos * -b1Scale y) - b2Center y
+        )
+        if(isIn(xAxis, yAxis, b2Center, b2Scale, corner, reaction)) return true
+
+        // re-test with a smaller cube
+        b1Scale x *= 0.8
+        b1Scale y *= 0.8
+    }
 
     return false
 
@@ -81,35 +92,34 @@ boxBoxCH: func (box1, box2: Box, reaction: Float3) -> Bool {
 
 isIn: func (xAxis, yAxis: Float2, b2Center, b2Scale: Float3, corner: Float2, reaction: Float3) -> Bool {
 
-    ("Testing corner " + corner toString() + ", axis = " + xAxis toString() + " | " + yAxis toString()) println()
+    //("Testing corner " + corner toString() + ", axis = " + xAxis toString() + " | " + yAxis toString()) println()
 
     // testing on X axis
     cdotX := corner dot(xAxis)
-    diff1 := - b2Center x + b2Scale x
-    diff2 := - b2Center x - b2Scale x
+    diff1 := b2Scale x
+    diff2 := -b2Scale x
     inX := (cdotX < diff1 && cdotX > diff2)
-    ("cdotX = %.2f, in = %d" format(cdotX, inX)) println()
+    //("cdotX = %.2f, in = %d, [%.2f - %.2f]" format(cdotX, inX, diff1, diff2)) println()
 
     // testing on Y axis
     cdotY := corner dot(yAxis)
-    diff3 := - b2Center y + b2Scale y
-    diff4 := - b2Center y - b2Scale y
+    diff3 := b2Scale y
+    diff4 := -b2Scale y
     inY := (cdotY < diff3 && cdotY > diff4)
-    ("cdotY = %.2f, in = %d" format(cdotY, inY)) println()
+    //("cdotY = %.2f, in = %d, [%.2f - %.2f]" format(cdotY, inY, diff3, diff4)) println()
 
     // compute correction
     if(inX && inY) {
         nearest := 1
         nearestDist := diff1 - cdotX
 
-        "diffs 1/2/3/4 = %.2f / %.2f / %.2f / %.2f" printfln(diff1 - cdotX, cdotX - diff2, diff3 - cdotY, cdotY - diff4)
+        //"diffs 1/2/3/4 = %.2f / %.2f / %.2f / %.2f" printfln(diff1 - cdotX, cdotX - diff2, diff3 - cdotY, cdotY - diff4)
 
         if(cdotX - diff2 < nearestDist) {
             nearest = 2
             nearestDist = cdotX - diff2
         }
 
-        /*
         if(diff3 - cdotY < nearestDist) {
             nearest = 3
             nearestDist = diff3 - cdotY
@@ -119,35 +129,34 @@ isIn: func (xAxis, yAxis: Float2, b2Center, b2Scale: Float3, corner: Float2, rea
             nearest = 4
             nearestDist = cdotY - diff4
         }
-        */ 
 
         match (nearest) {
             case 1 =>
-                "Correcting minus X" println()
+                //"Correcting minus X" println()
                 reaction set(
                     (diff1 - cdotX) * xAxis x,
                     (diff1 - cdotX) * xAxis y,
                     0
                 )
             case 2 =>
-                "Correcting plus  X" println()
+                //"Correcting plus  X" println()
                 reaction set(
                     (diff2 - cdotX) * xAxis x,
                     (diff2 - cdotX) * xAxis y,
                     0
                 )
             case 3 =>
-                "Correcting minus Y" println()
+                //"Correcting minus Y" println()
                 reaction set(
                     (diff3 - cdotY) * yAxis x,
                     (diff3 - cdotY) * yAxis y,
                     0
                 )
             case 4 =>
-                "Correcting plus  Y" println()
+                //"Correcting plus  Y" println()
                 reaction set(
-                    (cdotY - diff4) * yAxis x,
-                    (cdotY - diff4) * yAxis y,
+                    (diff4 - cdotY) * yAxis x,
+                    (diff4 - cdotY) * yAxis y,
                     0
                 )
         }
