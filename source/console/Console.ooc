@@ -235,35 +235,26 @@ Console: class extends Window {
 		
 		ch := (m unicode & 0x7f) as Char
 		
-		// haha c'est tout moche.
 		if(m key == SDLK_BACKSPACE && caretStart > 0) {
-			"Backspace!" println()
 			buffer = buffer substring(0, caretStart - 1) + buffer substring(caretStart, buffer length())
 			caretStart -= 1
 			
 		} else if(m key == SDLK_DELETE && caretStart < buffer length()) {
-			"Delete!" println()
 			buffer = buffer substring(0, caretStart) + buffer substring(caretStart + 1, buffer length())
 			
 		} else if(m key == SDLK_RIGHT && caretStart < buffer length() ) {
-			"Right!" println()
 			caretStart += 1
 			
 		} else if(m key == SDLK_LEFT && caretStart > 0) {
-			"Left!" println()
 			caretStart -= 1
 			
 		} else if(m key == SDLK_HOME) {
-			"Right!" println()
 			caretStart = 0
 			
 		} else if(m key== SDLK_END) {
-			"End!" println()
 			caretStart = buffer length()
 			
 		} else if(ch printable?() && !(state & KMOD_LCTRL) && !(state & KMOD_RCTRL)) {
-			"Dun goofed! char %c" printfln(ch)
-			
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {
@@ -271,8 +262,6 @@ Console: class extends Window {
 			}
 			caretStart += 1
 		}
-		"Got ch %c, aka %d, printable ? %d, SDLK_LSHIFT = %d, SDK_RSHIFT = %d, LCTRL = %d, RCTRL = %d" printfln(
-			ch, ch, ch printable?(), SDLK_LSHIFT, SDLK_RSHIFT, state & KMOD_LCTRL, state & KMOD_RCTRL)
 	}
 	
 	setBuffer: func(text: String) {
