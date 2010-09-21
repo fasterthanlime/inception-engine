@@ -3,24 +3,26 @@ import gfx/[RenderWindow, Cube, Scene, Quad, Line, Camera, Texture]
 import gfx/r2m/[R2MLoader]
 import physics/PhysicsEngine
 
+import io/File
 import text/StringTokenizer
 import console/[Console, Command]
 import hud/[Hud, Window, ConvertCoords, SpeedoMeter]
 
 import gameplay/Kart
 
-main: func (argc: Int, argv: Char*) {
+main: func (argc: Int, argv: CString*) {
 	
 	engine := Engine new()
 	
     //--------------- Setup the window
     width := 1280
     height := 800
-	win := RenderWindow new(width, height, 16, false, "kart test")
+	win := RenderWindow new(width, height, 16, false, "Ice Cream Madness")
 	engine addEntity(win)
 
     //--------------- Create the ingame console
-    engine addEntity(Console new(10, 10, width * 2/5, height * 2/5))
+    console := Console new(10, 10, width * 2/5, height * 2/5)
+    engine addEntity(console)
 
     //--------------- Set up the keyboard / mouse input
     engine addEntity(EventMapper new())
@@ -49,6 +51,13 @@ main: func (argc: Int, argv: Char*) {
 
     //--------------- Add the speedometer
     engine addEntity(SpeedoMeter new(kart))
+    
+    //--------------- Load and interpret the autoexec.cfg file
+    autoPath := "autoexec.cfg"
+    if(File new(autoPath) exists?()) {
+		"Loading script file '" + autoPath + "'"
+		console load(autoPath)
+	}
     
     //--------------- Start the engine!
 	engine run()

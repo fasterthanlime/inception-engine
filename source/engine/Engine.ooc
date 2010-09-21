@@ -1,6 +1,7 @@
 use sdl, glew
+
 import glew
-import sdl/[Sdl, Event]
+import sdl/[Core, Event]
 import structs/HashMap
 import Entity, Update, Message, Types
 import io/File

@@ -11,6 +11,8 @@ Property: abstract class {
         class name
     }
     
+    fromString: abstract func (st: StringTokenizer) -> String
+    
 }
 
 GenericProperty: class <T> extends Property {
@@ -30,15 +32,15 @@ GenericProperty: class <T> extends Property {
             case String =>
                 value as String
             case Float =>
-                "%.2f" format(value as Float)
+                "%.4f" format(value as Float)
             case Int =>
                 "%d" format(value as Int)
             case Float2 =>
                 f := value as Float2
-                "(%.2f, %.2f)" format(f x, f y)
+                "(%.4f, %.4f)" format(f x, f y)
             case Float3 =>
                 f := value as Float3
-                "(%.2f, %.2f, %.2f)" format(f x, f y, f z)
+                "(%.4f, %.4f, %.4f)" format(f x, f y, f z)
             case =>
                 T name
         }
@@ -48,17 +50,35 @@ GenericProperty: class <T> extends Property {
         match(T) {
             case String =>
                 tok := st nextToken()
-                if(tok != null) set(tok)
+                if(!tok) return "Missing value!"
+                set(tok)
                 ""
             case Float =>
                 tok := st nextToken()
-                if(tok != null) set(tok toFloat())
+                if(!tok) return "Missing value!"
+                set(tok toFloat())
                 ""
             case Int =>
                 tok := st nextToken()
-                if(tok != null) set(tok toInt())
+                if(!tok) return "Missing value!"
+                set(tok toInt())
                 ""
+            case Float2 =>
+				x := st nextToken()
+				y := st nextToken()
+				if(!x || !y) return "Need 2 values."
+				set(Float2 new(x toFloat(), y toFloat()))
+				""
+			case Float3 =>
+				x := st nextToken()
+				y := st nextToken()
+				z := st nextToken()
+				if(!x || !y || !z) return "Need 3 values."
+				set(Float3 new(x toFloat(), y toFloat(), z toFloat()))
+				""
             // TODO: add other types
+            case =>
+				("Don't know how to set property " + name + " with value " + toString() + " of type " + T name)
         }
     }
     

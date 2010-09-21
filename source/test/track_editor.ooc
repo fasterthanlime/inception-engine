@@ -11,7 +11,7 @@ import hud/[Hud, Window, ConvertCoords]
 import structs/ArrayList
 import io/FileWriter
 
-main: func (argc: Int, argv: Char*) {
+main: func (argc: Int, argv: CString*) {
 	
 	engine := Engine new()
 	

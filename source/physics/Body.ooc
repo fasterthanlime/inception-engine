@@ -35,11 +35,14 @@ Body: class extends Entity {
         geom set("position", pos)
     }
 	
-	evolve: func(dt: Float) { // in seconds
+	evolve: func(dt: Float) { // in seconds	
 		if(fixed)
 			return
 
-        //"Evolving body, dt = %.2f, vel = %s" printfln(dt, vel toString() toCString())
+        //"Evolving body, dt = %.4f, vel = %s" printfln(dt, vel toString() toCString())
+        
+        // Using a fixed timestep solves jittering problems - FPS is stabilized elsewhere anyway
+        dt = 0.02;
             
 		for(force in forces) {
             force compute(this, tmpForce)

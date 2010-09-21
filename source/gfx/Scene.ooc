@@ -1,7 +1,7 @@
 use glew,sdl,glu
 import glew
 import glu/Glu
-import sdl/[Video,Sdl]
+import sdl/[Video,Core]
 import engine/[Entity, Update, Engine, Types]
 import gfx/[Model, RenderWindow, Camera, ShaderProgram]
 import structs/[LinkedList, HashMap, ArrayList]

@@ -1,4 +1,7 @@
-OOC_FLAGS=-driver=sequence -v -gcc -g -noclean +-w -sourcepath=source/ $(shell echo $$OOC_FLAGS)
+
+#OOC_FLAGS=-v -g +-w -sourcepath=source -DNO_STDIO_REDIRECT +-mwindows -lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -lglew32 $(shell echo $$OOC_FLAGS)
+OOC_FLAGS=-v -g +-w -sourcepath=source -DNO_STDIO_REDIRECT $(shell echo $$OOC_FLAGS)
+
 OOC?=rock
 TEST?=fall
 

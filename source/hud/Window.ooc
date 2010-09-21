@@ -1,6 +1,6 @@
 use sdl, glew, glu
 
-import sdl/[Sdl,Event]
+import sdl/[Core, Event]
 import glew, glu/Glu
 import gfx/Model
 import engine/[Types, Message, Entity]

@@ -1,11 +1,14 @@
 use glew, glu, sdl, ftgl
 import ftgl
-import sdl/[Sdl,Event]
+import sdl/[Core,Event]
 import glew,glu/Glu
 import engine/[Engine, Entity, Property, Types, Message, EventMapper]
 import gfx/[RenderWindow, Model]
+
 import structs/[LinkedList, HashMap]
 import text/StringTokenizer
+import io/FileReader
+
 import hud/Window
 import Command
 
@@ -40,9 +43,22 @@ Console: class extends Window {
 		drawText()
 	}
 	
+	load: func (fileName: String) {
+		fR := FileReader new(fileName)
+		while(fR hasNext?()) {
+			line := fR readLine() trim()
+			if(!line empty?()) command(line)
+		}
+		fR close()
+	}
+	
 	initCommands: func {
 		addCommand(Command new("show", "show [entity] [...]", func (console: Console, st: StringTokenizer) {
             ename := st nextToken()
+            if(!ename) {
+				command("help show"); return
+			}
+            
             pname := st nextToken()
             
             ent := console engine getEntity(ename)
@@ -68,6 +84,31 @@ Console: class extends Window {
                 console cprintln("- %s = %s" format(prop name toCString(), prop toString() toCString()))
             }
         }))
+        
+        addCommand(Command new("set", "set entity property value", func (console: Console, st: StringTokenizer) {
+			ename := st nextToken()
+			if(!ename) command("help set")
+			
+			pname := st nextToken()
+			if(!pname) command("help set")
+			
+			ent := console engine getEntity(ename)
+            if(ent == null) {
+                console cprintln("sorry, no such entity [%s]" format(ename toCString()))
+                return
+            }
+                
+            // display a particular property
+            if(pname != null && !pname empty?()) {
+                prop := ent props get(pname)
+                if(prop == null) {
+                    console cprintln("sorry, entity [%s] doesn't have a property named [%s]" format(ename toCString(), pname toCString()))
+                    return
+                }
+                msg := prop fromString(st)
+                if(!msg empty?()) msg println()
+            }
+		}))
         
 		addCommand(Command new("help", "help [command]", func (console: Console, st: StringTokenizer) {
             name := st nextToken()
@@ -196,25 +237,33 @@ Console: class extends Window {
 		
 		// haha c'est tout moche.
 		if(m key == SDLK_BACKSPACE && caretStart > 0) {
+			"Backspace!" println()
 			buffer = buffer substring(0, caretStart - 1) + buffer substring(caretStart, buffer length())
 			caretStart -= 1
 			
 		} else if(m key == SDLK_DELETE && caretStart < buffer length()) {
+			"Delete!" println()
 			buffer = buffer substring(0, caretStart) + buffer substring(caretStart + 1, buffer length())
 			
 		} else if(m key == SDLK_RIGHT && caretStart < buffer length() ) {
+			"Right!" println()
 			caretStart += 1
 			
 		} else if(m key == SDLK_LEFT && caretStart > 0) {
+			"Left!" println()
 			caretStart -= 1
 			
 		} else if(m key == SDLK_HOME) {
+			"Right!" println()
 			caretStart = 0
 			
 		} else if(m key== SDLK_END) {
+			"End!" println()
 			caretStart = buffer length()
 			
-		} else if((ch printable?() && ch != SDLK_LSHIFT && ch != SDLK_RSHIFT) && !((state & KMOD_LCTRL) || (state & KMOD_RCTRL))) {
+		} else if(ch printable?() && !(state & KMOD_LCTRL) && !(state & KMOD_RCTRL)) {
+			"Dun goofed! char %c" printfln(ch)
+			
 			if(caretStart == buffer length()) {
 				buffer = buffer + ch
 			} else {
@@ -222,6 +271,8 @@ Console: class extends Window {
 			}
 			caretStart += 1
 		}
+		"Got ch %c, aka %d, printable ? %d, SDLK_LSHIFT = %d, SDK_RSHIFT = %d, LCTRL = %d, RCTRL = %d" printfln(
+			ch, ch, ch printable?(), SDLK_LSHIFT, SDLK_RSHIFT, state & KMOD_LCTRL, state & KMOD_RCTRL)
 	}
 	
 	setBuffer: func(text: String) {
@@ -237,6 +288,8 @@ Console: class extends Window {
 		
 		level := 0
 		for(token in tokenizer) {
+			if(token trim() empty?()) break
+			
 			match(level) {
 				case 0 => {
 					suggs clear()
@@ -257,15 +310,15 @@ Console: class extends Window {
 					if(correctTokens last() == "show") {
 						status = SHOW
 						ent := engine getEntity(token)
-						if(ent == null) {
+						if(ent) {
+							correctTokens add(token clone())
+						} else {
 							for(key in engine entities getKeys()) {
 								if(key startsWith?(token)) {
 									suggs add(key)
 								}
 							}
 							break
-						} else {
-							correctTokens add(token clone())
 						}
 					}
 				}
@@ -342,10 +395,10 @@ Console: class extends Window {
                 if (finished) break
                 best += 1
             }
-            setBuffer("%s%s" format(correctToken, suggs[0] substring(0, best)))
+            setBuffer(correctToken + suggs[0] substring(0, best))
             
 		} else if(suggs size == 1) {
-			setBuffer("%s%s " format(correctToken, suggs[0]))
+			setBuffer(correctToken + suggs[0])
 		} else {
 			match(status) {
 				case COMMAND => cprintln("Sorry, no command begins with '%s'"  format(buffer toCString()))
@@ -475,7 +528,6 @@ Console: class extends Window {
 		history add(0, cm)
 		lines add(0, cm)
 		tokenizer := StringTokenizer new(cm, " ")
-		
 		
 		token := tokenizer nextToken()
         command := commands get(token)

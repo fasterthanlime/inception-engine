@@ -1,5 +1,5 @@
 use sdl
-import sdl/[Sdl,Event]
+import sdl/[Core, Event]
 import Message
 import engine/[Entity, Message]
 
