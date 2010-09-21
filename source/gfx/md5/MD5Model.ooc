@@ -303,7 +303,7 @@ MD5Model: class extends Model {
         }
         glEnd()
     }
-    
+
     render: func {
         
         skeleton : MD5Joint*

@@ -37,14 +37,18 @@ Model: abstract class extends Entity {
 	_render: func {
 		if(!show)
 			return // don't render hidden objects
-            
+
+        /*
 		if(shader) {
             glUseProgram(shader id)
             glUniform1f(timeid, engine getTicks() as Float)
         }
+        */
         if(texture) texture enable()
+        /*
         if(!writeDepth) glDepthMask(false)
         if(wire) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        */
 		
 		glPushMatrix()
             glTranslated(pos x, pos y, pos z)
@@ -52,10 +56,12 @@ Model: abstract class extends Entity {
             render()
 		glPopMatrix()
 
+        /*
         if(wire) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
         if(!writeDepth) glDepthMask(true)
+        */
         if(texture) texture disable()
-		if(shader) glUseProgram(0)
+		//if(shader) glUseProgram(0)
 	}
 	
 	render: abstract func {}

@@ -145,6 +145,7 @@ MD5Loader: class {
                         // Copy vertex data 
                         mesh vertices[vertIndex] st x = fdata[0]
                         mesh vertices[vertIndex] st y = 1 - fdata[1]
+                        "Got UV (%.2f, %.2f)" printfln(mesh vertices[vertIndex] st x, mesh vertices[vertIndex] st y)
                         mesh vertices[vertIndex] start = idata[0]
                         mesh vertices[vertIndex] count = idata[1]
                     } else if (sscanf (buff toCString(), " tri %d %d %d %d", triIndex&,

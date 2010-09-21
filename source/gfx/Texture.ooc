@@ -7,17 +7,25 @@ import glew, sdl/[Core, Image]
  */
 Texture: class {
 
+    fileName: String
     textureID: GLuint = -1
 
     init: func (fileName: String) {
+        this fileName = fileName
         textureID = loadGLImage(fileName toCString())
     }
 
     enable: func {
         glEnable(GL_TEXTURE_2D)
         glBindTexture(GL_TEXTURE_2D, textureID)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     }
 
     disable: func {
@@ -25,19 +33,23 @@ Texture: class {
     }
     
     loadGLImage: static func (fileName: Char*) -> GLuint {
-		
-		glEnable(GL_TEXTURE_2D)
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+
+        /*
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0)
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0)
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0)
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE)
 		glPixelStorei(GL_PACK_ALIGNMENT, 1)
+        */
 		
 		"Loading texture %s..." printfln(fileName)
 		
@@ -85,7 +97,8 @@ Texture: class {
 		}
 		
 		stdout flush()
-		
+
+        glGetError()
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -97,8 +110,12 @@ Texture: class {
 			GL_UNSIGNED_BYTE,
 			surface@ pixels
 		)
-		SDL freeSurface(surface)
-		
+        error := glGetError()
+        "error is %d" printfln(error)
+        SDL freeSurface(surface)
+
+        "Finished loading, ID is %d" printfln(texture)
+        
 		texture
 	}
 
@@ -138,7 +155,7 @@ flipSurface: func (surface: Surface*) -> Surface* {
 					
 					dstPos := (height - 1 - y) * pitch + x * bpp
 					srcPos := 			    y  * pitch + x * bpp
-					
+                    
 					dstPixels[dstPos]     = srcPixels[srcPos]
 					dstPixels[dstPos + 1] = srcPixels[srcPos + 1]
 					dstPixels[dstPos + 2] = srcPixels[srcPos + 2]

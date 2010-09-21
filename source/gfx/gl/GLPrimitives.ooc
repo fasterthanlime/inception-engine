@@ -6,13 +6,13 @@ glXYQuad: func (xmin, xmax, ymin, ymax: Float) {
 
     glBegin(GL_QUADS)
         glTexCoord2f(0, 0)
-        glVertex3f(xmin, ymin, 0)
+        glVertex2f(xmin, ymin)
         glTexCoord2f(0, 1)
-        glVertex3f(xmin, ymax, 0)
+        glVertex2f(xmin, ymax)
         glTexCoord2f(1, 1)
-        glVertex3f(xmax, ymax, 0)
+        glVertex2f(xmax, ymax)
         glTexCoord2f(1, 0)
-        glVertex3f(xmax, ymin, 0)
+        glVertex2f(xmax, ymin)
     glEnd()
 
 }
