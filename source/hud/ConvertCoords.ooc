@@ -35,7 +35,7 @@ ConvertCoords: class extends Entity {
 
             coords set(posX, posY, posZ)
             set("coords", coords)
-            "Got world coords (%.2f, %.2f, %.2f) / mouse coords (%.2f, %.2f, %.2f)" printfln(posX, posY, posZ, winX, winY, winZ)
+            "Got world coords (%.2f, %.2f, %.2f) / mouse coords (%.2f, %.2f, %.2f)" printfln(posX as Double, posY as Double, posZ as Double, winX as Double, winY as Double, winZ as Double)
         )
     }
 

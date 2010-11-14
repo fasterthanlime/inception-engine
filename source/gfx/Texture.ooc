@@ -111,10 +111,10 @@ Texture: class {
 			surface@ pixels
 		)
         error := glGetError()
-        "error is %d" printfln(error)
+        "error is %d" printfln(error as Int)
         SDL freeSurface(surface)
 
-        "Finished loading, ID is %d" printfln(texture)
+        "Finished loading, ID is %d" printfln(texture as Int)
         
 		texture
 	}
