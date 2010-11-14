@@ -2,8 +2,6 @@ import math
 import engine/[Entity, Types]
 import Geometry, Box, calculateAABB
 
-import gameplay/Kart
-
 abs: func (f: Float) -> Float { f < 0 ? -f : f }
 
 /**
