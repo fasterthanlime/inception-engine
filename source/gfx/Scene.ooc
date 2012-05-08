@@ -48,45 +48,49 @@ Scene: class extends Entity {
     getFrontPass: func -> Pass { frontPass }
 	
 	render: func -> Bool {
-		time2 = SDL getTicks()
-		glClearColor(0,0,0,0)
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            time2 = SDL getTicks()
+            glClearColor(0,0,0,0)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	    //glMatrixMode(GL_MODELVIEW)
 	    //glLoadIdentity()
 	    rw := engine getEntity("render_window") as RenderWindow 
 	    
 	    //glMatrixMode(GL_PROJECTION);
-		//glLoadIdentity();
-		//gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity()
+            //glLoadIdentity();
+            //gluPerspective(45.0, rw width/rw height, 1.0, 10000.0);
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity()
 		
-        cam := get("camera", Camera) .look()
+            cam := get("camera", Camera) .look()
 		
-        // this is probably wrong. I think we can only use one shader at a time
-		for(shader in globalPrograms) {
-			useProgram(shader)
-		}
+            // this is probably wrong. I think we can only use one shader at a time
+            for(shader in globalPrograms) {
+                    useProgram(shader)
+            }
 
 	    for(pass in passes) {
-            for(model in pass models) {
-                model _render()
+                for(model in pass models) {
+                    model _render()
+                }
             }
-        }
         
-		for(shader in globalPrograms) {
-			glUseProgram(0)
-		}
+            for(shader in globalPrograms) {
+                    glUseProgram(0)
+            }
 		
 	    glFlush()
 	    SDLVideo glSwapBuffers()
 
-        time1 = SDL getTicks()
-        ticksPerFrame := 100
-        delta := time1 - time2
-        //"delta = %d" printfln(delta)
-        usleep((ticksPerFrame - delta) * 100)
-        
+            time1 = SDL getTicks()
+            ticksPerFrame := 100
+            delta := time1 - time2
+            sleepTime := (ticksPerFrame - delta) * 100
+
+            if (sleepTime < 0) {
+                // woops, late
+                sleepTime = 0
+            }
+            usleep(sleepTime)
 		
 	    return true
 	}
