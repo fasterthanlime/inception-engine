@@ -14,43 +14,43 @@ Cube: class extends Model {
         scale := get("scale", Float3)
         
 		glBegin(GL_QUADS)
-			glColor3ub(255, 0, 0) //face rouge
+			glColor3ub(128, 128, 128)
 			glVertex3d(scale x, scale y, scale z)
 			glVertex3d(scale x, scale y, -scale z)
 			glVertex3d(-scale x, scale y, -scale z)
 			glVertex3d(-scale x, scale y, scale z)
 
-			glColor3ub(0, 255, 0) //face verte
+			glColor3ub(128, 128, 128)
 			glVertex3d(scale x, -scale y, scale z)
 			glVertex3d(scale x, -scale y, -scale z)
 			glVertex3d(scale x, scale y, -scale z)
 			glVertex3d(scale x, scale y, scale z)
 
-			glColor3ub(0, 0, 255) //face bleue
+			glColor3ub(128, 128, 128)
 			glVertex3d(-scale x, -scale y, scale z)
 			glVertex3d(-scale x, -scale y, -scale z)
 			glVertex3d(scale x, -scale y, -scale z)
 			glVertex3d(scale x, -scale y, scale z)
 
-			glColor3ub(255, 255, 0) //face jaune
+			glColor3ub(128, 128, 128)
 			glVertex3d(-scale x, scale y, scale z)
 			glVertex3d(-scale x, scale y, -scale z)
 			glVertex3d(-scale x, -scale y, -scale z)
 			glVertex3d(-scale x, -scale y, scale z)
 
-			glColor3ub(0, 255, 255) //face cyan
+			glColor3ub(128, 128, 128)
 			glVertex3d(scale x, scale y, -scale z)
 			glVertex3d(scale x, -scale y, -scale z)
 			glVertex3d(-scale x, -scale y, -scale z)
 			glVertex3d(-scale x, scale y, -scale z)
 
-			glColor3ub(255, 0, 255) //face magenta
+			glColor3ub(128, 128, 128)
 			glVertex3d(scale x, -scale y, scale z)
 			glVertex3d(scale x, scale y, scale z)
 			glVertex3d(-scale x, scale y, scale z)
 			glVertex3d(-scale x, -scale y, scale z)
 		glEnd()
 	}
-
-
 }
+
+
