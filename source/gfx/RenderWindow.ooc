@@ -57,7 +57,7 @@ RenderWindow: class extends Entity {
 			videoFlags |= SDL_HWACCEL
 
 		/* Sets up OpenGL double buffering */
-		SDL GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1)
+		SDL glSetAttribute(SDL_GL_DOUBLEBUFFER, 1)
 
 		/* get a SDL surface */
 		surface = SDL setMode(width, height, bpp, videoFlags)
