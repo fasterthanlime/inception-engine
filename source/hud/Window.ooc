@@ -1,7 +1,7 @@
 use sdl, glew, glu
 
 import sdl/[Core, Event]
-import glew, glu/Glu
+import glew, glu
 import gfx/Model
 import engine/[Types, Message, Entity]
 import math

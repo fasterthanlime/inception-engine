@@ -1,4 +1,4 @@
-import glew,glu/Glu
+import glew, glu
 import gfx/Model
 import structs/LinkedList
 import Widget

@@ -1,7 +1,7 @@
 use glew, glu, sdl, ftgl
 import ftgl
 import sdl/[Core,Event]
-import glew,glu/Glu
+import glew, glu
 import engine/[Engine, Entity, Property, Types, Message, EventMapper]
 import gfx/[RenderWindow, Model]
 

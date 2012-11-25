@@ -1,3 +1,4 @@
+use inception
 import engine/[Engine, Entity, Property, Update, EventMapper, Message, Types]
 import gfx/[RenderWindow, Cube, Scene, Grid, Line]
 import gfx/md5/MD5Loader

@@ -1,6 +1,6 @@
 
 use sdl, glew, glu
-import sdl/[Core, Video, Event], glew, glu/Glu
+import sdl/[Core, Event], glew, glu
 
 import engine/[Message, Entity, Types]
 import console/Console
@@ -11,7 +11,7 @@ RenderWindow: class extends Entity {
 	fullscreen := false
 	isActive := false
 	title := "r2l"
-	surface: Surface*
+	surface: SdlSurface*
 	
     init: func ~renderWindow (=width, =height, =bpp, =fullscreen, =title) {
         
@@ -22,8 +22,8 @@ RenderWindow: class extends Entity {
 		
 		/* initialize SDL */
 		if (SDL init(SDL_INIT_EVERYTHING) < 0) {
-            fprintf(stderr, "SDL initialization failed: %s\n", SDL getError())
-			quit()
+		    "SDL initialization failed: %s" printfln(SDL getError())
+		    quit()
 		}
         
         SDL enableUnicode(true)
@@ -32,7 +32,7 @@ RenderWindow: class extends Entity {
 		videoInfo := SDL getVideoInfo()
 
 		if (!videoInfo) {
-			fprintf(stderr, "SDL video query failed: %s\n", SDL getError())
+			"SDL video query failed: %s" printfln(SDL getError())
 			quit()
 		}
 
@@ -60,18 +60,18 @@ RenderWindow: class extends Entity {
 		SDL GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1)
 
 		/* get a SDL surface */
-		surface = SDLVideo setMode(width, height, bpp, videoFlags)
+		surface = SDL setMode(width, height, bpp, videoFlags)
 
 		/* Verify there is a surface */
 		if (!surface) {
-			fprintf(stderr,  "Video mode set failed: %s\n", SDL getError())
+			"Video mode set failed: %s" printfln(SDL getError())
 			quit()
 		}
 
 		/* initialize OpenGL */
 		if (initGL() == false)
 		{
-			fprintf(stderr, "Could not initialize OpenGL.\n")
+			"Could not initialize OpenGL." println()
 			quit()
 		}
 
@@ -79,11 +79,8 @@ RenderWindow: class extends Entity {
 		resizeWindow(width, height)
 		
 		SDL enableKeyRepeat(300, 30)
-		//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-		//glEnable(GL_COLOR_MATERIAL)
 		title(title)
 		
-		//SDL WM_GrabInput(SDL_GRAB_ON)
 		SDL showCursor(SDL_DISABLE)
         
 		glewInit()
@@ -118,7 +115,6 @@ RenderWindow: class extends Entity {
 
 		/* Set our perspective */
 		gluPerspective(45.0, ratio, 0.1, 1000.0)
-		//gluOrtho2D(0, width, height, 0);
 
 		/* Make sure we're changing the model view and not the projection */
 		glMatrixMode(GL_MODELVIEW)
@@ -127,9 +123,6 @@ RenderWindow: class extends Entity {
 		glLoadIdentity()
 		
 		glEnable(GL_DEPTH_TEST)
-		//glEnable(GL_BLEND)
-		//glDisable(GL_DEPTH_TEST)
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 		return true
@@ -186,6 +179,6 @@ RenderWindow: class extends Entity {
 	
 	
 	title: func(=title) {
-		SDLVideo wmSetCaption(title toCString(), null)
+		SDL wmSetCaption(title toCString(), null)
 	}
 }

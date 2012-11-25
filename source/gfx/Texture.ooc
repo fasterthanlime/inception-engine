@@ -66,19 +66,19 @@ Texture: class {
 		
 		format := surface@ format@
 		"Size: %dx%d, alpha = %d, bpp = %d, rMask = %x, gMask = %x, bMask = %x" printfln(
-			surface@ w, surface@ h, format Amask, format BitsPerPixel, format Rmask, format Gmask, format Bmask)
+			surface@ w, surface@ h, format aMask, format bitsPerPixel, format rMask, format gMask, format bMask)
 		
-		hasAlpha := (format Amask != 0)
+		hasAlpha := (format aMask != 0)
 		alphaFormat := (hasAlpha ? GL_RGBA : GL_RGB)
 		
 		desiredBpp := hasAlpha ? 32 : 24
-		if(format BitsPerPixel != desiredBpp) {
+		if(format bitsPerPixel != desiredBpp) {
 			"Converting to %d bpp and RGB[A]!" printfln(desiredBpp)
-			format BitsPerPixel = desiredBpp
-			format Rmask = 0x000000ff
-			format Gmask = 0x0000ff00
-			format Bmask = 0x00ff0000
-			format Amask = hasAlpha ? 0xff000000 : 0
+			format bitsPerPixel = desiredBpp
+			format rMask = 0x000000ff
+			format gMask = 0x0000ff00
+			format bMask = 0x00ff0000
+			format aMask = hasAlpha ? 0xff000000 : 0
 			
 			converted := SDL convertSurface(surface, format&, SDL_SWSURFACE)
 			if(converted) {
@@ -123,7 +123,7 @@ Texture: class {
 
 // code that follows is gleefully stolen from http://www.lazyfoo.net/SDL_tutorials/lesson31/index.php
 
-flipSurface: func (surface: Surface*) -> Surface* {
+flipSurface: func (surface: SdlSurface*) -> SdlSurface* {
 	format := surface@ format@
 	
 	(width, height) := (surface@ w, surface@ h)
@@ -133,14 +133,14 @@ flipSurface: func (surface: Surface*) -> Surface* {
 		SDL_SWSURFACE,
 		width,
 		height,
-		format BitsPerPixel,
-		format Rmask,
-		format Gmask,
-		format Bmask,
-		format Amask
+		format bitsPerPixel,
+		format rMask,
+		format gMask,
+		format bMask,
+		format aMask
 	)
 
-	bpp := format BytesPerPixel
+	bpp := format bytesPerPixel
 
 	// Flip pixels
 	match (bpp) {
@@ -173,7 +173,7 @@ flipSurface: func (surface: Surface*) -> Surface* {
 				}
 			}
 		case =>
-			"Unsupported BPP: %d, not flipping surface." printfln(format BitsPerPixel)
+			"Unsupported BPP: %d, not flipping surface." printfln(format bitsPerPixel)
 			return null
 	}
 

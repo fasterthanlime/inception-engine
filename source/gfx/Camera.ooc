@@ -1,6 +1,6 @@
 use glew, glu, sdl
 
-import glew, glu/Glu, sdl/[Core, Event]
+import glew, glu, sdl/[Core, Event]
 import engine/[Types, Entity, Property, Message]
 import math
 
